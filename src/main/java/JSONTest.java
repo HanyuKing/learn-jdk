@@ -2,17 +2,31 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author wanghanyu
  * @create 2017-09-14 15:05
  */
 public class JSONTest {
     public static void main(String[] args) {
-        AAA a = new AAA();
-        a.setAge(12);
-        a.setName("hanyu");
+//        AAA a = new AAA();
+//        a.setAge(12);
+//        a.setName("hanyu");
+//
+//        System.out.println(JSON.toJSONString(a));
+        System.out.println(JSON.toJSONString(BusinessTypeEnum.RED));
+    }
 
-        System.out.println(JSON.toJSONString(a));
+    @Test
+    public void testJson2() {
+        JSONObject jsonObject = JSON.parseObject("");
+        Map result = new HashMap();
+
+        for (Map.Entry<String, Object> entry : jsonObject.entrySet()) {
+            result.put(entry.getKey(), entry.getValue());
+        }
     }
 
     @Test
@@ -26,6 +40,12 @@ public class JSONTest {
         obj.put("aaa", a);
         System.out.println(obj.toString());
     }
+}
+
+enum BusinessTypeEnum {
+    AUCTION,//拍卖
+    SELFSHOP,//自营店铺
+    RED,//闪购
 }
 
 class AAA {

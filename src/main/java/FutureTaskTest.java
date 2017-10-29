@@ -1,5 +1,6 @@
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -13,7 +14,8 @@ import java.util.concurrent.*;
 public class FutureTaskTest {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        ThreadPoolExecutor wareSearcherExcutor = new ThreadPoolExecutor(15, 15, 5, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+        ThreadPoolExecutor wareSearcherExcutor = new ThreadPoolExecutor(1, 1, 5, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(1), new BasicThreadFactory.Builder().namingPattern("getIsInAppPool-%d")
+                .build());
         List<Future<Boolean>> futureTasks = new ArrayList<Future<Boolean>>();
         final List<Person> persons = new ArrayList<Person>();
 
