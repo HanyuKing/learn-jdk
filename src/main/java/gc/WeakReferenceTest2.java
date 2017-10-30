@@ -23,21 +23,11 @@ public class WeakReferenceTest2 {
     }
 
     public static class User extends WeakReference<Integer> {
-        private Integer id;
-
         private String name;
 
         public User(Integer id, String name) {
             super(id);
             this.name = name;
-        }
-
-        public void setId(Integer id) {
-            this.id = id;
-        }
-
-        public Integer getId() {
-            return id;
         }
 
         public void setName(String name) {

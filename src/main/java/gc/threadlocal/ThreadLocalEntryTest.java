@@ -11,6 +11,7 @@ public class ThreadLocalEntryTest {
     public static void main(String[] args) {
         ThreadLocal<Object> threadLocal = new ThreadLocal<Object>();
         Object obj = new Object();
+
         ThreadLocalEntryTest.Entry entry = new Entry(threadLocal, obj);
         obj = null;
         threadLocal = null;
