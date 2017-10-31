@@ -36,6 +36,7 @@ public class ContextUtil {
 
 		//printThread();
 
+
 		System.gc();
 		//printThread();
 	}
