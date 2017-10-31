@@ -1,3 +1,5 @@
+package other;
+
 /**
  * @author wanghanyu
  * @create 2017-09-28 19:26

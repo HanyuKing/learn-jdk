@@ -1,4 +1,4 @@
-package gc;
+package reference;
 
 import java.lang.ref.WeakReference;
 import java.util.Map;
