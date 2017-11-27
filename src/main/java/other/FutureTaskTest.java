@@ -29,14 +29,15 @@ public class FutureTaskTest {
             persons.add(p);
         }
 
-        final List<Person2> person2s = Lists.transform(persons, new Function<Person, Person2>() {
-            @Nullable
-            public Person2 apply(@Nullable Person person) {
-                Person2 person2 = new Person2();
-                person2.setStudent(person.getStudent());
-                return person2;
-            }
-        });
+        final List<Person2> person2s = null;
+//        Lists.transform(persons, new Function<Person, Person2>() {
+//            @Nullable
+//            public Person2 apply(@Nullable Person person) {
+//                Person2 person2 = new Person2();
+//                person2.setStudent(person.getStudent());
+//                return person2;
+//            }
+//        });
 
         for(int i = 0; i < 10; i++) {
             final int j = i;
