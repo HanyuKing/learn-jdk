@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class CPU {
+public class CPU_TOP {
 
     public static void main(String[] args) throws Exception {
         String command = "top -b -n 1";
