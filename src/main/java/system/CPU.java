@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SystemUtil {
+public class CPU {
 
     public static void main(String[] args) throws Exception {
         String command = "top -b -n 1";
@@ -81,15 +81,16 @@ public class SystemUtil {
             }
             String hxPid = "0x" + Long.toHexString(Long.valueOf(maxCpuT));
             System.out.println(pid + " : " + hxPid);
-            BufferedReader read3 = exec("jstack -l " + pid);
 
-            StringBuilder jstack = new StringBuilder();
-            String line3 = null;
-            int startIndex = 0;
-            int endIndex = startIndex;
-            int index = 0;
-            while((line3 = read3.readLine()) != null) {
-                System.out.println(line3);
+            exec("jstack -l " + pid + " > " + pid + ".log");
+
+//            StringBuilder jstack = new StringBuilder();
+//            String line3 = null;
+//            int startIndex = 0;
+//            int endIndex = startIndex;
+//            int index = 0;
+//            while((line3 = read3.readLine()) != null) {
+//                System.out.println(line3);
 //                jstack.append(line3).append("\n");
 //
 //                if(line3.indexOf(hxPid) > 0) {
@@ -105,11 +106,11 @@ public class SystemUtil {
 //                }
 //
 //                index += line3.length() + 1;
-            }
-
-            read3.close();
-
-            System.out.println("pid: " + pid + " tid: " + maxCpuT + " error stack: " + jstack.substring(startIndex, endIndex));
+//            }
+//
+//            read3.close();
+//
+//            System.out.println("pid: " + pid + " tid: " + maxCpuT + " error stack: " + jstack.substring(startIndex, endIndex));
         }
     }
 
