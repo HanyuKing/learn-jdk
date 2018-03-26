@@ -41,6 +41,12 @@
             <version>2.5.8</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-beanutils/commons-beanutils -->
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.8.3</version>
+        </dependency>
     </dependencies>
 
 
