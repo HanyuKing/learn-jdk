@@ -13,12 +13,8 @@ import java.util.Map;
  */
 public class JSONTest {
     public static void main(String[] args) {
-//        AAA a = new AAA();
-//        a.setAge(12);
-//        a.setName("hanyu");
-//
-//        System.out.println(JSON.toJSONString(a));
-        System.out.println(JSON.toJSONString(BusinessTypeEnum.RED));
+        String str = "{\"coupon\":\"{\\\"endTime\\\":\\\"2018-04-24 23:59:59\\\",\\\"quota\\\":100,\\\"discount\\\":99,\\\"startTime\\\":\\\"2018-04-21 00:00:00\\\"}\",\"points\":12,\"sendType\":2}";
+        Ext ext = JSON.parseObject(str, Ext.class);
     }
 
     @Test

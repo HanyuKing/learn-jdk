@@ -1,5 +1,9 @@
 package other;
 
+import org.junit.Test;
+
+import java.util.Arrays;
+
 /**
  * @author wanghanyu
  * @create 2017-09-28 19:26
@@ -14,6 +18,17 @@ public class StaticTest {
         System.out.println(s2.obj);
         System.out.println(s3.obj);
     }
+
+    @Test
+    public void testSB() {
+        String str = "1,2,3,";
+        System.out.println(Arrays.asList(str.split(",")).toString());
+    }
+
+    @Test
+    public void testEquals() {
+        System.out.println("null".equals(String.valueOf("null")));
+    }
 }
 
 class Static {
@@ -25,3 +40,4 @@ class StaticMethod {
         return new Object();
     }
 }
+

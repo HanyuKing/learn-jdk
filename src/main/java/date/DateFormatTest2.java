@@ -15,10 +15,8 @@ public class DateFormatTest2 {
     public static final String pattern5 = "yyyy-MM";
     public static final String pattern6 = "yyyy";
 
-    public static void main(String[] args) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat(pattern1);
-            System.out.println("1->" + sdf.format(new Date()));
-        } catch (Exception e) {}
+    public static void main(String[] args) throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat(pattern4);
+        System.out.println("1->" + sdf.parse("2018-04-21"));
     }
 }
