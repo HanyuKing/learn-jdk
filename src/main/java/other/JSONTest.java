@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * @author wanghanyu
@@ -37,6 +38,13 @@ public class JSONTest {
         a.setName("hanyu");
         obj.put("aaa", a);
         System.out.println(obj.toString());
+    }
+
+    @Test
+    public void testJSONRegx() {
+        String regx = "(^[1-9]\\d{5}(18|19|([23]\\d))\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$)|(^[1-9]\\d{5}\\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\\d{2}$)";
+        Pattern p = Pattern.compile(regx);
+        System.out.println(p.matcher("360424199506232155").matches());
     }
 }
 
