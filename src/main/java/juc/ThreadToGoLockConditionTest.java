@@ -1,6 +1,9 @@
 package juc;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Hanyu King
@@ -9,24 +12,35 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ThreadToGoLockConditionTest {
 
     private static AtomicInteger i = new AtomicInteger(0);
-    private volatile static int currThread = 1;
-    private static Object condition = new Object();
+    private static Lock lock = new ReentrantLock(false);
+    private static Condition condition1 = lock.newCondition();
+    private static Condition condition2 = lock.newCondition();
+    private static Condition condition3 = lock.newCondition();
+
+    private static int currThread = 1;
 
     public static void main(String[] args) {
         new Thread(new Runnable() {
             public void run() {
                 while (true) {
-                    synchronized (condition) {
-                        while(currThread != 1) {
-                            try {
-                                condition.wait();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                    try {
+                        lock.lock();
+                        while (currThread != 1) {
+                            condition1.await();
                         }
                         print();
                         currThread = 2;
-                        condition.notifyAll();
+                        condition2.signal();
+                    } catch (Exception e) {
+
+                    } finally {
+                        lock.unlock();
+                    }
+
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
             }
@@ -35,18 +49,20 @@ public class ThreadToGoLockConditionTest {
         new Thread(new Runnable() {
             public void run() {
                 while (true) {
-                    synchronized (condition) {
-                        while(currThread != 2) {
-                            try {
-                                condition.wait();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                    try {
+                        lock.lock();
+                        while (currThread != 2) {
+                            condition2.await();
                         }
                         print();
                         currThread = 3;
-                        condition.notifyAll();
+                        condition3.signal();
+                    } catch (Exception e) {
+
+                    } finally {
+                        lock.unlock();
                     }
+
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
@@ -59,18 +75,20 @@ public class ThreadToGoLockConditionTest {
         new Thread(new Runnable() {
             public void run() {
                 while (true) {
-                    synchronized (condition) {
-                        while(currThread != 3) {
-                            try {
-                                condition.wait();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                    try {
+                        lock.lock();
+                        while (currThread != 3) {
+                            condition3.await();
                         }
                         print();
                         currThread = 1;
-                        condition.notifyAll();
+                        condition1.signal();
+                    } catch (Exception e) {
+
+                    } finally {
+                        lock.unlock();
                     }
+
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
@@ -79,6 +97,7 @@ public class ThreadToGoLockConditionTest {
                 }
             }
         }).start();
+
     }
 
     private static void print() {
