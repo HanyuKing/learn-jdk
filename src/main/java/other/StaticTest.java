@@ -1,43 +1,34 @@
 package other;
 
-import org.junit.Test;
+public class StaticTest
+{
+   public static void main(String[] args)
+   {
+       staticFunction();
+   }
 
-import java.util.Arrays;
+    // TODO: 2018/6/29 注释看看
+   static StaticTest st = new StaticTest();
 
-/**
- * @author wanghanyu
- * @create 2017-09-28 19:26
- */
-public class StaticTest {
-    public static void main(String[] args) {
-        Static s1 = new Static();
-        Static s2 = new Static();
-        Static s3 = new Static();
+   static
+   {
+       System.out.println("1");
+   }
 
-        System.out.println(s1.obj);
-        System.out.println(s2.obj);
-        System.out.println(s3.obj);
-    }
+   {
+       System.out.println("2");
+   }
 
-    @Test
-    public void testSB() {
-        String str = "1,2,3,";
-        System.out.println(Arrays.asList(str.split(",")).toString());
-    }
+   StaticTest()
+   {
+       System.out.println("3");
+       System.out.println("a="+a+",b="+b);
+   }
 
-    @Test
-    public void testEquals() {
-        System.out.println("null".equals(String.valueOf("null")));
-    }
+   public static void staticFunction(){
+       System.out.println("4");
+   }
+
+   int a=110;
+   static int b =112;
 }
-
-class Static {
-    public Object obj = StaticMethod.newObj();
-}
-
-class StaticMethod {
-    public static Object newObj() {
-        return new Object();
-    }
-}
-

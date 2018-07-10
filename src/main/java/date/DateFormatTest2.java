@@ -1,6 +1,7 @@
 package date;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -18,5 +19,15 @@ public class DateFormatTest2 {
     public static void main(String[] args) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat(pattern4);
         System.out.println("1->" + sdf.parse("2018-04-21"));
+
+        Date date = sdf.parse("2018-06-27");
+        Date date2 = sdf.parse("2018-07-01");
+
+        System.out.println("diff day: " + (date2.getTime() - date.getTime()) / (24 * 60 * 60 * 1000));
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, 4);
+        System.out.println(sdf.format(calendar.getTime()));
     }
 }
