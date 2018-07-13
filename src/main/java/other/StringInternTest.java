@@ -44,4 +44,27 @@ public class StringInternTest {
         s3.intern();
         System.out.println(s3 == s4);
     }
+
+    @Test
+    public void testTimeConsuming() {
+        String[] keys = new String[50000];
+        for(int i = 0; i < keys.length; i++) {
+            keys[i] = i + "";
+        }
+
+        long start = System.currentTimeMillis();
+        for(int i = 0; i < 10000000; i++) {
+            String s = keys[i % 50000];
+        }
+        System.out.println(System.currentTimeMillis() - start);
+
+        start = System.currentTimeMillis();
+        for(int i = 0; i < 10000000; i++) {
+            String s = keys[i % 50000];
+            synchronized (s) {
+                String str = s;
+            }
+        }
+        System.out.println(System.currentTimeMillis() - start);
+    }
 }
