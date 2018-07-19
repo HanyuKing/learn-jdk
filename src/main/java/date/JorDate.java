@@ -63,33 +63,10 @@ public class JorDate {
 
     @Test
     public void testGetDateStrings() {
-        String[] dates = getDateStrings("2018-07-03", "2018-07-03");
+        String[] dates = getDateStrings("2018-07-17", "2018-07-18");
         for (int i = 0; i < dates.length; i++) {
             System.out.println(dates[i]);
         }
-    }
-
-    public String[] getDateStrings(String startTime, String endTime) {
-        DateTime begin = DateTime.now();
-        DateTime end = DateTime.now();
-
-        try {
-            begin = DateTime.parse(startTime);
-            end = DateTime.parse(endTime);
-        } catch (Exception e) {
-        }
-
-        DateTime yesterday = DateTime.now().plusDays(-1);
-        end = yesterday.isAfter(end) ? end : yesterday;
-
-        int diffDay = new Period(begin, end, PeriodType.days()).getDays() + 1;
-        diffDay = diffDay > 4 ? 4 : diffDay;
-
-        String[] dates = new String[diffDay];
-        for(int i = 0; i < diffDay; i++) {
-            dates[i] = end.plusDays(-i).toString("yyyy-MM-dd");
-        }
-        return dates;
     }
 
     @Test
@@ -110,5 +87,41 @@ public class JorDate {
         for(int i = 0; i < dates.length; i++) {
             System.out.println(dates[i]);
         }
+    }
+
+    public static String[] getDateStrings(String startTime, String endTime) {
+        DateTime begin = new DateTime();
+        DateTime end = new DateTime();
+
+        try {
+            begin = DateTime.parse(startTime);
+            end = DateTime.parse(endTime);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        DateTime yesterday = DateTime.now().plusDays(-1);
+        end = yesterday.isAfter(end) ? end : yesterday;
+
+        if(end.isBefore(begin)) {
+            return new String[]{};
+        }
+
+        int diffDay = new Period(begin, end, PeriodType.days()).getDays() + 1;
+        diffDay = diffDay > 90 ? 90 : diffDay;
+
+        String[] dates = new String[diffDay];
+        for(int i = 0; i < diffDay; i++) {
+            dates[i] = end.plusDays(-i).toString("yyyy-MM-dd");
+        }
+
+        String temp;
+        for(int i = 0; i < dates.length >> 1; i++) {
+            temp = dates[i];
+            dates[i] = dates[dates.length - i - 1];
+            dates[dates.length - i - 1] = temp;
+        }
+
+        return dates;
     }
 }
