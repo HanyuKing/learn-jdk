@@ -7,6 +7,7 @@ import org.junit.Test;
  * @since 2018-05-29 10:59
  */
 public class IntegerTest {
+
     public static void main(String[] args) {
         Integer i = 14;
         Integer b = 199;
@@ -14,6 +15,20 @@ public class IntegerTest {
 
         System.out.println(b >= c);
         System.out.println(i >= 5);
+
+        new IntegerTest().func();
+    }
+
+    public void func() {
+        StackTraceElement[] stackTraceElements = (new Throwable()).getStackTrace();
+        for (int i = 0; i < stackTraceElements.length; i++) {
+            StackTraceElement stackTraceElement = stackTraceElements[i];
+            System.out.println("index=" + i + "----------------------------------");
+            System.out.println("className=" + stackTraceElement.getClassName());
+            System.out.println("fileName=" + stackTraceElement.getFileName());
+            System.out.println("methodName=" + stackTraceElement.getMethodName());
+            System.out.println("lineNumber=" + stackTraceElement.getLineNumber());
+        }
     }
 
     @Test

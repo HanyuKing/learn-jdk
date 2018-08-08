@@ -12,6 +12,16 @@ import java.util.Map;
 public class LongTest {
 
     @Test
+    public void testEquals() {
+        System.out.println(Long.valueOf(1L).equals(1L));
+    }
+
+    @Test
+    public void test() {
+        System.out.println((int) (1 / 0.0));
+    }
+
+    @Test
     public void testConvert() {
         Map map = new HashMap();
         map.put("key", 123);

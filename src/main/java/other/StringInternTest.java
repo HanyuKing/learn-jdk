@@ -2,6 +2,9 @@ package other;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * refer  https://tech.meituan.com/in_depth_understanding_string_intern.html?utm_source=tool.lu
  *
@@ -35,36 +38,44 @@ public class StringInternTest {
     @Test
     public void testStringIntern() {
         String s = new String("1");
-        String s2 = "1";
         s.intern();
+        String s2 = "1";
         System.out.println(s == s2);
 
         String s3 = new String("1") + new String("1");
-        String s4 = "11";
         s3.intern();
+        String s4 = "11";
         System.out.println(s3 == s4);
     }
 
     @Test
     public void testTimeConsuming() {
-        String[] keys = new String[50000];
-        for(int i = 0; i < keys.length; i++) {
-            keys[i] = i + "";
-        }
+        int size = 10000000;
+        List<String> lst = new ArrayList<String>();
 
         long start = System.currentTimeMillis();
-        for(int i = 0; i < 10000000; i++) {
-            String s = keys[i % 50000];
-        }
-        System.out.println(System.currentTimeMillis() - start);
+        int count = 0;
+        for (int i = 0; i < size; ++i ) {
+            String str = String.valueOf(i);
+            lst.add(str);
 
-        start = System.currentTimeMillis();
-        for(int i = 0; i < 10000000; i++) {
-            String s = keys[i % 50000];
-            synchronized (s) {
-                String str = s;
+            if ( i % 10000 == 0 ) {
+                if(count >= 300) {
+                    break;
+                }
+                count++;
+                long end = System.currentTimeMillis();
+                System.out.println(( end - start ) / 1000.0);
+                start = System.currentTimeMillis();
             }
         }
-        System.out.println(System.currentTimeMillis() - start);
+    }
+
+    @Test
+    public void test2() {
+        String s1 = new StringBuilder().append("String").append("Test").toString();
+        System.out.println(s1.intern() == s1);
+        String s2 = new StringBuilder().append("ja").append("va").toString();
+        System.out.println(s2.intern() == s2);
     }
 }

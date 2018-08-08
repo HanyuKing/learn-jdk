@@ -3,8 +3,11 @@ package date;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 /**
@@ -15,6 +18,19 @@ public class JorDate {
     public static void main(String[] args) {
         DateTime dateTime = DateTime.parse("2018-06-27");
         System.out.println(dateTime.plusDays(1).toString("yyyy-MM-dd"));
+    }
+
+    @Test
+    public void testFormat000000() {
+        System.out.println(DateTime.parse(DateTime.now().toString("yyyy-MM-dd 00:00:00"), DateTimeFormat.forPattern("yyyy-MM-dd 00:00:00")));
+    }
+
+    @Test
+    public void testDayCompare() {
+        String date1 = "2018-07-20 01:00:00";
+        String date2 = "2018-07-20 23:59:59";
+        System.out.println(new DateTime(date1));
+        //System.out.println(new Period(new DateTime(date1).getMillis(), new DateTime(date2).getMillis(), PeriodType.days()));
     }
 
     @Test
@@ -63,7 +79,7 @@ public class JorDate {
 
     @Test
     public void testGetDateStrings() {
-        String[] dates = getDateStrings("2018-07-17", "2018-07-18");
+        String[] dates = getDateStrings("2018-07-22", "2018-07-22");
         for (int i = 0; i < dates.length; i++) {
             System.out.println(dates[i]);
         }
@@ -97,7 +113,8 @@ public class JorDate {
             begin = DateTime.parse(startTime);
             end = DateTime.parse(endTime);
         } catch (Exception e) {
-            e.printStackTrace();
+            //log.error("时间格式错误: startTime[{}]endTime[{}]", startTime, endTime, e);
+           // throw ExceptionsUtil.Http400("时间格式错误");
         }
 
         DateTime yesterday = DateTime.now().plusDays(-1);
