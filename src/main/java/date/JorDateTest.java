@@ -1,6 +1,9 @@
 package date;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -23,5 +26,11 @@ public class JorDateTest {
             new DateTime().toString("yyyy-MM-dd");
         }
         System.out.println(System.currentTimeMillis() - start);
+    }
+
+    @Test
+    public void testZere() {
+        String dateStr = DateTime.now().plusDays(1).toString("yyyy-MM-dd ") + "1:00:00";
+        System.out.println(DateTime.parse(dateStr, DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate().getTime() - System.currentTimeMillis());
     }
 }

@@ -1,6 +1,7 @@
 package xstream;
 
 import com.thoughtworks.xstream.XStream;
+import sun.misc.VM;
 
 /**
  * @author Hanyu King
@@ -8,7 +9,12 @@ import com.thoughtworks.xstream.XStream;
  */
 public class XStreamTest {
     public static void main(String[] args) {
-        XStream xStream = new XStream();
+
+        while (true) {
+            XStream xStream = new XStream();
+            xStream.toString();
+            xStream = null;
+        }
 
     }
 }
