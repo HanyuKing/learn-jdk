@@ -27,17 +27,17 @@ public class FutureTaskTest {
 //                        Thread.sleep(6 * 1000);
 //                    }
                     System.out.println("temp: " + iTemp);
-                    return iTemp;
-                    //throw new RuntimeException("pool.submit futureTask 异常打印不出来");
+                    //return iTemp;
+                    throw new RuntimeException("pool.submit futureTask 异常打印不出来");
                 }
             };
 
             FutureTask<Integer> futureTask = new FutureTask<Integer>(callable);
             futures.add(futureTask);
-            pool.submit(futureTask);
+            pool.execute(futureTask);
         }
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 1; i++) {
             try {
                 Integer integer = (Integer) futures.get(i).get();
                 System.out.println(integer);

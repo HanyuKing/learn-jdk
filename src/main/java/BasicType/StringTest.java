@@ -12,6 +12,98 @@ import org.junit.Test;
 public class StringTest {
 
     @Test
+    public void testFormatGCLog() {
+        String gcLog = "[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SharedHeap::process_strong_roots[SystemDictionary_OOPS_DO[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do, 0.0011190 secs]\n" +
+                ", 0.0008810 secs]\n" +
+                "[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do, 0.0011710 secs]\n" +
+                "[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do, 0.0013440 secs]\n" +
+                "[StringTable_possibly_parallel_oops_do[StringTable_possibly_parallel_oops_do, 0.0014080 secs]\n" +
+                "[StringTable_possibly_parallel_oops_do, 0.0014450 secs]\n" +
+                "[StringTable_possibly_parallel_oops_do, 0.0013850 secs]\n" +
+                ", 0.0013210 secs]\n" +
+                ", 0.0013040 secs]\n" +
+                ", 0.0012880 secs]\n" +
+                ", 0.0012380 secs]\n" +
+                ", 0.0012040 secs]\n" +
+                ", 0.0011570 secs]\n" +
+                ", 0.0011080 secs]\n" +
+                ", 0.0000250 secs]\n" +
+                ", 0.0011150 secs]\n" +
+                ", 0.0011130 secs]\n" +
+                ", 0.0010260 secs]\n" +
+                ", 0.0011270 secs]\n" +
+                ", 0.0008280 secs]\n" +
+                ", 0.0010250 secs]\n" +
+                ", 0.0008390 secs]\n" +
+                ", 0.0008360 secs]\n" +
+                ", 0.0011150 secs]\n" +
+                ", 0.0011180 secs]\n" +
+                ", 0.0011110 secs]\n" +
+                ", 0.0008240 secs]\n" +
+                ", 0.0011070 secs]\n" +
+                ", 0.0011260 secs]\n" +
+                ", 0.0008160 secs]\n" +
+                ", 0.0008340 secs]\n" +
+                ", 0.0009710 secs]\n" +
+                ", 0.0008350 secs]\n" +
+                ", 0.0010880 secs]\n" +
+                ", 0.0007830 secs]\n" +
+                ", 0.0007990 secs]\n" +
+                ", 0.0008380 secs]\n" +
+                ", 0.0011220 secs]\n" +
+                ", 0.0008090 secs]\n" +
+                ", 0.0006540 secs]\n" +
+                "[StringTable_possibly_parallel_oops_do, 0.0015020 secs]\n" +
+                ", 0.0041990 secs]\n" +
+                ", 0.0088860 secs]\n" +
+                ", 0.0097190 secs]\n" +
+                ", 0.0092850 secs]\n" +
+                ", 0.0093310 secs]\n" +
+                ", 0.0102290 secs]\n" +
+                ", 0.0098990 secs]\n" +
+                ", 0.0096310 secs]\n" +
+                ", 0.0105430 secs]\n" +
+                ", 0.0108390 secs]\n" +
+                ", 0.0097710 secs]\n" +
+                ", 0.0108040 secs]\n" +
+                ", 0.0106210 secs]\n" +
+                ", 0.0099310 secs]\n" +
+                ", 0.0102200 secs]\n" +
+                ", 0.0107670 secs]\n" +
+                ", 0.0110420 secs]\n" +
+                ", 0.0105650 secs]\n" +
+                ", 0.0108720 secs]\n" +
+                ", 0.0111550 secs]\n" +
+                ", 0.0116770 secs]\n" +
+                ", 0.0116210 secs]\n" +
+                ", 0.0108000 secs]\n" +
+                ", 0.0116470 secs]\n" +
+                ", 0.0118270 secs]\n" +
+                ", 0.0475670 secs]\n" +
+                ", 0.0101030 secs]\n" +
+                ", 0.0110890 secs]\n" +
+                "[StringTable_possibly_parallel_oops_do, 0.0472310 secs]\n" +
+                ", 0.0124810 secs]\n" +
+                ", 0.0120450 secs]\n" +
+                ", 0.0119950 secs]\n" +
+                ", 0.0480920 secs]\n" +
+                ", 0.0110790 secs]\n" +
+                ", 0.0114850 secs]\n" +
+                ", 0.0115100 secs]\n" +
+                ", 0.0103760 secs]\n" +
+                ", 0.0477640 secs]\n" +
+                ", 0.0102690 secs]\n" +
+                ", 0.0487940 secs]\n" +
+                ", 0.0486250 secs]\n" +
+                ", 0.0491140 secs]\n" +
+                ", 0.0484270 secs]\n" +
+                ", 0.0000140 secs]\n" +
+                ", 0.0490030 secs]\n" +
+                ", 1.2494170 secs]";
+
+    }
+
+    @Test
     public void testFormat() {
         System.out.println(String.format("adasd%ssasd", 123));
 

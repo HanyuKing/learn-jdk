@@ -1,79 +1,163 @@
 package jmx;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.Set;
+import java.lang.management.MemoryUsage;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-import javax.management.Attribute;
-import javax.management.AttributeNotFoundException;
-import javax.management.InstanceNotFoundException;
-import javax.management.IntrospectionException;
-import javax.management.InvalidAttributeValueException;
-import javax.management.MBeanException;
-import javax.management.MBeanInfo;
-import javax.management.MBeanServerConnection;
-import javax.management.MBeanServerInvocationHandler;
-import javax.management.MalformedObjectNameException;
-import javax.management.ObjectInstance;
-import javax.management.ObjectName;
-import javax.management.ReflectionException;
+import javax.management.*;
+import javax.management.openmbean.CompositeDataSupport;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
 public class Client {
 
-    public static void main(String[] args) throws IOException,
-            MalformedObjectNameException, InstanceNotFoundException,
-            AttributeNotFoundException, InvalidAttributeValueException,
-            MBeanException, ReflectionException, IntrospectionException {
-        String domainName = "MyMBean";
-        int rmiPort = 1099;
-        JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:"+rmiPort+"/"+domainName);
-        // 可以类比HelloAgent.java中的那句：
-        // JMXConnectorServer jmxConnector = JMXConnectorServerFactory.newJMXConnectorServer(url, null, mbs);
-        JMXConnector jmxc = JMXConnectorFactory.connect(url);
-        MBeanServerConnection mbsc = jmxc.getMBeanServerConnection();
+    public static void main(String[] args) throws Exception {
 
-        //print domains
-        System.out.println("Domains:------------------");
-        String domains[] = mbsc.getDomains();
-        for(int i=0;i<domains.length;i++){
-            System.out.println("\tDomain["+i+"] = "+domains[i]);
-        }
-        //MBean count
-        System.out.println("MBean count = "+mbsc.getMBeanCount());
-        //process attribute
-        ObjectName mBeanName = new ObjectName(domainName+":name=HelloWorld");
-        mbsc.setAttribute(mBeanName, new Attribute("Name","zzh"));//注意这里是Name而不是name
-        System.out.println("Name = "+mbsc.getAttribute(mBeanName, "Name"));
+        try {
 
-        //接下去是执行Hello中的printHello方法，分别通过代理和rmi的方式执行
-        //via proxy
-//        HelloMBean proxy = MBeanServerInvocationHandler.newProxyInstance(mbsc, mBeanName, HelloMBean.class, false);
-//        proxy.printHello();
-//        proxy.printHello("jizhi boy");
-        //via rmi
-        mbsc.invoke(mBeanName, "printHello", null, null);
-        mbsc.invoke(mBeanName, "printHello", new String[]{"jizhi gril"}, new String[]{String.class.getName()});
+            String jmxURL = "service:jmx:rmi:///jndi/rmi://127.0.0.1:1023/jmxrmi";
 
-        //get mbean information
-        MBeanInfo info = mbsc.getMBeanInfo(mBeanName);
-        System.out.println("Hello Class: "+info.getClassName());
-        for(int i=0;i<info.getAttributes().length;i++){
-            System.out.println("Hello Attribute:"+info.getAttributes()[i].getName());
-        }
-        for(int i=0;i<info.getOperations().length;i++){
-            System.out.println("Hello Operation:"+info.getOperations()[i].getName());
-        }
+            JMXServiceURL serviceURL = new JMXServiceURL(jmxURL);
 
-        //ObjectName of MBean
-        System.out.println("all ObjectName:--------------");
-        Set<ObjectInstance> set = mbsc.queryMBeans(null, null);
-        for(Iterator<ObjectInstance> it = set.iterator();it.hasNext();){
-            ObjectInstance oi = it.next();
-            System.out.println("\t"+oi.getObjectName());
+            Map map = new HashMap();
+            String[] credentials = new String[] { "monitorRole", "tomcat" };
+            map.put("jmx.remote.credentials", credentials);
+            JMXConnector connector = JMXConnectorFactory.connect(serviceURL,
+                    map);
+            MBeanServerConnection mbsc = connector.getMBeanServerConnection();
+
+            // 端口最好是动态取得
+            ObjectName threadObjName = new ObjectName(
+                    "Catalina:type=ThreadPool,name=http-8080");
+            MBeanInfo mbInfo = mbsc.getMBeanInfo(threadObjName);
+
+            String attrName = "currentThreadCount";// tomcat的线程数对应的属性值
+            MBeanAttributeInfo[] mbAttributes = mbInfo.getAttributes();
+            System.out.println("currentThreadCount:"
+                    + mbsc.getAttribute(threadObjName, attrName));
+
+            // heap
+            for (int j = 0; j < mbsc.getDomains().length; j++) {
+                System.out.println("###########" + mbsc.getDomains()[j]);
+            }
+            Set MBeanset = mbsc.queryMBeans(null, null);
+            System.out.println("MBeanset.size() : " + MBeanset.size());
+            Iterator MBeansetIterator = MBeanset.iterator();
+            while (MBeansetIterator.hasNext()) {
+                ObjectInstance objectInstance = (ObjectInstance) MBeansetIterator
+                        .next();
+                ObjectName objectName = objectInstance.getObjectName();
+                String canonicalName = objectName.getCanonicalName();
+                System.out.println("canonicalName : " + canonicalName);
+                if (canonicalName
+                        .equals("Catalina:host=localhost,type=Cluster")) {
+                    // Get details of cluster MBeans
+                    System.out.println("Cluster MBeans Details:");
+                    System.out
+                            .println("=========================================");
+                    // getMBeansDetails(canonicalName);
+                    String canonicalKeyPropList = objectName
+                            .getCanonicalKeyPropertyListString();
+                }
+            }
+            // ------------------------- system ----------------------
+            ObjectName runtimeObjName = new ObjectName("java.lang:type=Runtime");
+            System.out.println("厂商:"
+                    + (String) mbsc.getAttribute(runtimeObjName, "VmVendor"));
+            System.out.println("程序:"
+                    + (String) mbsc.getAttribute(runtimeObjName, "VmName"));
+            System.out.println("版本:"
+                    + (String) mbsc.getAttribute(runtimeObjName, "VmVersion"));
+            Date starttime = new Date((Long) mbsc.getAttribute(runtimeObjName,
+                    "StartTime"));
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            System.out.println("启动时间:" + df.format(starttime));
+
+            Long timespan = (Long) mbsc.getAttribute(runtimeObjName, "Uptime");
+            System.out.println("连续工作时间:" + Client.formatTimeSpan(timespan));
+            // ------------------------ JVM -------------------------
+            // 堆使用率
+            ObjectName heapObjName = new ObjectName("java.lang:type=Memory");
+            MemoryUsage heapMemoryUsage = MemoryUsage
+                    .from((CompositeDataSupport) mbsc.getAttribute(heapObjName,
+                            "HeapMemoryUsage"));
+            long maxMemory = heapMemoryUsage.getMax();// 堆最大
+            long commitMemory = heapMemoryUsage.getCommitted();// 堆当前分配
+            long usedMemory = heapMemoryUsage.getUsed();
+            System.out.println("heap:" + (double) usedMemory * 100
+                    / commitMemory + "%");// 堆使用率
+
+            MemoryUsage nonheapMemoryUsage = MemoryUsage
+                    .from((CompositeDataSupport) mbsc.getAttribute(heapObjName,
+                            "NonHeapMemoryUsage"));
+            long noncommitMemory = nonheapMemoryUsage.getCommitted();
+            long nonusedMemory = heapMemoryUsage.getUsed();
+            System.out.println("nonheap:" + (double) nonusedMemory * 100
+                    / noncommitMemory + "%");
+
+            ObjectName permObjName = new ObjectName(
+                    "java.lang:type=MemoryPool,name=Perm Gen");
+            MemoryUsage permGenUsage = MemoryUsage
+                    .from((CompositeDataSupport) mbsc.getAttribute(permObjName,
+                            "Usage"));
+            long committed = permGenUsage.getCommitted();// 持久堆大小
+            long used = heapMemoryUsage.getUsed();//
+            System.out.println("perm gen:" + (double) used * 100 / committed
+                    + "%");// 持久堆使用率
+
+            // -------------------- Session ---------------
+            ObjectName managerObjName = new ObjectName(
+                    "Catalina:type=Manager,*");
+            Set<ObjectName> s = mbsc.queryNames(managerObjName, null);
+            for (ObjectName obj : s) {
+                System.out.println("应用名:" + obj.getKeyProperty("path"));
+                ObjectName objname = new ObjectName(obj.getCanonicalName());
+                System.out.println("最大会话数:"
+                        + mbsc.getAttribute(objname, "maxActiveSessions"));
+                System.out.println("会话数:"
+                        + mbsc.getAttribute(objname, "activeSessions"));
+                System.out.println("活动会话数:"
+                        + mbsc.getAttribute(objname, "sessionCounter"));
+            }
+
+            // ----------------- Thread Pool ----------------
+            ObjectName threadpoolObjName = new ObjectName(
+                    "Catalina:type=ThreadPool,*");
+            Set<ObjectName> s2 = mbsc.queryNames(threadpoolObjName, null);
+            for (ObjectName obj : s2) {
+                System.out.println("端口名:" + obj.getKeyProperty("name"));
+                ObjectName objname = new ObjectName(obj.getCanonicalName());
+                System.out.println("最大线程数:"
+                        + mbsc.getAttribute(objname, "maxThreads"));
+                System.out.println("当前线程数:"
+                        + mbsc.getAttribute(objname, "currentThreadCount"));
+                System.out.println("繁忙线程数:"
+                        + mbsc.getAttribute(objname, "currentThreadsBusy"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        jmxc.close();
     }
+
+    public static String formatTimeSpan(long span) {
+        long minseconds = span % 1000;
+
+        span = span / 1000;
+        long seconds = span % 60;
+
+        span = span / 60;
+        long mins = span % 60;
+
+        span = span / 60;
+        long hours = span % 24;
+
+        span = span / 24;
+        long days = span;
+        return (new Formatter()).format("%1$d天 %2$02d:%3$02d:%4$02d.%5$03d",
+                days, hours, mins, seconds, minseconds).toString();
+    }
+
 }

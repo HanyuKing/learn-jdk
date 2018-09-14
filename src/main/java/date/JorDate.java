@@ -22,7 +22,8 @@ public class JorDate {
 
     @Test
     public void testFormat000000() {
-        System.out.println(DateTime.parse(DateTime.now().toString("yyyy-MM-dd 00:00:00"), DateTimeFormat.forPattern("yyyy-MM-dd 00:00:00")));
+        System.out.println(DateTime.parse("2018-07-20 01:00:00", DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")).toDate());
+        System.out.println(new DateTime(1536138590000L).toDate());
     }
 
     @Test

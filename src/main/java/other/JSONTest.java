@@ -19,6 +19,17 @@ public class JSONTest {
     }
 
     @Test
+    public void testJson3() {
+        String str = "{\"happened_time\":\"2018-06-09\", \"method\":\"title213\", \"time\":\"12312\", \"time_unit\":\"milliseconds\"}";
+        JSONObject object = JSON.parseObject(str);
+
+        System.out.println(object.get("happened_time"));
+        System.out.println(object.get("method"));
+        System.out.println(object.get("time"));
+        System.out.println(object.get("time_unit"));
+    }
+
+    @Test
     public void testJson2() {
         JSONObject jsonObject = JSON.parseObject("");
         Map result = new HashMap();
