@@ -17,4 +17,9 @@ public class BigDecmalTest {
                 .doubleValue();
         System.out.println(a);
     }
+
+    @Test
+    public void testCompareTo() {
+        System.out.println(new BigDecimal("1230").compareTo(new BigDecimal(20)));
+    }
 }

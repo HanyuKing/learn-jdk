@@ -19,6 +19,12 @@ public class JSONTest {
     }
 
     @Test
+    public void testParse() {
+        String s = "{\"supplierId\":\"ves0002730\",\"pin\":\"prom_shop\",\"rebateInfo\":\"{ \"supplierId \": \"ves0002730 \", \"supportPercent \": \"100 \", \"fileInfoList \":[{ \"fileFolderName \": \"promo-rebate \", \"fileName \": \"1540799137951_d15d6e0c0ed9469d99963d3baea9d748.xlsx \"}]}\",\"ip\":\"127.0.0.1\"}\n";
+        JSON.parseObject(s);
+    }
+
+    @Test
     public void testJson3() {
         String str = "{\"happened_time\":\"2018-06-09\", \"method\":\"title213\", \"time\":\"12312\", \"time_unit\":\"milliseconds\"}";
         JSONObject object = JSON.parseObject(str);

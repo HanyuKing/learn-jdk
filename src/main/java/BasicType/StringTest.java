@@ -105,7 +105,7 @@ public class StringTest {
 
     @Test
     public void testFormat() {
-        System.out.println(String.format("adasd%ssasd", 123));
+        System.out.println(String.format("adasd%ss%sasd", 123, 456));
 
         System.out.println(Long.valueOf("123"));
     }

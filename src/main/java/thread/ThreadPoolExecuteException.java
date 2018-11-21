@@ -1,5 +1,6 @@
 package thread;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -9,19 +10,21 @@ import java.util.concurrent.Executors;
  */
 public class ThreadPoolExecuteException {
     public static void main(String[] args) {
-        ExecutorService pool = Executors.newCachedThreadPool();
-        pool.execute(new Runnable() {
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                System.out.println("开始打印异常");
-                throw new RuntimeException("pool.execute 异常打印出来");
-            }
-        });
-        System.out.println("shutdown...");
-        pool.shutdown();
+//        ExecutorService threadPool = Executors.newFixedThreadPool(1);
+//        threadPool.submit(new Runnable() {
+//            public void run() {
+//                Object obj = null;
+//                System.out.println(obj.toString());
+//            }
+//        });
+//
+//        threadPool.execute(new Runnable() {
+//            public void run() {
+//                Object obj = null;
+//                System.out.println(obj.toString());
+//            }
+//        });
+//
+//        threadPool.shutdown();
     }
 }
