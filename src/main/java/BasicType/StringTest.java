@@ -132,4 +132,13 @@ public class StringTest {
         String s = "asdasdad\nsassdfsfsdf";
         System.out.println(JSON.toJSONString(s));
     }
+
+    @Test
+    public void testReplaceAll() {
+        String s = "aaaaa            aaaaaaa         ";
+        System.out.print(s);
+        System.out.print("ssssssssssss");
+        System.out.print(s.replaceAll(" ", ""));
+        System.out.print("ssssssssssss");
+    }
 }

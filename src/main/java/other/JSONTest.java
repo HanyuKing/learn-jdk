@@ -16,6 +16,7 @@ public class JSONTest {
     public static void main(String[] args) {
         String str = "{\"coupon\":\"{\\\"endTime\\\":\\\"2018-04-24 23:59:59\\\",\\\"quota\\\":100,\\\"discount\\\":99,\\\"startTime\\\":\\\"2018-04-21 00:00:00\\\"}\",\"points\":12,\"sendType\":2}";
         Ext ext = JSON.parseObject(str, Ext.class);
+        System.out.println(new JSONTest().getClass().getSimpleName());
     }
 
     @Test
