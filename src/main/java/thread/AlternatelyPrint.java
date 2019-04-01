@@ -40,8 +40,26 @@ public class AlternatelyPrint {
                     try {
                         lock.lock();
                         System.out.println("B"+ ++count);
-                        condition1.signal();
+                        condition3.signal();
                         condition2.await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } finally {
+                        lock.unlock();
+                    }
+                }
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    try {
+                        lock.lock();
+                        System.out.println("C"+ ++count);
+                        condition1.signal();
+                        condition3.await();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } finally {

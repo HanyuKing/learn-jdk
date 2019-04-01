@@ -1,5 +1,7 @@
 package jvm;
 
+import org.junit.Test;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -31,5 +33,12 @@ public class Test1 {
   } catch (Exception e) {
    e.printStackTrace();
   }
+ }
+
+ @Test
+ public void test() {
+  String str1 = "[null,null,null,null,2147483647,null,2147483646,null,2147483646,null,null,2147483647,2147483646,null,-2147483648,-2147483648,null,2147483647]";
+  String str2 = "[null,null,null,null,2147483647,null,2147483646,null,2147483646,null,null,2147483647,2147483647,null,-2147483648,-2147483648,null,2147483647]";
+  System.out.println(str1.equals(str2));
  }
 }

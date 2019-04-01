@@ -25,16 +25,17 @@ public class WeakHashMapTest {
         key1 = null;
         //key2 = null;
         System.gc();
-        //System.out.println(weakHashMap.entrySet());
+        System.out.println(weakHashMap.keySet());
+        System.out.println(weakHashMap.entrySet());
 
-        Field tableField = weakHashMap.getClass().getDeclaredField("table");
-        Field sizeField = weakHashMap.getClass().getDeclaredField("size");
-        tableField.setAccessible(true);
-        sizeField.setAccessible(true);
-        Object[] table = (Object[]) tableField.get(weakHashMap);
-        int size = sizeField.getInt(weakHashMap);
-
-        System.out.println("size->" + size);
+//        Field tableField = weakHashMap.getClass().getDeclaredField("table");
+//        Field sizeField = weakHashMap.getClass().getDeclaredField("size");
+//        tableField.setAccessible(true);
+//        sizeField.setAccessible(true);
+//        Object[] table = (Object[]) tableField.get(weakHashMap);
+//        int size = sizeField.getInt(weakHashMap);
+//
+//        System.out.println("size->" + size);
 
         //System.out.println(weakHashMap.entrySet());
 //        for(int i = 0; i < table.length; i++) {
@@ -51,6 +52,6 @@ public class WeakHashMapTest {
 //            }
 //        }
 
-        System.out.println(weakHashMap.entrySet());
+//        System.out.println(weakHashMap.entrySet());
     }
 }
