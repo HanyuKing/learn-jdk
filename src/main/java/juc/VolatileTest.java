@@ -1,5 +1,7 @@
 package juc;
 
+import org.junit.Test;
+
 public class VolatileTest {
 
     static int i = 0;
@@ -31,5 +33,21 @@ public class VolatileTest {
                 write();
             }
         }).start();
+    }
+
+    /**
+     * 不是线程安全，只保证可见性
+     */
+    @Test
+    public void test() {
+        for(int i = 0; i < 100; i++) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    VolatileTest.i++;
+                }
+            }).start();
+        }
+        System.out.println(VolatileTest.i);
     }
 }
