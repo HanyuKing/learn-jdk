@@ -5,10 +5,11 @@ public class StaticTest
    public static void main(String[] args)
    {
        staticFunction();
+       //staticFunction(); todo 注释看看
    }
 
     // TODO: 2018/6/29 注释看看
-   static StaticTest st = new StaticTest();
+   //static StaticTest st = new StaticTest();
 
    static
    {

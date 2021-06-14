@@ -1,6 +1,7 @@
 package collection;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Lists;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -25,6 +26,19 @@ public class ArrayListTest {
 
         System.out.println(list);
         System.out.println(list2);
+
+    }
+
+    @Test
+    public void testRemove() {
+        List<String> list = Lists.newArrayList("1", "2");
+        for (String l : list) {
+            if ("2".equals(l)) { // todo 把2换成1
+                list.remove(l);
+            }
+        }
+
+       // System.out.println(list);
 
     }
 
