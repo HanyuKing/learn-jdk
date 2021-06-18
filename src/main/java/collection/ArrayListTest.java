@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,7 +40,6 @@ public class ArrayListTest {
         }
 
        // System.out.println(list);
-
     }
 
     private static class AAA {

@@ -14,7 +14,12 @@ public class CallableAndFuture {
                 return new Random().nextInt(100);
             }
         };
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
+            }
+        }).start();
         List<Future<Integer>> futureList = new ArrayList<Future<Integer>>();
         for(int i = 0; i < 10; i++) {
             FutureTask<Integer> future = new FutureTask<Integer>(callable);
