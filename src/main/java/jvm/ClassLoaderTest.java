@@ -1,5 +1,8 @@
 package jvm;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 public class ClassLoaderTest {
     public static void main(String[] args) throws ClassNotFoundException {
         ClassLoader c1 = new MyClassLoader1();
@@ -10,6 +13,33 @@ public class ClassLoaderTest {
         System.out.println(klass1.getName());
         System.out.println(klass2.getName());
         System.out.println(klass1 == klass2);
+
+        MyClassLoader3 c3 = new MyClassLoader3();
+
+        Class klass3 = Class.forName("jvm.ClassLoaderTest", false, c3);
+        Class klass4 = Class.forName("jvm.ClassLoaderTest", false, c1);
+        System.out.println(klass3.getName());
+        System.out.println(klass4.getName());
+        System.out.println(klass3 == klass4);
+    }
+
+    static class MyClassLoader3 extends ClassLoader {
+        @Override
+        public Class<?> loadClass(String name) throws ClassNotFoundException {
+            try {
+                String clazzName = name.substring(name.lastIndexOf(".") + 1) + ".class";
+
+                InputStream is = getClass().getResourceAsStream(clazzName);
+                if (is == null) {
+                    return super.loadClass(name);
+                }
+                byte[] b = new byte[is.available()];
+                is.read(b);
+                return defineClass(name, b, 0, b.length);
+            } catch (IOException e) {
+                throw new ClassNotFoundException(name);
+            }
+        }
     }
 
     static class MyClassLoader1 extends ClassLoader {
