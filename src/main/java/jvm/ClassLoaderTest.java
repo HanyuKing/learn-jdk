@@ -20,7 +20,7 @@ public class ClassLoaderTest {
         Class klass4 = Class.forName("jvm.ClassLoaderTest", false, c1);
         System.out.println(klass3.getName());
         System.out.println(klass4.getName());
-        System.out.println(klass3 == klass4);
+        System.out.println(klass3.equals(klass4));
     }
 
     static class MyClassLoader3 extends ClassLoader {
