@@ -16,27 +16,33 @@ public class P547 {
         }
 
         int row = isConnected.length;
+        int col = isConnected[0].length;
 
         int count = 0;
 
-        boolean[] visited = new boolean[row];
-
         for (int i = 0; i < row; i++) {
-            if (!visited[i]) {
-                dfs(isConnected, i, visited);
-                count++;
+            for (int j = 0; j < col; j++) {
+                if (isConnected[i][j] == 1) {
+                    dfs(isConnected, i, j);
+                    count++;
+                }
             }
         }
 
         return count;
     }
 
-    private void dfs(int[][] isConnected, int i, boolean[] visited) {
-        visited[i] = true;
-        for (int j = 0; j < isConnected[0].length; j++) {
-            if(isConnected[i][j] == 1 && !visited[j]) {
-                dfs(isConnected, j, visited);
+    private void dfs(int[][] isConnected, int i, int j) {
+        if (i < 0 || j < 0 || i >= isConnected.length || j >= isConnected[0].length || isConnected[i][j] != 1) {
+            return;
+        }
+        isConnected[i][j] = 2;
+
+        for (int k = 0; k < isConnected.length; k++) {
+            if (isConnected[j][k] != 1) {
+                continue;
             }
+            dfs(isConnected, j, k);
         }
     }
 }
