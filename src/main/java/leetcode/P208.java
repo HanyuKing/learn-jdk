@@ -46,18 +46,8 @@ class Trie {
     public boolean search(String word) {
         if (word.length() == 0) throw new IllegalArgumentException();
 
-        Node[] dictTemp = this.dict;
-        Node targetNode = null;
-        for (char c : word.toCharArray()) {
-            if (dictTemp == null) {
-                return false;
-            }
-            targetNode = dictTemp[c - 'a'];
-            if (targetNode == null) {
-                return false;
-            }
-            dictTemp = targetNode.getDict();
-        }
+        Node targetNode = getLastNode(word);
+        if (targetNode == null) return false;
 
         return targetNode.isWord();
     }
@@ -66,22 +56,28 @@ class Trie {
     public boolean startsWith(String prefix) {
         if (prefix.length() == 0) throw new IllegalArgumentException();
 
-        Node[] dictTemp = this.dict;
-        Node targetNode = null;
-        for (char c : prefix.toCharArray()) {
-            if (dictTemp == null) {
-                return false;
-            }
-            targetNode = dictTemp[c - 'a'];
-            if (targetNode == null) {
-                return false;
-            }
-            dictTemp = targetNode.getDict();
-        }
+        Node targetNode = getLastNode(prefix);
+        if (targetNode == null) return false;
 
         return true;
     }
 
+    private Node getLastNode(String word) {
+
+        Node[] dictTemp = this.dict;
+        Node targetNode = null;
+        for (char c : word.toCharArray()) {
+            if (dictTemp == null) {
+                return null;
+            }
+            targetNode = dictTemp[c - 'a'];
+            if (targetNode == null) {
+                return null;
+            }
+            dictTemp = targetNode.getDict();
+        }
+        return targetNode;
+    }
 
     class Node {
         private Node[] dict;
