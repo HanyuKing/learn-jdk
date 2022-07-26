@@ -24,4 +24,12 @@ public class OptionalTest {
         System.out.println(optional.isPresent());
 
     }
+
+    @Test
+    public void testEqual() {
+        Long id = null;
+        Long cityId = null;
+
+        System.out.println(Optional.ofNullable(id).orElse(null));
+    }
 }
