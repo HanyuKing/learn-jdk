@@ -27,7 +27,7 @@ public class P138 {
             headTemp = headTemp.next;
         }
 
-        headTemp = new Solution().copyRandomList(head);
+        headTemp = new P138Solution().copyRandomList(head);
 
         while (headTemp != null) {
             System.out.println(headTemp.val);
@@ -53,7 +53,7 @@ class Node {
 }
 
 
-class Solution {
+class P138Solution {
     public Node copyRandomList(Node pHead) {
         Node newHead = new Node(-1);
         Node newHeadTemp = newHead;
