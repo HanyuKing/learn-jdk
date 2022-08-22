@@ -12,7 +12,7 @@ import java.util.List;
  **/
 public class P1403 {
     public static void main(String[] args) {
-        System.out.println(new Solution().minSubsequence(new int[]{4,4,7,6,7}));
+        System.out.println(new Solution1403().minSubsequence(new int[]{4,4,7,6,7}));
     }
 }
 
@@ -60,7 +60,7 @@ public class P1403 {
 
 
 //leetcode submit region begin(Prohibit modification and deletion)
-class Solution {
+class Solution1403 {
     public List<Integer> minSubsequence(int[] nums) {
         int sum = Arrays.stream(nums).sum();
         int[] indexNum = new int[101];
