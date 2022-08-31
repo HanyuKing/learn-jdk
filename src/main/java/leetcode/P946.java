@@ -6,7 +6,7 @@ public class P946 {
     public static void main(String[] args) {
         System.out.println(new Solution946().validateStackSequences(
                 new int[]{1,2,3,4,5},
-                new int[]{4,3,5,1,2}
+                new int[]{4,5,3,2,1}
         ));
     }
 }
@@ -61,24 +61,13 @@ class Solution946 {
         int j = 0;
 
         while (i < pushed.length) {
-            if (pushed[i] == popped[j]) {
-                i++;
-                j++;
-            } else if (!stack.isEmpty() && stack.peek() == popped[j]) {
+            stack.push(Integer.valueOf(pushed[i++]));
+            while (!stack.isEmpty() && stack.peek() == popped[j]) {
                 stack.pop();
                 j++;
-            } else {
-                stack.push(Integer.valueOf(pushed[i++]));
             }
         }
-
-        while (j < popped.length) {
-            if (stack.pop() != popped[j++]) {
-                return false;
-            }
-        }
-
-        return true;
+        return stack.isEmpty();
     }
 }
 //leetcode submit region end(Prohibit modification and deletion)
