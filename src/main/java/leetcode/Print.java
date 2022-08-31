@@ -3,6 +3,20 @@ package leetcode;
 import java.util.ArrayList;
 
 public class Print {
+
+    public static void printTreeInOrder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        if (root.left != null) {
+            printTreeInOrder(root.left);
+        }
+        System.out.print(root.val + " ");
+        if (root.right != null) {
+            printTreeInOrder(root.right);
+        }
+    }
+
     public static void main(String[] args) {
         int[][] matrix = {
                 {1,2,3,4},
