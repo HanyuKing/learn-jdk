@@ -1,5 +1,7 @@
 package leetcode;
 
+import java.util.Stack;
+
 /**
  * @Author Hanyu.Wang
  * @Date 2022/9/1 10:18
@@ -8,7 +10,7 @@ package leetcode;
  **/
 public class P1475 {
     public static void main(String[] args) {
-        int[] result = new Solution1475().finalPrices(new int[]{10,1,1,6});
+        int[] result = new Solution1475_2().finalPrices(new int[]{10,1,1,6});
         Print.printArray(result);
     }
 }
@@ -57,6 +59,27 @@ public class P1475 {
 //
 // Related Topics 栈 数组 单调栈 👍 112 👎 0
 
+class Solution1475_2 {
+    /**
+     * 单调栈
+     *
+     * @param prices
+     * @return
+     */
+    public int[] finalPrices(int[] prices) {
+        int[] result = new int[prices.length];
+        Stack<Integer> stack = new Stack<>();
+        for (int i = prices.length - 1; i >= 0; i--) {
+            while (!stack.isEmpty() && stack.peek() > prices[i]) {
+                stack.pop();
+            }
+            int minPrice = stack.isEmpty() ? prices[i] : prices[i] - stack.peek();
+            result[i] = minPrice;
+            stack.push(prices[i]);
+        }
+        return result;
+    }
+}
 
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution1475 {
