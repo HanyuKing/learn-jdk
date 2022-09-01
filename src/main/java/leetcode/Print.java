@@ -4,6 +4,18 @@ import java.util.ArrayList;
 
 public class Print {
 
+    public static void printArray(int[] array) {
+        if (array == null) {
+            throw new IllegalArgumentException("array can not be null");
+        }
+
+        System.out.print("[");
+        for (int i = 0; i < array.length; i++) {
+            System.out.print(array[i] + " ");
+        }
+        System.out.println("]");
+    }
+
     public static void printTreeInOrder(TreeNode root) {
         if (root == null) {
             return;
