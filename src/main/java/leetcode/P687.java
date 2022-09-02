@@ -90,34 +90,20 @@ class Solution687 {
         if (root == null) {
             return 0;
         }
-        int leftMaxPath = 0;
-        if (root.left != null) {
-            leftMaxPath = findMaxPath(root.left);
-            if (root.val == root.left.val) {
-                leftMaxPath++;
-            }
-        }
-        int rightMaxPath = 0;
-        if (root.right != null) {
-            rightMaxPath = findMaxPath(root.right);
-            if (root.val == root.right.val) {
-                rightMaxPath++;
-            }
-        }
-
-        if (root.left != null && root.right != null
-                && root.left.val == root.val && root.right.val == root.val) {
-            maxPath = Math.max(leftMaxPath + rightMaxPath, maxPath);
-        } else {
-            maxPath = Math.max(maxPath, Math.max(leftMaxPath, rightMaxPath));
-        }
-
+        int leftMaxPath = findMaxPath(root.left);
+        int rightMaxPath = findMaxPath(root.right);
         int containRootMaxPath = 0;
+        int currMaxPath = 0;
+
         if (root.left != null && root.left.val == root.val) {
-            containRootMaxPath = leftMaxPath;
+            containRootMaxPath = leftMaxPath + 1;
+            currMaxPath = containRootMaxPath;
+            maxPath = Math.max(maxPath, currMaxPath);
         }
+
         if (root.right != null && root.right.val == root.val) {
-            containRootMaxPath = Math.max(containRootMaxPath, rightMaxPath);
+            containRootMaxPath = Math.max(containRootMaxPath, rightMaxPath + 1);
+            maxPath = Math.max(maxPath, currMaxPath + rightMaxPath + 1);
         }
 
         return containRootMaxPath;
