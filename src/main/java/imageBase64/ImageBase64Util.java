@@ -16,7 +16,7 @@ public class ImageBase64Util {
         String base64Str = imageToBase64Str("/Users/hanyuking/my/source_code/learn-jdk/src/main/java/imageBase64/image2base64.jpeg");
         System.out.println(base64Str);
 
-        boolean b = base64StrToImage(base64Str, "/Users/hanyuking/my/source_code/learn-jdk/src/main/java/imageBase64/image2base64_2.jpeg");
+        boolean b = base64StrToImage(base64Str, "/Users/hanyuking/my/source_code/learn-jdk/src/main/java/imageBase64/image2base64_2.png");
         System.out.println(b);
     }
 
