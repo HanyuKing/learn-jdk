@@ -17,7 +17,7 @@ public class MyHttpHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) {
         try {
-            Thread.sleep(16000);
+//            Thread.sleep(16000);
             StringBuilder responseText = new StringBuilder();
             responseText.append("请求方法：").append(httpExchange.getRequestMethod()).append("<br/>");
             responseText.append("请求参数：").append(getRequestParam(httpExchange)).append("<br/>");
