@@ -104,7 +104,7 @@ public final class HttpUtils {
                     // 可以保留在池中或由连接管理器租用。
                     //每个路由的默认最大连接，每个路由实际最大连接为默认为DefaultMaxPreRoute控制，而MaxTotal是控制整个池子最大数
                     manager.setMaxTotal(2048);
-                    manager.setDefaultMaxPerRoute(2048);
+                    manager.setDefaultMaxPerRoute(1024);
                     // 在从连接池获取连接时，连接不活跃多长时间后需要进行一次验证，默认为2s
                     manager.setValidateAfterInactivity(5 * 1000);
 

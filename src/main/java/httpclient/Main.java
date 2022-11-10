@@ -1,5 +1,6 @@
 package httpclient;
 
+import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
@@ -24,7 +25,10 @@ public class Main {
 
                 while (true) {
 
-                    System.out.println(poolManager.getRoutes());
+                    for (HttpRoute httpRoute : poolManager.getRoutes()) {
+                        System.out.println(poolManager.getStats(httpRoute));
+                    }
+
                     System.out.println(poolManager.getTotalStats());
 
                     Thread.sleep(1000);
