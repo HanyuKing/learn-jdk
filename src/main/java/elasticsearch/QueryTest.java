@@ -12,6 +12,7 @@ import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -80,7 +81,7 @@ public class QueryTest {
 
         BoolQuery.Builder builder = QueryBuilders.bool();
         builder = builder.must(m -> m.match(mh -> mh.field("name").query(FieldValue.of("小米 11"))));
-        if (catIds != null && catIds.size() > 0) {
+        if (CollectionUtils.isNotEmpty(catIds)) {
             builder = builder.must(t -> t.terms(tq -> tq.field("cat_id").terms(TermsQueryField.of(v -> v.value(catIds)))));
         }
 
