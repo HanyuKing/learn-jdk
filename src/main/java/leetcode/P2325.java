@@ -52,15 +52,24 @@ public class P2325 {
 //                {3, 1},
 //        });
 
-        int[] ans = new Solution2325().shortestAlternatingPaths(6, new int[][]{
+        int[] ans = new Solution2325().shortestAlternatingPaths(9, new int[][]{
                 // {2,2},{0,1},{0,3},{0,0},{0,4},{2,1},{2,0},{1,4},{3,4}
-                {4,1},{3,5},{5,2},{1,4},{4,2},{0,0},{2,0},{1,1}
+                // {4,1},{3,5},{5,2},{1,4},{4,2},{0,0},{2,0},{1,1}
+                {2,1},{5,1},{6,4},{1,0},{7,4},{0,8},{7,8},{7,6},{6,8},{3,1},{2,7},{3,6},{8,3},{0,0},{5,0},{8,1},{4,8},{4,7},{8,0},{8,5}
         }, new int[][]{
                 // {1,3},{0,0},{0,3},{4,2},{1,0}
-                {5,5},{5,0},{4,4},{0,3},{1,0}
+                // {5,5},{5,0},{4,4},{0,3},{1,0}
+                {1,5},{2,7},{2,0},{5,2},{8,5},{1,7},{6,1},{1,4},{4,1},{3,6},{8,8},{7,6},{1,1},{6,8},{2,8},{7,7},{7,3},{1,2},{2,6}
         });
 
         // [0,-1,4,1,-1,2]
+
+        //9
+//        {2,1},{5,1},{6,4},{1,0},{7,4},{0,8},{7,8},{7,6},{6,8},{3,1},{2,7},{3,6},{8,3},{0,0},{5,0},{8,1},{4,8},{4,7},{8,0},{8,5}
+//        {1,5},{2,7},{2,0},{5,2},{8,5},{1,7},{6,1},{1,4},{4,1},{3,6},{8,8},{7,6},{1,1},{6,8},{2,8},{7,7},{7,3},{1,2},{2,6}
+
+        //[0,3,4,7,4,2,5,4,1]
+        //[0,3,4,3,4,2,4,4,1]
 
         for (int i = 0; i < ans.length; i++) {
             System.out.print(ans[i] + " ");
@@ -171,10 +180,10 @@ class Solution2325 {
                 } else {
                     shortestPathMap.put(outNode.nodeNo, 1);
                     Set<String> usedPath = new HashSet<>();
-                    deepFindShortestPath(outNode, outNode, outEdges.get(0), 1, shortestPathMap, usedPath);
+                    deepFindShortestPath(outNode, outEdges.get(0), 1, shortestPathMap, usedPath);
                     if (outEdges.size() > 1) {
                         usedPath = new HashSet<>();
-                        deepFindShortestPath(outNode, outNode, outEdges.get(1), 1, shortestPathMap, usedPath);
+                        deepFindShortestPath(outNode, outEdges.get(1), 1, shortestPathMap, usedPath);
                     }
                 }
             }
@@ -182,7 +191,7 @@ class Solution2325 {
             return shortestPathMap;
         }
 
-        private void deepFindShortestPath(Node startNode, Node currNode, Edge inEdge, int pathLong,  Map<Integer, Integer> shortestPathMap, Set<String> usedPath) {
+        private void deepFindShortestPath(Node currNode, Edge inEdge, int pathLong,  Map<Integer, Integer> shortestPathMap, Set<String> usedPath) {
             for (Map.Entry<Node, List<Edge>> entry : currNode.outMap.entrySet()) {
                 Node outNode = entry.getKey();
                 List<Edge> outEdges = entry.getValue();
@@ -191,19 +200,24 @@ class Solution2325 {
                 if (selectedEdge.color == inEdge.color) {
                     continue;
                 }
-                if (outNode.nodeNo == currNode.nodeNo) {
-                    continue;
-                }
+//                if (outNode.nodeNo == currNode.nodeNo) {
+//                    continue;
+//                }
                 String path = currNode.nodeNo + ":" + selectedEdge.toNodeNo + ":" + selectedEdge.color;
                 if (usedPath.contains(path)) {
                     // circle
+                    System.out.println(path + "**>" + (pathLong + 1));
                     return;
                 }
                 usedPath.add(path);
 
-                shortestPathMap.put(outNode.nodeNo, Math.min(pathLong + 1, shortestPathMap.getOrDefault(outNode.nodeNo, Integer.MAX_VALUE)));
+                int minPath = Math.min(pathLong + 1, shortestPathMap.getOrDefault(outNode.nodeNo, Integer.MAX_VALUE));
 
-                deepFindShortestPath(startNode, outNode, selectedEdge, pathLong + 1, shortestPathMap, usedPath);
+                shortestPathMap.put(outNode.nodeNo, minPath);
+
+                System.out.println(path + "->" + (pathLong + 1));
+
+                deepFindShortestPath(outNode, selectedEdge, pathLong + 1, shortestPathMap, usedPath);
             }
             return ;
         }
