@@ -12,7 +12,55 @@ public class P1138 {
     }
 
     static class Solution1138 {
+        /**
+         * 考虑'z'，优先 U
+         *
+         * @param target
+         * @return
+         */
         public String alphabetBoardPath(String target) {
+            int currRow = 0;
+            int currCol = 0;
+            StringBuilder result = new StringBuilder();
+
+            for (int i = 0; i < target.length(); i++) {
+                char targetChar = target.charAt(i);
+                int targetRow = (targetChar - 'a') / 5;
+                int targetCol = (targetChar - 'a') % 5;
+
+                while (true) {
+                    if (targetCol - currCol < 0) {
+                        result.append(appendMulti("L", currCol - targetCol));
+                        currCol = targetCol;
+                    }
+
+
+                    if (targetRow - currRow < 0) {
+                        result.append(appendMulti("U",  currRow - targetRow));
+                        currRow = targetRow;
+                    }
+
+                    if (targetRow - currRow > 0) {
+                        result.append(appendMulti("D", targetRow - currRow));
+                        currRow = targetRow;
+                    }
+
+                    if (targetCol - currCol > 0) {
+                        result.append(appendMulti("R", targetCol - currCol));
+                        currCol = targetCol;
+                    }
+
+                    if (currCol == targetCol && currRow == targetRow) {
+                        result.append("!");
+                        break;
+                    }
+                }
+
+            }
+
+            return result.toString();
+        }
+        public String alphabetBoardPath1(String target) {
             int currRow = 0;
             int currCol = 0;
             StringBuilder result = new StringBuilder();
