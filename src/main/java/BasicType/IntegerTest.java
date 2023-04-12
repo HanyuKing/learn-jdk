@@ -2,6 +2,10 @@ package BasicType;
 
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
 /**
  * @author Hanyu King
  * @since 2018-05-29 10:59
@@ -57,8 +61,36 @@ public class IntegerTest {
         char a = '王';
         System.out.println(a);
     }
+
+    @Test
+    public void testHashMapHashCode() {
+        Map<Sku, Integer> map = new HashMap<>();
+        map.put(new Sku("hanyu"), 1);
+        System.out.println(map.get(new Sku("hanyu")));
+    }
 }
 
 class Sku {
+    private String name;
 
+    public Sku(String name) {
+        this.name = name;
+    }
+
+    public Sku() {
+
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sku sku = (Sku) o;
+        return Objects.equals(name, sku.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
 }
