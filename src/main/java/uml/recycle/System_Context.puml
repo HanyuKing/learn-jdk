@@ -7,9 +7,11 @@ System_Boundary(users, "用户") {
     Person(miKefu, "客服", "小米客服")
 }
 
-System(mishop_recycle_crond, "Go定时任务", "发券、扣资金池、业务补偿\n拉取分类、产品、城市等信息\n同步订单信息到回收商")
-
-System(nr_recycle, "换新交易系统", "线上【普通换新、信用换新、miare换新、\n一站式换新、大家电换新、保值换新】\n\n线下【普通换新、一站式换新、保值换新】")
+System_Boundary(recycle_middle, "换新中台") {
+    System(nr_recycle, "换新交易系统", "线上【普通换新、信用换新、miare换新、\n一站式换新、大家电换新、保值换新】\n\n线下【普通换新、一站式换新、保值换新】")
+    System(mishop_recycle_crond, "Go定时任务", "发券、扣资金池、业务补偿\n拉取分类、产品、城市等信息\n同步订单信息到回收商")
+    System(recycle_cron, "换新交易新定时任务", "发券、业务补偿\n同步订单信息到回收商")
+}
 
 System_Boundary(message_gateway, "消息网关") {
     System(thirdpart_notify, "ThirdPartNotify", "接入Notify三方消息")
