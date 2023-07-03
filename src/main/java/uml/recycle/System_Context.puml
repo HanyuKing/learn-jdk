@@ -1,13 +1,23 @@
 @startuml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
-System_Boundary(users, "用户") {
-Person(miUser, "商城用户", "使用小米商城APP、M站、小程序的用户")
-Person(miOperator, "运营", "以旧换新运营人员")
-Person(miKefu, "客服", "小米客服")
+AddBoundaryTag("recycle_middle_bg", $bgColor="#ffc300", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+AddBoundaryTag("user_bg", $bgColor="#97d9c6", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+AddBoundaryTag("outer_sys_bg", $bgColor="#fbe2b4", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+AddBoundaryTag("gateway_bg", $bgColor="#a5dff9", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+AddBoundaryTag("middle_bg", $bgColor="#9baec8", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+AddBoundaryTag("xinxi_tech_bg", $bgColor="#eb8b71", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+AddBoundaryTag("backcend_manage_sys_bg", $bgColor="#7ca2a1", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+
+System_Boundary(users, "用户", $tags="user_bg") {
+    Person(miUser, "商城用户", "使用小米商城APP、M站、小程序的用户")
+    Person(miOperator, "运营", "以旧换新运营人员")
+    Person(miKefu, "客服", "小米客服")
 }
 
-System_Boundary(recycle_middle, "换新中台") {
+
+
+System_Boundary(recycle_middle, "换新中台", $tags="recycle_middle_bg") {
     System(mishop_recycle_v2, "mishop_recycle_v2", "已下线")
     System(mishop_recycle_v3, "mishop_recycle_v3", "几乎下线")
     System(nr_recycle, "换新交易系统", "线上【普通换新、信用换新、miare换新、一站式换新、大家电换新、保值换新】\n\n线下【普通换新、一站式换新、保值换新】")
@@ -20,7 +30,7 @@ System_Boundary(recycle_middle, "换新中台") {
     }
 }
 
-System_Boundary(gateway, "网关") {
+System_Boundary(gateway, "网关", $tags="gateway_bg") {
     System_Boundary(message_gateway, "消息网关") {
         System(thirdpart_notify, "ThirdPartNotify", "接入Notify三方消息")
         System(nr_event_center, "NrEventCenter", "接入RocketMQ三方消息")
@@ -35,12 +45,12 @@ System_Boundary(gateway, "网关") {
     }
 }
 
-System_Boundary(recycle_management_backend_sys, "后台管理系统") {
+System_Boundary(recycle_management_backend_sys, "后台管理系统", $tags="backcend_manage_sys_bg") {
     System(recycle_management_backend, "换新管理系统后台", "线上【机型、分类、品牌管理、\n立减活动配置、增值服务配置】\n\n线下【门店活动、返佣返利、\n签约、质检库】")
     System(bd_backend, "bd后台", "一些换新相关的配置\n作废现金券\n同步城市信息")
 }
 
-System_Boundary(middle_from, "零售中台") {
+System_Boundary(middle_from, "零售中台", $tags="middle_bg") {
     System(ecard_message, "礼品卡消息", "礼品卡退款消息")
     System(karos2, "交易服务（karos）", "查询换新订单、核销、核销回滚")
     System(nr_order_message, "交易订单消息", "支付、关单、拒收、退款")
@@ -48,12 +58,12 @@ System_Boundary(middle_from, "零售中台") {
     System(promotion, "促销", "核销、核销回滚")
 }
 
-System_Boundary(xinxi_tech_from, "信息技术部") {
+System_Boundary(xinxi_tech_from, "信息技术部", $tags="xinxi_tech_bg") {
     System(kefu, "客服系统", "查询回收单详情、列表")
     System(oc_notify, "OC_Notify消息", "拆单、发货、妥投、退款等")
 }
 
-System_Boundary(middle_to, "零售中台") {
+System_Boundary(middle_to, "零售中台", $tags="middle_bg") {
     System(nr_order, "交易订单", "打标")
     System(shopapi_address, "地址服务", "商城地址")
     System(ecard, "礼品卡", "发/作废/查询卡")
@@ -63,19 +73,19 @@ System_Boundary(middle_to, "零售中台") {
     System(karos, "交易服务（Karos）", "查询订单")
 }
 
-System_Boundary(xinxi_tech_to, "信息技术部") {
+System_Boundary(xinxi_tech_to, "信息技术部", $tags="xinxi_tech_bg") {
     System(imei, "imei", "oaid查询imei")
     System(express, "express", "仓库快递")
     System(OC, "OC", "micare、保值服务")
 }
 
-System_Boundary(ouer_sys_to, "外部三方系统") {
+System_Boundary(ouer_sys_to, "外部三方系统", $tags="outer_sys_bg") {
     System_Ext(recycler, "回收商（线上）", "爱回收/闪回收/转转/鑫郃/转转循环")
     System_Ext(recycler_offline, "回收商（线下）", "闪回收/转转/转转循环")
     System_Ext(recycler_caihuoxia_to, "采货侠（线下）", "")
 }
 
-System_Boundary(outer_sys_from, "外部三方系统") {
+System_Boundary(outer_sys_from, "外部三方系统", $tags="outer_sys_bg") {
     System_Ext(recycler2, "回收商（线上）", "爱回收/闪回收")
     System_Ext(recycler_caihuoxia_from, "采货侠（线下）", "")
     System_Ext(recycler_offline_from, "回收商（线下）", "闪回收/转转/转转循环")
