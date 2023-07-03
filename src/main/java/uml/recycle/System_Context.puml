@@ -1,9 +1,11 @@
 @startuml C4_Elements
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
-Person(miUser, "用户", "使用小米商城APP、M站、小程序的用户")
-Person(miOperator, "运营", "以旧换新运营人员")
-Person(miKefu, "客服", "小米客服")
+System_Boundary(users, "用户") {
+    Person(miUser, "商城用户", "使用小米商城APP、M站、小程序的用户")
+    Person(miOperator, "运营", "以旧换新运营人员")
+    Person(miKefu, "客服", "小米客服")
+}
 
 System(mishop_recycle_crond, "Go定时任务", "发券、扣资金池、业务补偿\n拉取分类、产品、城市等信息\n同步订单信息到回收商")
 
@@ -62,33 +64,19 @@ System_Boundary(recycle_sys, "回收商") {
 
 System(recycler2, "回收商（线上）", "爱回收/闪回收")
 
-Rel(miOperator, bd_backend, "Uses", "")
-Rel(miOperator, recycle_management, "Uses", "")
-Rel(miOperator, mishop_recycleconf, "Uses", "")
-Rel(miUser, mishop_oscar, "Uses")
-Rel(miUser, m_mi_com_go, "Uses")
+Rel(miOperator, backend, "Uses", "")
+Rel(miUser, mishop_oscar, "Uses", "HTTPS")
+Rel(miUser, m_mi_com_go, "Uses", "HTTPS")
 Rel(miKefu, kefu, "Uses")
 
 Rel(nr_recycle, backend, "Uses", "HTTPS/DUBBO")
-
-Rel(nr_recycle, recycler, "Uses", "HTTPS")
-Rel(nr_recycle, recycler_offline, "Uses", "HTTPS")
-
-Rel(nr_recycle, OC, "Uses", "HTTPS")
-Rel(nr_recycle, imei, "Uses", "HTTPS")
-Rel(nr_recycle, express, "Uses", "HTTPS")
-Rel(nr_recycle, ecard, "Uses", "DUBBO")
-Rel(nr_recycle, gis, "Uses", "Search")
-Rel(nr_recycle, shopapi_address, "Search", "DUBBO or HTTPS")
-Rel(nr_recycle, tag_center, "Read", "DUBBO")
-Rel(nr_recycle, nr_order, "Write", "DUBBO")
-Rel(nr_recycle, aftersale, "Read", "DUBBO")
-Rel(nr_recycle, karos, "Read", "HTTPS")
-
+Rel(nr_recycle, recycle_sys, "Uses", "HTTPS")
+Rel(nr_recycle, middle_to, "Uses", "HTTPS/DUBBO")
+Rel(nr_recycle, xinxi_tech_to, "Uses", "HTTPS")
 
 Rel(message_gateway, nr_recycle, "Uses", "DUBBO")
 Rel(gateway, nr_recycle, "Uses", "DUBBO")
-Rel(kefu, mone, "HTTPS")
+Rel(kefu, mone, "Uses", "HTTPS")
 Rel(karos2, nr_recycle, "Uses", "DUBBO")
 Rel(pos, nr_recycle, "Uses", "DUBBO")
 Rel(promotion, nr_recycle, "Uses", "DUBBO")
