@@ -8,6 +8,8 @@ Person(miKefu, "客服", "小米客服")
 }
 
 System_Boundary(recycle_middle, "换新中台") {
+    System(mishop_recycle_v2, "mishop_recycle_v2", "已下线")
+    System(mishop_recycle_v3, "mishop_recycle_v3", "几乎下线")
     System(nr_recycle, "换新交易系统", "线上【普通换新、信用换新、miare换新、一站式换新、大家电换新、保值换新】\n\n线下【普通换新、一站式换新、保值换新】")
     System(mishop_recycle_crond, "定时任务(Go)", "发券、扣资金池、业务补偿\n拉取分类、产品、城市等信息\n同步订单信息到回收商")
     System(recycle_cron, "定时任务(Java)", "发券、业务补偿\n同步订单信息到回收商")
@@ -108,6 +110,8 @@ Rel(mone_gateway, recycle_management_server, "Uses", "DUBBO")
 
 Lay_R(xinxi_tech_to, middle_to)
 Lay_U(middle_to, ouer_sys_to)
+Lay_L(mishop_recycle_v2, mishop_recycle_crond)
+Lay_L(mishop_recycle_v3, mishop_recycle_v2)
 
 SHOW_LEGEND()
 @enduml
