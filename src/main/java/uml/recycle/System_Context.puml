@@ -115,8 +115,6 @@ Rel(mone_gateway, recycle_management_server, "Uses", "DUBBO")
 
 Lay_R(xinxi_tech_to, middle_to)
 Lay_U(middle_to, ouer_sys_to)
-Lay_L(mishop_recycle_v2, mishop_recycle_crond)
-Lay_L(mishop_recycle_v3, mishop_recycle_v2)
 
 SHOW_LEGEND()
 @enduml
