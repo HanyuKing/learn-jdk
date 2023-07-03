@@ -1,10 +1,10 @@
 @startuml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
-AddBoundaryTag("recycle_middle_bg", $bgColor="#FEB729", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+AddBoundaryTag("recycle_middle_bg", $bgColor="#a5dff9", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
 AddBoundaryTag("user_bg", $bgColor="#97d9c6", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
 AddBoundaryTag("outer_sys_bg", $bgColor="#fbe2b4", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
-AddBoundaryTag("gateway_bg", $bgColor="#a5dff9", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+AddBoundaryTag("gateway_bg", $bgColor="#d0a727", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
 AddBoundaryTag("middle_bg", $bgColor="#9baec8", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
 AddBoundaryTag("xinxi_tech_bg", $bgColor="#eb8b71", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
 AddBoundaryTag("backcend_manage_sys_bg", $bgColor="#7ca2a1", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
