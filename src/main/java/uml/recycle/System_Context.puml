@@ -1,7 +1,7 @@
 @startuml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
-AddBoundaryTag("recycle_middle_bg", $bgColor="#feb64a", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+AddBoundaryTag("recycle_middle_bg", $bgColor="#FEB729", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
 AddBoundaryTag("user_bg", $bgColor="#97d9c6", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
 AddBoundaryTag("outer_sys_bg", $bgColor="#fbe2b4", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
 AddBoundaryTag("gateway_bg", $bgColor="#a5dff9", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
