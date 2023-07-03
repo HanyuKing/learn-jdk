@@ -6,15 +6,25 @@ Person(miOperator, "运营", "以旧换新运营人员")
 Person(miKefu, "客服", "小米客服")
 
 System(mishop_recycle_crond, "Go定时任务", "发券、扣资金池、业务补偿\n拉取分类、产品、城市等信息\n同步订单信息到回收商")
-System(mishop_recycleconf, "换新产品站配置系统", "换新C端入口配置\n大家电活动配置")
-System(recycle_management, "换新管理系统", "线上【机型、分类、品牌管理、\n立减活动配置、增值服务配置】\n\n线下【门店活动、返佣返利、\n签约、质检库】")
-System(nr_recycle, "换新交易系统", "线上【普通换新、信用换新、miare换新、\n一站式换新、大家电换新、保值换新】\n\n线下【普通换新、一站式换新、保值换新】")
-System(bd_backend, "bd后台", "一些换新相关的配置\n作废现金券")
 
-System(mishop_oscar, "小米商城app", "网关")
-System(m_mi_com_go, "小米商城m站", "网关")
-System(mishop_recycle_callback, "回收商回调", "网关")
-System(mone, "mone", "网关")
+System(nr_recycle, "换新交易系统", "线上【普通换新、信用换新、miare换新、\n一站式换新、大家电换新、保值换新】\n\n线下【普通换新、一站式换新、保值换新】")
+
+System_Boundary(message_gateway, "消息网关") {
+    System(thirdpart_notify, "ThirdPartNotify", "接入Notify三方消息")
+    System(nr_event_center, "NrEventCenter", "接入RocketMQ三方消息")
+}
+
+System_Boundary(backend, "后台管理系统") {
+    System(mishop_recycleconf, "换新产品站配置系统", "换新C端入口配置\n大家电活动配置")
+    System(recycle_management, "换新管理系统", "线上【机型、分类、品牌管理、\n立减活动配置、增值服务配置】\n\n线下【门店活动、返佣返利、\n签约、质检库】")
+    System(bd_backend, "bd后台", "一些换新相关的配置\n作废现金券")
+}
+System_Boundary(gateway, "网关") {
+    System(mishop_oscar, "小米商城app", "网关")
+    System(m_mi_com_go, "小米商城m站", "网关")
+    System(mishop_recycle_callback, "回收商回调", "网关")
+    System(mone, "mone", "网关")
+}
 
 System(kefu, "客服系统", "查询回收单详情、列表")
 System(karos, "交易服务（Karos）", "查询订单")
@@ -34,14 +44,14 @@ System(aftersale, "售后", "退款")
 
 
 System(recycler, "回收商（线上）", "爱回收/闪回收/转转/鑫郃/转转循环")
+System(recycler2, "回收商（线上）", "爱回收/闪回收")
 System(recycler_offline, "回收商（线下）", "闪回收/转转/转转循环")
 
 
 System(OC, "OC", "micare、保值服务")
 System(oc_notify, "OC_Notify消息", "拆单、发货、妥投、退款等")
 System(ecard_message, "礼品卡消息", "礼品卡退款消息")
-System(thirdpart_notify, "ThirdPartNotify", "接入Notify三方消息")
-System(nr_event_center, "NrEventCenter", "接入RocketMQ三方消息")
+
 
 Rel(miOperator, bd_backend, "Uses", "")
 Rel(miOperator, recycle_management, "Uses", "")
@@ -50,8 +60,7 @@ Rel(miUser, mishop_oscar, "Uses")
 Rel(miUser, m_mi_com_go, "Uses")
 Rel(miKefu, kefu, "Uses")
 
-Rel(nr_recycle, bd_backend, "Search", "HTTPS")
-Rel(nr_recycle, recycle_management, "Search", "DUBBO")
+Rel(nr_recycle, backend, "Uses", "HTTPS/DUBBO")
 
 Rel(nr_recycle, recycler, "Uses", "HTTPS")
 Rel(nr_recycle, recycler_offline, "Uses", "HTTPS")
@@ -68,12 +77,8 @@ Rel(nr_recycle, aftersale, "Read", "DUBBO")
 Rel(nr_recycle, karos, "Read", "HTTPS")
 
 
-Rel(thirdpart_notify, nr_recycle, "Uses", "DUBBO")
-Rel(nr_event_center, nr_recycle, "Uses", "DUBBO")
-Rel(mone, nr_recycle, "DUBBO")
-
-Rel(mishop_oscar, nr_recycle, "Uses", "DUBBO")
-Rel(m_mi_com_go, nr_recycle, "Uses", "DUBBO")
+Rel(message_gateway, nr_recycle, "Uses", "DUBBO")
+Rel(gateway, nr_recycle, "Uses", "DUBBO")
 Rel(kefu, mone, "HTTPS")
 Rel(karos2, nr_recycle, "Uses", "DUBBO")
 Rel(pos, nr_recycle, "Uses", "DUBBO")
@@ -83,8 +88,6 @@ Rel(oc_notify, thirdpart_notify, "Consume", "Notify")
 Rel(nr_order_message, nr_event_center, "Consume", "RocketMQ")
 Rel(ecard_message, nr_event_center, "Consume", "RocketMQ")
 
-
-
-Rel(mishop_recycle_callback, nr_recycle, "Uses", "DUBBO")
+Rel(recycler2, mishop_recycle_callback, "Uses", "HTTPS")
 
 @enduml
