@@ -26,32 +26,41 @@ System_Boundary(gateway, "网关") {
     System(mone, "mone", "网关")
 }
 
-System(kefu, "客服系统", "查询回收单详情、列表")
-System(karos, "交易服务（Karos）", "查询订单")
-System(karos2, "交易服务（karos）", "查询换新订单、核销、核销回滚")
-System(nr_order_message, "交易订单消息", "支付、关单、拒收、退款")
-System(nr_order, "交易订单", "打标")
-System(shopapi_address, "地址服务", "商城地址")
-System(ecard, "礼品卡", "发/作废/查询卡")
-System(pos, "POS", "获取token等")
-System(promotion, "促销", "核销、核销回滚")
+System_Boundary(middle_from, "零售中台") {
+    System(ecard_message, "礼品卡消息", "礼品卡退款消息")
+    System(karos2, "交易服务（karos）", "查询换新订单、核销、核销回滚")
+    System(nr_order_message, "交易订单消息", "支付、关单、拒收、退款")
+    System(pos, "POS", "获取token等")
+    System(promotion, "促销", "核销、核销回滚")
+}
 
-System(gis, "商品GIS", "新机列表\ncid/sku/goodsId/productId查询等")
-System(imei, "imei", "oaid查询imei")
-System(express, "express", "仓库快递")
-System(tag_center, "标签中台", "182(换新标)")
-System(aftersale, "售后", "退款")
+System_Boundary(xinxi_tech_from, "信息技术部") {
+    System(kefu, "客服系统", "查询回收单详情、列表")
+    System(oc_notify, "OC_Notify消息", "拆单、发货、妥投、退款等")
+}
 
+System_Boundary(middle_to, "零售中台") {
+    System(nr_order, "交易订单", "打标")
+    System(shopapi_address, "地址服务", "商城地址")
+    System(ecard, "礼品卡", "发/作废/查询卡")
+    System(gis, "商品GIS", "新机列表\ncid/sku/goodsId/productId查询等")
+    System(tag_center, "标签中台", "182(换新标)")
+    System(aftersale, "售后", "退款")
+    System(karos, "交易服务（Karos）", "查询订单")
+}
 
-System(recycler, "回收商（线上）", "爱回收/闪回收/转转/鑫郃/转转循环")
+System_Boundary(xinxi_tech_to, "信息技术部") {
+    System(imei, "imei", "oaid查询imei")
+    System(express, "express", "仓库快递")
+    System(OC, "OC", "micare、保值服务")
+}
+
+System_Boundary(recycle_sys, "回收商") {
+    System(recycler, "回收商（线上）", "爱回收/闪回收/转转/鑫郃/转转循环")
+    System(recycler_offline, "回收商（线下）", "闪回收/转转/转转循环")
+}
+
 System(recycler2, "回收商（线上）", "爱回收/闪回收")
-System(recycler_offline, "回收商（线下）", "闪回收/转转/转转循环")
-
-
-System(OC, "OC", "micare、保值服务")
-System(oc_notify, "OC_Notify消息", "拆单、发货、妥投、退款等")
-System(ecard_message, "礼品卡消息", "礼品卡退款消息")
-
 
 Rel(miOperator, bd_backend, "Uses", "")
 Rel(miOperator, recycle_management, "Uses", "")
