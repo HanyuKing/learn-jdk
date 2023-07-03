@@ -1,34 +1,29 @@
-@startuml C4_Elements
+@startuml
 !include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 
-System_Boundary(users, "用户") {
-    Person(miUser, "商城用户", "使用小米商城APP、M站、小程序的用户")
-    Person(miOperator, "运营", "以旧换新运营人员")
-    Person(miKefu, "客服", "小米客服")
-}
+Person(miUser, "商城用户", "使用小米商城APP、M站、小程序的用户")
+Person(miOperator, "运营", "以旧换新运营人员")
+Person(miKefu, "客服", "小米客服")
 
-System_Boundary(recycle_middle, "换新中台") {
-    System(nr_recycle, "换新交易系统", "线上【普通换新、信用换新、miare换新、\n一站式换新、大家电换新、保值换新】\n\n线下【普通换新、一站式换新、保值换新】")
-    System(mishop_recycle_crond, "Go定时任务", "发券、扣资金池、业务补偿\n拉取分类、产品、城市等信息\n同步订单信息到回收商")
-    System(recycle_cron, "换新交易新定时任务", "发券、业务补偿\n同步订单信息到回收商")
-}
+
+System(nr_recycle, "换新交易系统", "线上【普通换新、信用换新、miare换新、一站式换新、大家电换新、保值换新】\n\n线下【普通换新、一站式换新、保值换新】")
 
 System_Boundary(message_gateway, "消息网关") {
     System(thirdpart_notify, "ThirdPartNotify", "接入Notify三方消息")
     System(nr_event_center, "NrEventCenter", "接入RocketMQ三方消息")
 }
-
 System_Boundary(backend, "后台管理系统") {
     System(mishop_recycleconf, "换新产品站配置系统", "换新C端入口配置\n大家电活动配置")
     System(recycle_management, "换新管理系统", "线上【机型、分类、品牌管理、\n立减活动配置、增值服务配置】\n\n线下【门店活动、返佣返利、\n签约、质检库】")
-    System(bd_backend, "bd后台", "一些换新相关的配置\n作废现金券")
+    System(bd_backend, "bd后台", "一些换新相关的配置\n作废现金券\n同步城市信息")
 }
-System_Boundary(gateway, "网关") {
+System_Boundary(server_gateway, "服务端网关") {
     System(mishop_oscar, "小米商城app", "网关")
     System(m_mi_com_go, "小米商城m站", "网关")
     System(mishop_recycle_callback, "回收商回调", "网关")
-    System(mone, "mone", "网关")
 }
+
+System(mone, "mone", "网关")
 
 System_Boundary(middle_from, "零售中台") {
     System(ecard_message, "礼品卡消息", "礼品卡退款消息")
@@ -59,12 +54,16 @@ System_Boundary(xinxi_tech_to, "信息技术部") {
     System(OC, "OC", "micare、保值服务")
 }
 
-System_Boundary(recycle_sys, "回收商") {
-    System(recycler, "回收商（线上）", "爱回收/闪回收/转转/鑫郃/转转循环")
-    System(recycler_offline, "回收商（线下）", "闪回收/转转/转转循环")
+System_Boundary(ouer_sys_to, "外部三方系统") {
+    System_Ext(recycler, "回收商（线上）", "爱回收/闪回收/转转/鑫郃/转转循环")
+    System_Ext(recycler_offline, "回收商（线下）", "闪回收/转转/转转循环")
+    System_Ext(recycler_caihuoxia_to, "采货侠（线下）", "")
 }
 
-System(recycler2, "回收商（线上）", "爱回收/闪回收")
+System_Boundary(outer_sys_from, "外部三方系统") {
+    System_Ext(recycler2, "回收商（线上）", "爱回收/闪回收")
+    System_Ext(recycler_caihuoxia_from, "采货侠（线下）", "")
+}
 
 Rel(miOperator, backend, "Uses", "")
 Rel(miUser, mishop_oscar, "Uses", "HTTPS")
@@ -72,12 +71,13 @@ Rel(miUser, m_mi_com_go, "Uses", "HTTPS")
 Rel(miKefu, kefu, "Uses")
 
 Rel(nr_recycle, backend, "Uses", "HTTPS/DUBBO")
-Rel(nr_recycle, recycle_sys, "Uses", "HTTPS")
+Rel(nr_recycle, ouer_sys_to, "Uses", "HTTPS")
 Rel(nr_recycle, middle_to, "Uses", "HTTPS/DUBBO")
 Rel(nr_recycle, xinxi_tech_to, "Uses", "HTTPS")
 
 Rel(message_gateway, nr_recycle, "Uses", "DUBBO")
-Rel(gateway, nr_recycle, "Uses", "DUBBO")
+Rel(mone, nr_recycle, "Uses", "DUBBO")
+Rel(server_gateway, nr_recycle, "Uses", "DUBBO")
 Rel(kefu, mone, "Uses", "HTTPS")
 Rel(karos2, nr_recycle, "Uses", "DUBBO")
 Rel(pos, nr_recycle, "Uses", "DUBBO")
@@ -88,5 +88,7 @@ Rel(nr_order_message, nr_event_center, "Consume", "RocketMQ")
 Rel(ecard_message, nr_event_center, "Consume", "RocketMQ")
 
 Rel(recycler2, mishop_recycle_callback, "Uses", "HTTPS")
+Rel(recycler_caihuoxia_from, mone, "Uses", "HTTPS")
 
+SHOW_LEGEND()
 @enduml
