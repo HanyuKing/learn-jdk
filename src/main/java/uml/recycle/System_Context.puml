@@ -1,0 +1,79 @@
+@startuml C4_Elements
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(miUser, "用户", "使用小米商城APP、M站、小程序的用户")
+Person(miOperator, "运营", "以旧换新运营人员")
+
+System(mishop_recycle_crond, "Go定时任务", "发券、扣资金池、业务补偿\n拉取分类、产品、城市等信息\n同步订单信息到回收商")
+
+System(mishop_recycleconf, "换新产品站配置系统", "换新C端入口配置\n大家电活动配置")
+
+System(recycle_management, "换新管理系统", "线上【机型、分类、品牌管理、\n立减活动配置、增值服务配置】\n\n线下【门店活动、返佣返利、\n签约、质检库】")
+
+System(nr_recycle, "换新交易系统", "线上【普通换新、信用换新、miare换新、\n一站式换新、大家电换新、保值换新】\n\n线下【普通换新、一站式换新、保值换新】")
+
+System(bd_backend, "bd后台", "一些换新相关的配置")
+
+System(mishop_oscar, "小米商城app", "网关")
+System(m_mi_com_go, "小米商城m站", "网关")
+System(mishop_recycle_callback, "回收商回调", "网关")
+
+System(karos, "交易服务", "")
+System(nr_order_message, "交易订单消息", "支付、关单、拒收、退款")
+System(nr_order, "交易订单", "打标")
+System(shopapi_address, "地址服务", "")
+System(ecard, "礼品卡", "发/作废/查询卡")
+System(gis, "商品GIS", "新机列表\ncid/sku/goodsId/productId查询等")
+System(imei, "imei", "oaid查询imei")
+System(express, "express", "仓库快递")
+System(tag_center, "标签中台", "182(换新标)")
+System(aftersale, "售后", "退款")
+
+
+System(recycler, "回收商（线上）", "爱回收/闪回收/转转/鑫郃/转转循环")
+System(recycler_offline, "回收商（线下）", "闪回收/转转/转转循环")
+
+
+System(OC, "OC", "micare、保值服务")
+System(oc_notify, "OC_Notify消息", "拆单、发货、妥投、退款等")
+System(ecard_message, "礼品卡消息", "礼品卡退款消息")
+System(thirdpart_notify, "ThirdPartNotify", "接入Notify三方消息")
+System(nr_event_center, "NrEventCenter", "接入RocketMQ三方消息")
+
+Rel(miOperator, bd_backend, "Uses", "")
+Rel(miOperator, recycle_management, "Uses", "")
+Rel(miOperator, mishop_recycleconf, "Uses", "")
+Rel(miUser, mishop_oscar, "Uses")
+Rel(miUser, m_mi_com_go, "Uses")
+
+Rel(nr_recycle, bd_backend, "Search", "HTTPS")
+Rel(nr_recycle, recycle_management, "Search", "DUBBO")
+
+Rel(nr_recycle, recycler, "Uses", "HTTPS")
+Rel(nr_recycle, recycler_offline, "Uses", "HTTPS")
+
+Rel(nr_recycle, OC, "Uses", "HTTPS")
+Rel(nr_recycle, imei, "Uses", "HTTPS")
+Rel(nr_recycle, express, "Uses", "HTTPS")
+Rel(nr_recycle, ecard, "Uses", "DUBBO")
+Rel(nr_recycle, gis, "Uses", "Search")
+Rel(nr_recycle, shopapi_address, "Search", "DUBBO or HTTPS")
+Rel(nr_recycle, tag_center, "Read", "DUBBO")
+Rel(nr_recycle, nr_order, "Write", "DUBBO")
+Rel(nr_recycle, aftersale, "Read", "DUBBO")
+Rel(nr_recycle, karos, "查询新单", "HTTPS")
+
+
+Rel(mishop_oscar, nr_recycle, "Uses", "DUBBO")
+Rel(m_mi_com_go, nr_recycle, "Uses", "DUBBO")
+
+Rel(oc_notify, thirdpart_notify, "Consume", "Notify")
+Rel(nr_order_message, nr_event_center, "Consume", "RocketMQ")
+Rel(ecard_message, nr_event_center, "Consume", "RocketMQ")
+
+Rel(thirdpart_notify, nr_recycle, "Uses", "DUBBO")
+Rel(nr_event_center, nr_recycle, "Uses", "DUBBO")
+
+Rel(mishop_recycle_callback, nr_recycle, "Uses", "DUBBO")
+
+@enduml
