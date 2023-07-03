@@ -23,6 +23,9 @@ System(nr_order_message, "交易订单消息", "支付、关单、拒收、退�
 System(nr_order, "交易订单", "打标")
 System(shopapi_address, "地址服务", "商城地址")
 System(ecard, "礼品卡", "发/作废/查询卡")
+System(pos, "POS", "获取token等")
+System(promotion, "促销", "核销、核销回滚")
+
 System(gis, "商品GIS", "新机列表\ncid/sku/goodsId/productId查询等")
 System(imei, "imei", "oaid查询imei")
 System(express, "express", "仓库快递")
@@ -65,18 +68,22 @@ Rel(nr_recycle, aftersale, "Read", "DUBBO")
 Rel(nr_recycle, karos, "Read", "HTTPS")
 
 
+Rel(thirdpart_notify, nr_recycle, "Uses", "DUBBO")
+Rel(nr_event_center, nr_recycle, "Uses", "DUBBO")
+Rel(mone, nr_recycle, "DUBBO")
+
 Rel(mishop_oscar, nr_recycle, "Uses", "DUBBO")
 Rel(m_mi_com_go, nr_recycle, "Uses", "DUBBO")
 Rel(kefu, mone, "HTTPS")
 Rel(karos2, nr_recycle, "Uses", "DUBBO")
+Rel(pos, nr_recycle, "Uses", "DUBBO")
+Rel(promotion, nr_recycle, "Uses", "DUBBO")
 
 Rel(oc_notify, thirdpart_notify, "Consume", "Notify")
 Rel(nr_order_message, nr_event_center, "Consume", "RocketMQ")
 Rel(ecard_message, nr_event_center, "Consume", "RocketMQ")
 
-Rel(thirdpart_notify, nr_recycle, "Uses", "DUBBO")
-Rel(nr_event_center, nr_recycle, "Uses", "DUBBO")
-Rel(mone, nr_recycle, "DUBBO")
+
 
 Rel(mishop_recycle_callback, nr_recycle, "Uses", "DUBBO")
 
