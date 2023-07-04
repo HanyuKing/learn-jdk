@@ -8,7 +8,7 @@ AddBoundaryTag("gateway_bg", $bgColor="#a5dff9", $fontColor="black", $borderColo
 AddBoundaryTag("middle_bg", $bgColor="#9baec8", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
 AddBoundaryTag("xinxi_tech_bg", $bgColor="#eb8b71", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
 AddBoundaryTag("backcend_manage_sys_bg", $bgColor="#7ca2a1", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
-AddBoundaryTag("backcend_manage_server_bg", $bgColor="#DFD9E2", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+
 System_Boundary(users, "用户", $tags="user_bg") {
     Person(miUser, "商城用户", "使用小米商城APP、M站、小程序的用户")
     Person(miOperator, "运营", "以旧换新运营人员")
@@ -19,7 +19,7 @@ System_Boundary(users, "用户", $tags="user_bg") {
 
 System_Boundary(recycle_middle, "换新中台", $tags="recycle_middle_bg") {
     System(nr_recycle, "换新交易系统", "线上【普通换新、信用换新、miare换新、一站式换新、大家电换新、保值换新】\n\n线下【普通换新、一站式换新、保值换新】")
-    System_Boundary(recycle_management_server, "换新后台管理服务", $tags="backcend_manage_server_bg") {
+    System_Boundary(recycle_management_server, "换新后台管理服务") {
         System(mishop_recycleconf, "换新产品站配置服务", "换新C端入口配置\n大家电活动配置")
         System(recycle_management, "换新管理服务", "线上【机型、分类、品牌管理、\n立减活动配置、增值服务配置】\n\n线下【门店活动、返佣返利、\n签约、质检库】")
     }

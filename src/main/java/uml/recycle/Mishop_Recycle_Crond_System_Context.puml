@@ -1,0 +1,45 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+AddBoundaryTag("recycle_cron_bg", $bgColor="#F0B775", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+AddBoundaryTag("outer_sys_bg", $bgColor="#fbe2b4", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+AddBoundaryTag("middle_bg", $bgColor="#9baec8", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+AddBoundaryTag("xinxi_tech_bg", $bgColor="#eb8b71", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+AddBoundaryTag("backcend_manage_sys_bg", $bgColor="#7ca2a1", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+AddBoundaryTag("backcend_manage_server_bg", $bgColor="#7ca2a1", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+
+System_Boundary(recycle_middle, "换新中台", $tags="recycle_cron_bg") {
+    System(nr_recycle, "换新交易系统", "线上【普通换新、信用换新、miare换新、一站式换新、大家电换新、保值换新】\n\n线下【普通换新、一站式换新、保值换新】")
+    System_Boundary(recycle_management_server, "换新后台管理服务") {
+        System(mishop_recycleconf, "换新产品站配置服务", "换新C端入口配置\n大家电活动配置")
+        System(recycle_management, "换新管理服务", "线上【机型、分类、品牌管理、\n立减活动配置、增值服务配置】\n\n线下【门店活动、返佣返利、\n签约、质检库】")
+    }
+}
+
+System_Boundary(recycle_management_backend_sys, "后台管理系统", $tags="backcend_manage_sys_bg") {
+    System(recycle_management_backend, "换新管理系统后台", "线上【机型、分类、品牌管理、\n立减活动配置、增值服务配置】\n\n线下【门店活动、返佣返利、\n签约、质检库】")
+    System(bd_backend, "bd后台", "一些换新相关的配置\n作废现金券\n同步城市信息")
+}
+
+System_Boundary(middle, "零售中台", $tags="middle_bg") {
+    System(nr_order, "交易订单", "打标")
+    System(shopapi_address, "地址服务", "商城地址")
+    System(ecard, "礼品卡", "发/作废/查询卡")
+    System(gis, "商品GIS", "新机列表\ncid/sku/goodsId/productId查询等")
+    System(tag_center, "标签中台", "182(换新标)")
+    System(aftersale, "售后", "退款")
+    System(karos, "交易服务（Karos）", "查询订单")
+}
+
+System_Boundary(xinxi_tech, "信息技术部", $tags="xinxi_tech_bg") {
+    System(imei, "imei", "oaid查询imei")
+    System(express, "express", "仓库快递")
+    System(OC, "OC", "micare、保值服务")
+}
+
+System_Boundary(ouer_sys_to, "外部三方系统", $tags="outer_sys_bg") {
+    System_Ext(recycler, "回收商（线上）", "爱回收/闪回收/转转/鑫郃/转转循环")
+}
+
+SHOW_LEGEND()
+@enduml
