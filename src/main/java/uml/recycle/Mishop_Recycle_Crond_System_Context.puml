@@ -7,6 +7,7 @@ AddBoundaryTag("middle_bg", $bgColor="#9baec8", $fontColor="black", $borderColor
 AddBoundaryTag("xinxi_tech_bg", $bgColor="#eb8b71", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
 AddBoundaryTag("backcend_manage_sys_bg", $bgColor="#7ca2a1", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
 AddBoundaryTag("backcend_manage_server_bg", $bgColor="#DFD9E2", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
+AddBoundaryTag("mall_bg", $bgColor="#a5dff9", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
 
 System_Boundary(recycle_middle, "换新中台", $tags="recycle_cron_bg") {
     System(mishop_recycle_crond, "Go定时任务", "发券、扣资金池、业务补偿\n拉取分类、产品、城市等信息\n同步订单信息到回收商")
@@ -26,6 +27,10 @@ System_Boundary(middle, "零售中台", $tags="middle_bg") {
     System(karos, "交易服务（Karos）", "查询订单")
 }
 
+System_Boundary(mall, "商城", $tags="mall_bg") {
+    System(xiaomi_bingo, "xiaomi_bingo", "发奖(优惠券)")
+}
+
 System_Boundary(xinxi_tech, "信息技术部", $tags="xinxi_tech_bg") {
     System(imei, "imei", "oaid查询imei")
     System(OC, "OC", "micare查询、报案、取消报案、核销")
@@ -39,6 +44,7 @@ System_Boundary(ouer_sys_to, "外部三方系统", $tags="outer_sys_bg") {
 Rel(mishop_recycle_crond, ouer_sys_to, "Uses", "HTTPS")
 Rel(mishop_recycle_crond, xinxi_tech, "Uses", "HTTPS")
 Rel(mishop_recycle_crond, middle, "Uses", "HTTPS")
+Rel(mishop_recycle_crond, mall, "Uses", "Thrift")
 Rel(mishop_recycle_crond, bd_backend, "Write", "Redis")
 Rel(recycle_management_server, bd_backend, "Read", "Redis/MySQL")
 
