@@ -42,7 +42,7 @@ System_Boundary(ouer_sys_to, "外部三方系统", $tags="outer_sys_bg") {
 }
 
 Rel(mishop_recycle_crond, ouer_sys_to, "Uses", "HTTPS")
-Rel(mishop_recycle_crond, xinxi_tech, "Uses", "HTTPS")
+Rel(mishop_recycle_crond, xinxi_tech, "Uses", "HTTPS/Thrift")
 Rel(mishop_recycle_crond, middle, "Uses", "HTTPS")
 Rel(mishop_recycle_crond, mall, "Uses", "Thrift")
 Rel(mishop_recycle_crond, bd_backend, "Write", "Redis")
