@@ -1,0 +1,42 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(operator, "运营")
+
+System_Boundary(backend, "管理后台") {
+
+}
+
+System_Boundary(gateway, "网关") {
+    Container(mone, "mone", "mione网关")
+}
+
+System_Boundary(mishop_recycleconf, "换新配置系统") {
+    Container(api, "api")
+    Container(app, "app")
+    Container(common, "common")
+    Container(infra, "infra")
+    ContainerDb(database, "MySQL", "MySQL")
+    ContainerDb(redis, "Redis", "Redis")
+}
+
+System_Boundary(middle, "零售中台") {
+    Container(tag_center, "tag_center", "标签中台")
+    Container(goods_center, "gms", "商品中台")
+}
+
+Rel(operator, backend, "Uses")
+Rel(backend, mone, "Call", "HTTPS")
+Rel(mone, api, "RPC", "DUBBO")
+Rel(app, api, "implement")
+Rel(app, common, "Uses")
+Rel(app, infra, "Uses")
+Rel(infra, database, "Uses")
+Rel(infra, redis, "Uses")
+Rel(infra, middle, "RPC", "DUBBO")
+
+Lay_U(app, api)
+
+
+
+@enduml
