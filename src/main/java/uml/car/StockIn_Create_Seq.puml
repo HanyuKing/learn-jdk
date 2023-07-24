@@ -1,0 +1,40 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+skin rose
+autonumber
+
+participant 调拨服务
+participant 出入库服务
+participant CIMS
+'participant RDC'
+participant 门店WMS
+database MySQL
+'queue 事件中心'
+
+'---------------------------创建入库单--------------------------'
+调拨服务 -> 出入库服务 : 创建入库单
+出入库服务 -> CIMS : 更新库存(增加在途库存)
+
+alt 库存预占失败
+    出入库服务 <-- CIMS: 更新库存失败
+    调拨服务 <-- 出入库服务: 结束
+else 库存更新成功
+    出入库服务 <-- CIMS: 库存更新成功
+    出入库服务 -> 出入库服务: 补充附加字段\n比如: 入库单号、初始状态、商品信息等等
+    出入库服务 -> MySQL: 写入库单表(状态为"<font color=red>已创建</font>")\n写入库单明细表\n入出库单log表
+    note right : 定时任务查询"待推送"的记录，重新\n执行后面推单操作
+    出入库服务 <-- MySQL: 写表成功
+    出入库服务 -> 门店WMS: 推入库单
+
+   alt 推单成功
+        出入库服务 <-- 门店WMS: 推单成功
+        出入库服务 -> MySQL: 更新出库单表(状态为"<font color=red>已推送</font>")
+        出入库服务 <-- MySQL: 写表成功
+   else 推单失败
+        出入库服务 <-- 门店WMS: 推单失败
+   end
+   note right : 此处尝试推门店WMS，上游不关心推门店WMS是否成功，写\n入库单成功就算成功，最终一致
+   调拨服务 <-- 出入库服务: 返回结果
+end
+
+@enduml

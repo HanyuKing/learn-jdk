@@ -1,0 +1,23 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+skin rose
+autonumber
+
+
+
+采购调拨单 -> 入库单: 创建
+入库单 -> 入库单: 参数校验
+入库单 -> 商品中台: 查询商品信息(List<Long> ssuIdList)
+入库单 <-- 商品中台: 返回每个ssuId的商品信息(pCode, pName)
+入库单 -> WMS: 推入库单
+入库单 <-- WMS: 返回
+入库单 -> 库存服务: 增加在途库存
+入库单 <-- 库存服务: 返回
+入库单 -> 入库单: 补充附加字段\n比如: 入库单号、初始状态、商品信息等等
+
+入库单 -> MySQL: 写入库单表\n写入库单明细表\n写入库单log表
+
+
+database MySQL
+
+@enduml

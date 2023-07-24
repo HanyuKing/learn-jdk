@@ -1,0 +1,26 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+skin rose
+autonumber
+
+'participant 调拨服务'
+participant 出入库服务
+participant CIMS
+participant RDC
+participant 门店WMS
+queue 事件中心
+
+'---------------------------真实出库--------------------------'
+门店WMS -> 出入库服务 : 确认入库
+出入库服务 -> CIMS : 更新库存(实际入库)
+出入库服务 <-- CIMS : 更新成功
+出入库服务 -> 出入库服务 : 更新入库单("<font color=red>部分入库or全部入库</font>")
+出入库服务 -> 出入库服务 : 更新入库单明细\n实际每个商品入了多少
+出入库服务 -> 出入库服务 : 写入库单log表
+出入库服务 -> 事件中心 : 发入库成功消息
+出入库服务 <-- 事件中心 : 成功
+出入库服务 -> 门店WMS : 返回结果
+
+
+
+@enduml
