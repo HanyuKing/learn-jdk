@@ -123,8 +123,8 @@ DROP
   TABLE IF EXISTS `ctms_delivery_order`;
 CREATE TABLE `ctms_delivery_order` (
   `id` BIGINT (20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `stock_out_id` VARCHAR (20) NOT NULL COMMENT '出库单号',
   `delivery_order_id` VARCHAR (20) NOT NULL COMMENT '运单号',
+  `related_id` VARCHAR (20) NOT NULL COMMENT '关联单号',
   `logistics_code` VARCHAR (50) NOT NULL DEFAULT '' COMMENT '快递公司代码',
   `logistics_name` VARCHAR (50) NOT NULL DEFAULT '' COMMENT '快递公司名称',
   `express_code` VARCHAR (50) NOT NULL DEFAULT '' COMMENT '快递单号',
@@ -133,7 +133,8 @@ CREATE TABLE `ctms_delivery_order` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
-  KEY `idx_delivery_order_id` (`delivery_order_id`)
+  KEY `idx_delivery_order_id` (`delivery_order_id`),
+  UNIQUE KEY `udx_related_express_code` (`delivery_order_id`, `express_code`)
 ) ENGINE = INNODB DEFAULT CHARSET = utf8 COMMENT '运单';
 DROP
   TABLE IF EXISTS `ctms_delivery_order_item`;
@@ -158,9 +159,9 @@ DROP
 CREATE TABLE `ctms_delivery_order_relation`
 (
     `id` BIGINT (20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `delivery_order_id` VARCHAR(20) NOT NULL COMMENT '运单号',
     `relation_id`       TINYINT(2)  NOT NULL DEFAULT '1' COMMENT '是否逻辑删除 1-有效 2-已删除',
-    `type`              TINYINT(2)  NOT NULL COMMENT '是否逻辑删除 1-出库单 2-入库单',
+    `delivery_order_id` VARCHAR(20) NOT NULL COMMENT '运单号',
+    `type`              TINYINT(2)  NOT NULL COMMENT '1-出库单 2-入库单',
     `create_time`       datetime    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),
