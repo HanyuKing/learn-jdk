@@ -142,8 +142,8 @@ CREATE TABLE `ctms_delivery_order_item` (
   `id` BIGINT (20) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `delivery_order_id` VARCHAR (20) NOT NULL COMMENT '运单号',
   `ssu_id` BIGINT (20) NOT NULL COMMENT '商品id',
-  `product_code` VARCHAR (200) DEFAULT NULL COMMENT '商品编码',
-  `product_name` VARCHAR (200) DEFAULT NULL COMMENT '商品名称',
+  `item_code` VARCHAR (200) DEFAULT NULL COMMENT '商品编码',
+  `item_name` VARCHAR (200) DEFAULT NULL COMMENT '商品名称',
   `number` INT (10) DEFAULT NULL COMMENT '数量',
   `delete_flag` TINYINT ( 2 ) NOT NULL DEFAULT '0' COMMENT '是否逻辑删除 0-有效 1-已删除',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -159,7 +159,7 @@ DROP
 CREATE TABLE `ctms_delivery_order_relation`
 (
     `id` BIGINT (20) NOT NULL AUTO_INCREMENT COMMENT '主键',
-    `relation_id`       TINYINT(2)  NOT NULL DEFAULT '1' COMMENT '是否逻辑删除 1-有效 2-已删除',
+    `related_id` VARCHAR (20) NOT NULL COMMENT '关联单号',
     `delivery_order_id` VARCHAR(20) NOT NULL COMMENT '运单号',
     `type`              TINYINT(2)  NOT NULL COMMENT '1-出库单 2-入库单',
     `create_time`       datetime    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
