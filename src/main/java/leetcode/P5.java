@@ -5,8 +5,39 @@ import java.util.Map;
 
 public class P5 {
     public static void main(String[] args) {
-        System.out.println(new P5().longestPalindrome("aaaa"));
+        System.out.println(new P5().longestPalindromeForDP("aacabdkacaa"));
     }
+
+    public String longestPalindromeForDP(String s) {
+        String res = String.valueOf(s.charAt(0));
+
+        int length = s.length();
+
+        int[][] dp = new int[length][length];
+
+        for (int i = 0; i < length; i++) {
+            dp[i][i] = 1;
+        }
+
+        int longest = 1;
+
+        for (int i = length - 1 - 1; i >= 0; i--) {
+            for (int j = length - 1; j > i; j--) {
+                if (s.charAt(i) == s.charAt(j) && dp[i + 1][j - 1] >= 0) {
+                    dp[i][j] = dp[i + 1][j - 1] + 2;
+                    if (dp[i][j] > longest) {
+                        longest = dp[i][j];
+                        res = s.substring(i, j + 1);
+                    }
+                } else {
+                    dp[i][j] = -1;
+                }
+            }
+        }
+
+        return res;
+    }
+
     public String longestPalindrome(String s) {
         boolean[][] flag = new boolean[s.length()][s.length()];
 
