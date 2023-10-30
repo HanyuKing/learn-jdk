@@ -12,7 +12,28 @@ public class P2917 {
         int[] nums = new int[]{10,8,5,9,11,6,8};
         int k = 1;
 
-        System.out.println(new P2917().findKOr(nums, k));
+        System.out.println(new P2917().findKOr2(nums, k));
+    }
+
+    public int findKOr2(int[] nums, int k) {
+        int result = 0;
+        int D = 1;
+        for (int i = 0; i < 32; i++) {
+            int cnt = 0;
+            for (int n : nums) {
+                if ((n & D) > 0) {
+                    cnt++;
+                }
+                if (cnt == k) {
+                    break;
+                }
+            }
+            if (cnt == k) {
+                result |= D;
+            }
+            D = D << 1;
+        }
+        return result;
     }
 
     public int findKOr(int[] nums, int k) {
