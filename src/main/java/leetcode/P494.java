@@ -14,8 +14,70 @@ public class P494 {
     public static void main(String[] args) {
         int[] nums = new int[] {1, 1, 1, 1, 1};
         int target = 3;
-        int result = new P494().findTargetSumWays2(nums, target);
+//        int[] nums = new int[] {0,0,0,0,0,0,0,0,1};
+//        int target = 1;
+//        int[] nums = new int[] {100};
+//        int target = -200;
+        int result = new P494().findTargetSumWays4(nums, target);
         System.out.println(result);
+    }
+
+    public int findTargetSumWays4(int[] nums, int target) {
+        int sum = Arrays.stream(nums).sum();
+
+        if (Math.abs(target) > sum) {
+            return 0;
+        }
+
+        int len = 2 * sum + 1;
+        int[][] dp = new int[2][len];
+
+        dp[0][nums[0] + sum] = 1;
+        dp[0][-nums[0] + sum] += 1;
+
+        for (int i = 1; i < nums.length; i++) {
+            for (int j = 0; j < len; j++) {
+                if (j - nums[i] >= 0) {
+                    dp[1][j] += dp[0][j - nums[i]];
+                }
+                if (j + nums[i] < len) {
+                    dp[1][j] += dp[0][j + nums[i]];
+                }
+            }
+            for (int j = 0; j < len; j++) {
+                dp[0][j] = dp[1][j];
+                dp[1][j] = 0;
+            }
+        }
+
+        return dp[0][target + sum];
+    }
+
+    public int findTargetSumWays3(int[] nums, int target) {
+        int sum = Arrays.stream(nums).sum();
+
+        if (Math.abs(target) > sum) {
+            return 0;
+        }
+
+        int len = 2 * sum + 1;
+        int[][] dp = new int[nums.length][len];
+
+        dp[0][nums[0] + sum] = 1;
+        dp[0][-nums[0] + sum] += 1;
+
+        for (int i = 1; i < nums.length; i++) {
+            for (int j = 0; j < len; j++) {
+                if (j - nums[i] >= 0) {
+                    dp[i][j] += dp[i - 1][j - nums[i]];
+                }
+                if (j + nums[i] < len) {
+                    dp[i][j] += dp[i - 1][j + nums[i]];
+                }
+            }
+        }
+
+        return dp[nums.length - 1][target + sum];
     }
 
     public int findTargetSumWays2(int[] nums, int target) {
