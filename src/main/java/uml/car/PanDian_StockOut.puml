@@ -1,0 +1,25 @@
+@startuml
+'https://plantuml.com/state-diagram
+skin rose
+autonumber
+
+participant 门店WMS
+queue 盘亏MQ
+participant NR_Event_Center
+participant SCM
+participant SIMS
+queue 出库MQ
+
+
+门店WMS -> 盘亏MQ : 盘亏
+盘亏MQ --> NR_Event_Center : 消费盘点消息
+NR_Event_Center -> SCM : 盘亏
+SCM -> SCM : 创建出库单(盘亏出库)
+SCM -> SIMS : 减少正品库存
+SCM <- SIMS : 成功
+
+SCM -> 出库MQ : 出库成功消息
+出库MQ -> SCM : 成功
+
+@enduml
+
