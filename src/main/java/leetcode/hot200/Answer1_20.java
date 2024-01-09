@@ -12,7 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @Description
  * @Version 1.0
  **/
-public class Answer {
+public class Answer1_20 extends Base {
     @Test
     public void testP3() {
         System.out.println(lengthOfLongestSubstring("abcca"));
@@ -169,6 +169,181 @@ public class Answer {
         print(isValid(s));
     }
 
+    @Test
+    public void testP141() {
+        // PASS
+    }
+
+    @Test
+    public void testP121() {
+        int[] prices = new int[] {7, 1, 5, 3, 6, 4};
+        int result = maxProfit2(prices);
+        print(result);
+
+        prices = new int[] {7,6,4,3,1};
+        result = maxProfit2(prices); // todo 单调栈
+        print(result);
+    }
+
+    @Test
+    public void testP236() {
+        // PASS
+    }
+
+    @Test
+    public void testP88() {
+        // PASS merge2, merge
+    }
+
+    @Test
+    public void testP46() {
+        print(permute(new int[] {1, 2, 3}));
+    }
+
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        this.j = new boolean[nums.length];
+        doPermute(nums, new ArrayList<>(), result);
+        return result;
+    }
+
+    public void doPermute2(int[] nums, int start, int end, List<List<Integer>> result) {
+        if (end - start == 1) {
+            List<Integer> ans = new ArrayList<>();
+            for (int num : nums) {
+                ans.add(num);
+            }
+            result.add(ans);
+            return;
+        }
+
+        for (int i = start; i < end; i++) {
+
+            int temp = nums[start];
+            nums[start] = nums[i];
+            nums[i] = temp;
+
+            doPermute2(nums, start + 1, nums.length, result);
+
+            temp = nums[i];
+            nums[i] = nums[start];
+            nums[start] = temp;
+        }
+
+    }
+
+    private boolean[] j;
+    public void doPermute(int[] nums, List<Integer> permute, List<List<Integer>> result) {
+        if (permute.size() == nums.length) {
+            result.add(new ArrayList<>(permute));
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+
+            if (this.j[i]) {
+                continue;
+            }
+
+            permute.add(nums[i]);
+            this.j[i] = true;
+
+            doPermute(nums, permute, result);
+
+            this.j[i] = false;
+
+            permute.remove(permute.size() - 1);
+        }
+    }
+
+    public void merge2(int[] nums1, int m, int[] nums2, int n) {
+        int i1 = m - 1;
+        int i2 = n - 1;
+        int index = m + n - 1;
+        while (i1 >= 0 && i2 >= 0) {
+            if (nums1[i1] >= nums2[i2]) {
+                nums1[index--] = nums1[i1--];
+            } else {
+                nums1[index--] = nums2[i2--];
+            }
+        }
+        while (i1 >= 0) { // 可以省略
+            nums1[index--] = nums1[i1--];
+        }
+        while (i2 >= 0) {
+            nums1[index--] = nums2[i2--];
+        }
+    }
+
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int i1 = m - 1;
+        int i2 = n - 1;
+        int index = m + n - 1;
+        while (i1 >= 0 || i2 >= 0) {
+            if (i1 >= 0 && i2 >= 0) {
+                if (nums1[i1] >= nums2[i2]) {
+                    nums1[index--] = nums1[i1--];
+                } else {
+                    nums1[index--] = nums2[i2--];
+                }
+                continue;
+            }
+            if (i1 >= 0) {
+                nums1[index--] = nums1[i1--];
+            }
+            if (i2 >= 0) {
+                nums1[index--] = nums2[i2--];
+            }
+        }
+    }
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return null;
+        }
+        if (root == q || root == p) {
+            return root;
+        }
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        if (left != null && right != null) {
+            return root;
+        }
+        if (left == null) {
+            return right;
+        } else {
+            return left;
+        }
+    }
+
+    public int maxProfit2(int[] prices) {
+        int max = 0;
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < prices.length; i++) {
+            if (stack.isEmpty()) {
+                stack.push(prices[i]);
+            } else if (prices[i] < stack.peek()) {
+                stack.push(prices[i]);
+            } else {
+                max = Math.max(max, prices[i] - stack.peek());
+            }
+        }
+        return max;
+    }
+
+
+    public int maxProfit(int[] prices) {
+        int max = 0;
+        int minIndex = 0;
+        for (int i = 0; i < prices.length; i++) {
+            if (prices[i] - prices[minIndex] > max) {
+                max = prices[i] - prices[minIndex];
+            } else if (prices[i] - prices[minIndex] < 0) {
+                minIndex = i;
+            }
+        }
+        return max;
+    }
+
     public boolean isValid(String s) {
         Stack<Character> stack = new Stack<>();
 
@@ -277,19 +452,6 @@ public class Answer {
             levelList.add(nodeValueList);
         }
         return levelList;
-    }
-
-    public class TreeNode {
-        int val;
-        TreeNode left;
-        TreeNode right;
-        TreeNode() {}
-        TreeNode(int val) { this.val = val; }
-        TreeNode(int val, TreeNode left, TreeNode right) {
-            this.val = val;
-            this.left = left;
-            this.right = right;
-        }
     }
 
     public String longestPalindrome3(String s) {
@@ -662,8 +824,5 @@ public class Answer {
         return maxLen;
     }
 
-    private void print(Object o) {
-        Gson gson = new Gson();
-        System.out.println(gson.toJson(o));
-    }
+
 }
