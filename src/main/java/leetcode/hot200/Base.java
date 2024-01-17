@@ -23,7 +23,25 @@ public class Base {
     }
 
     protected void print(Object o) {
-        Gson gson = new Gson();
-        System.out.println(gson.toJson(o));
+        if (o instanceof ListNode) {
+            ListNode head = (ListNode) o;
+            StringBuilder sb = new StringBuilder();
+            while (head != null) {
+                sb.append(head.val + "->");
+                head = head.next;
+            }
+            System.out.println(sb.toString());
+        } else {
+            Gson gson = new Gson();
+            System.out.println(gson.toJson(o));
+        }
     }
+
+    protected class ListNode {
+      int val;
+      ListNode next;
+      ListNode() {}
+      ListNode(int val) { this.val = val; }
+      ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+  }
 }
