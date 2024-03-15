@@ -1,4 +1,4 @@
-package juc;
+package juc.cacheline;
 
 import sun.misc.Contended;
 

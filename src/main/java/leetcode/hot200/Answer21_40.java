@@ -199,6 +199,480 @@ public class Answer21_40 extends Base {
         print(addStrings("0", "0"));
     }
 
+    @Test
+    public void testP300() {
+        // 输入：nums = [10,9,2,5,3,7,101,18] 输出：4 解释：最长递增子序列是 [2,3,7,101]，因此长度为 4 。
+        //             [2,3,5,7,9,10,18,101]
+        // 输入：nums = [0,1,0,3,2,3] 输出：4
+        // 输入：nums = [7,7,7,7,7,7,7] 输出：1
+
+        int[] nums = new int[] {10,9,2,5,3,7,101,18};
+        print(lengthOfLIS(nums));
+    }
+
+    @Test
+    public void testP143() {
+        ListNode node1 = new ListNode(1);
+        ListNode node2 = new ListNode(2);
+        ListNode node3 = new ListNode(3);
+        ListNode node4 = new ListNode(4);
+        ListNode node5 = new ListNode(5);
+        node1.next = node2;
+        node2.next = node3;
+        node3.next = node4;
+        node4.next = node5;
+
+        reorderList(node1);
+
+        print(node1);
+    }
+
+    @Test
+    public void testP42() {
+        // todo
+    }
+
+    @Test
+    public void testP142() {
+        /*
+            输入：head = [3,2,0,-4], pos = 1
+            输出：返回索引为 1 的链表节点
+            解释：链表中有一个环，其尾部连接到第二个节点。
+         */
+        ListNode node1 = new ListNode(3);
+        ListNode node2 = new ListNode(2);
+        ListNode node3 = new ListNode(0);
+        ListNode node4 = new ListNode(4);
+        node1.next = node2;
+        node2.next = node3;
+        node3.next = node4;
+        node4.next = node2;
+
+        ListNode node = detectCycle(node1);
+
+        System.out.println(node == null ? null : node.val);
+
+    }
+
+    @Test
+    public void testP19() {
+        ListNode node1 = new ListNode(3);
+        ListNode node2 = new ListNode(2);
+        ListNode node3 = new ListNode(0);
+        ListNode node4 = new ListNode(4);
+        node1.next = node2;
+        node2.next = node3;
+        node3.next = node4;
+
+        ListNode head = removeNthFromEnd(node1, 2);
+
+        print(head);
+    }
+
+    @Test
+    public void testP124() {
+        // todo
+    }
+
+    @Test
+    public void testP56() {
+        /*
+        示例 1：
+
+        输入：intervals = [[1,3],[2,6],[8,10],[15,18]]
+        输出：[[1,6],[8,10],[15,18]]
+        解释：区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
+
+        示例 2：
+
+        输入：intervals = [[1,4],[4,5]]
+        输出：[[1,5]]
+        解释：区间 [1,4] 和 [4,5] 可被视为重叠区间。
+         */
+
+        int[][] intervals = new int[][] {
+                {8,10},
+                {1,3},
+                {2,6},
+                {15,18}
+        };
+        int[][] result = merge(intervals);
+        print(result);
+    }
+
+    @Test
+    public void testP72() {
+        // todo
+        /*
+        示例 1：
+
+        输入：word1 = "horse", word2 = "ros"
+        输出：3
+        解释：
+        horse -> rorse (将 'h' 替换为 'r')
+        rorse -> rose (删除 'r')
+        rose -> ros (删除 'e')
+
+        示例 2：
+
+        输入：word1 = "intention", word2 = "execution"
+        输出：5
+        解释：
+        intention -> inention (删除 't')
+        inention -> enention (将 'i' 替换为 'e')
+        enention -> exention (将 'n' 替换为 'x')
+        exention -> exection (将 'n' 替换为 'c')
+        exection -> execution (插入 'u')
+         */
+    }
+
+    @Test
+    public void testP94() {
+        // 递归 PASS
+        // todo 迭代
+    }
+
+    @Test
+    public void testP1250() {
+        // todo
+    }
+
+    @Test
+    public void testP199() {
+        /*
+        输入: [1,2,3,null,5,null,4]
+        输出: [1,3,4]
+        示例 2:
+
+        输入: [1,null,3]
+        输出: [1,3]
+        示例 3:
+
+        输入: []
+        输出: []
+         */
+
+
+        // BFS PASS
+        // DFS PASS
+    }
+
+    @Test
+    public void testP235() {
+        // 1. 不是搜索树时：lowestCommonAncestor2
+        // 2. 是搜索树时：lowestCommonAncestor
+    }
+
+    public TreeNode lowestCommonAncestor3(TreeNode root, TreeNode p, TreeNode q) {
+        if(root.val > p.val && root.val > q.val){
+            return lowestCommonAncestor(root.left, p, q);
+        }
+        if(root.val < p.val && root.val < q.val){
+            return lowestCommonAncestor(root.right, p, q);
+        }
+        return root;
+    }
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        int min = Math.min(p.val, q.val);
+        int max = Math.max(p.val, q.val);
+
+        if (root.val >= min && root.val <= max) {
+            return root;
+        } else if (root.val < min) {
+            return lowestCommonAncestor(root.right, p, q);
+        } else {
+            return lowestCommonAncestor(root.left, p, q);
+        }
+    }
+
+    public TreeNode lowestCommonAncestor2(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == p) {
+            return p;
+        }
+        if (root == q) {
+            return q;
+        }
+        TreeNode lp = findNode(root.left, p);
+        TreeNode lq = findNode(root.left, q);
+        TreeNode rp = findNode(root.right, p);
+        TreeNode rq = findNode(root.right, q);
+        if (lp != null && rq != null) {
+            return root;
+        } else if (lp != null && lq != null) {
+            return lowestCommonAncestor(root.left, p, q);
+        } else if (rp != null && rq != null) {
+            return lowestCommonAncestor(root.right, p, q);
+        } else if (rp != null && lq != null) {
+            return root;
+        }
+        return null;
+    }
+
+    private TreeNode findNode(TreeNode root, TreeNode node) {
+        if (root == null) {
+            return null;
+        }
+        if (root == node) {
+            return node;
+        }
+        TreeNode n = findNode(root.left, node);
+        if (n != null) {
+            return n;
+        }
+        n = findNode(root.right, node);
+        if (n != null) {
+            return n;
+        }
+        return null;
+    }
+
+
+    public List<Integer> rightSideView2(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        rightSideViewDFS(root, result, 0);
+        return result;
+    }
+
+    private void rightSideViewDFS(TreeNode root, List<Integer> result, int depth) {
+        if (root == null) {
+            return;
+        }
+        if (depth == result.size()) {
+            result.add(root.val);
+        }
+        depth++;
+        rightSideViewDFS(root.right, result, depth);
+        rightSideViewDFS(root.left, result, depth);
+    }
+
+    public List<Integer> rightSideView(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        int levelSize = 1;
+
+        while (!queue.isEmpty()) {
+            int nextLevelSize = 0;
+            while (levelSize > 0) {
+                TreeNode currNode = queue.poll();
+                if (currNode.left != null) {
+                    queue.add(currNode.left);
+                    nextLevelSize++;
+                }
+                if (currNode.right != null) {
+                    queue.add(currNode.right);
+                    nextLevelSize++;
+                }
+
+                levelSize--;
+
+                if (levelSize == 0) {
+                    result.add(currNode.val);
+                }
+            }
+            levelSize = nextLevelSize;
+        }
+
+        return result;
+    }
+
+    public List<Integer> inorderTraversal2(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+
+        Stack<TreeNode> stack = new Stack<>();
+        stack.add(root);
+        while (!stack.isEmpty()) {
+            TreeNode currRoot = stack.pop();
+            TreeNode leftNode = currRoot.left;
+            TreeNode rightNode = currRoot.right;
+            while (leftNode != null) {
+                stack.add(leftNode);
+                leftNode = leftNode.left;
+            }
+
+            result.add(currRoot.val);
+
+            while (rightNode != null) {
+                stack.add(rightNode);
+                rightNode = rightNode.right;
+            }
+        }
+
+        return result;
+    }
+
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        doInorderTraversal(result, root);
+        return result;
+    }
+
+    private void doInorderTraversal(List<Integer> result, TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        doInorderTraversal(result, root.left);
+        result.add(root.val);
+        doInorderTraversal(result, root.right);
+    }
+
+    public int minDistance(String word1, String word2) {
+        return 0;
+    }
+
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, Comparator.comparingInt(o -> o[0]));
+
+        int index = -1;
+
+        int[][] res = new int[intervals.length][2];
+
+        for (int[] currInterval : intervals) {
+            if (index == -1 || currInterval[0] > res[index][1]) {
+                res[++index] = currInterval;
+            } else {
+                res[index][1] = Math.max(res[index][1], currInterval[1]);
+            }
+        }
+
+        return Arrays.copyOf(res, index + 1);
+    }
+
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode p1 = head;
+        ListNode p2 = head;
+
+        while (--n > 0) {
+            p2 = p2.next;
+        }
+
+        if (p2.next == null) {
+            return head.next;
+        }
+
+        ListNode pre = null;
+        while (p2.next != null) {
+            pre = p1;
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+
+        pre.next = p1.next;
+
+        return head;
+    }
+
+    public ListNode detectCycle(ListNode head) {
+        ListNode p1 = head;
+        ListNode p2 = head;
+        while (p2 != null && p2.next != null) {
+            p1 = p1.next;
+            p2 = p2.next.next;
+            if (p1 == p2) {
+                break;
+            }
+        }
+
+        if (p2 == null || p2.next == null) {
+            return null;
+        }
+
+        p2 = head;
+        while (p1 != p2) {
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+
+        return p1;
+    }
+
+    /**
+     * todo 快慢指针
+     * @param head
+     */
+    public void reorderList(ListNode head) {
+        ListNode headTemp = head;
+        Stack<ListNode> stack = new Stack<>();
+        while (headTemp != null) {
+            stack.add(headTemp);
+            headTemp = headTemp.next;
+        }
+
+        boolean isLinkStack = true;
+        ListNode tail = head;
+        ListNode newHead = head.next;
+
+        int count = 2;
+        // boolean isOdd = stack.size() % 2 == 0;
+        // int limit = isOdd ? stack.size() / 2 : stack.size() / 2 + 1;
+        int size = stack.size();
+
+        while (count <= size) {
+            if (isLinkStack) {
+                tail.next = stack.pop();
+                tail = tail.next;
+
+                tail.next = null; // unlink
+
+                isLinkStack = false;
+            } else {
+                tail.next = newHead;
+                tail = newHead;
+                newHead = newHead.next;
+
+                tail.next = null; // unlink
+
+                isLinkStack = true;
+            }
+
+            count++;
+        }
+    }
+
+    public int lengthOfLIS(int[] nums) {
+        int[] dp = new int[nums.length];
+        dp[0] = 1;
+        int max = 1;
+        for (int i = 1; i < nums.length; i++) {
+            int count = 1;
+            for (int j = i - 1; j >= 0; j--) {
+                if (nums[i] > nums[j] && dp[j] + 1 > count) {
+                    count = dp[j] + 1;
+                    max = Math.max(count, max);
+                }
+            }
+            dp[i] = count;
+        }
+        return max;
+    }
+
+    public int lengthOfLIS2(int[] nums) {
+        if (nums.length == 0) {
+            return 0;
+        }
+        int[] dp = new int[nums.length];
+        dp[0] = 1;
+        int maxans = 1;
+        for (int i = 1; i < nums.length; i++) {
+            dp[i] = 1;
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            maxans = Math.max(maxans, dp[i]);
+        }
+        return maxans;
+    }
+
     public String addStrings(String num1, String num2) {
         int carry = 0;
         StringBuilder result = new StringBuilder();
