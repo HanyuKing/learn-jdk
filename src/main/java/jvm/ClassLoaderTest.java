@@ -14,7 +14,7 @@ public class ClassLoaderTest {
         System.out.println(klass2.getName());
         System.out.println(klass1 == klass2);
 
-        MyClassLoader3 c3 = new MyClassLoader3();
+        MyClassLoader3 c3 = new MyClassLoader3(); // change to MyClassLoader1
 
         Class klass3 = Class.forName("jvm.ClassLoaderTest", false, c3);
         Class klass4 = Class.forName("jvm.ClassLoaderTest", false, c1);

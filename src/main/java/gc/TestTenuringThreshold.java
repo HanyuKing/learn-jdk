@@ -1,5 +1,7 @@
 package gc;
 
+import java.util.concurrent.Semaphore;
+
 /**
  * -verbose:gc -Xms20M -Xmx20M -Xmn10M  -XX:+PrintGCDetails -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=1
  * -verbose:gc -Xms20M -Xmx20M -Xmn10M  -XX:+PrintGCDetails -XX:SurvivorRatio=8 -XX:MaxTenuringThreshold=15
@@ -9,14 +11,17 @@ package gc;
 public class TestTenuringThreshold {
     public static final int _1MB = 1024 * 1024;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         byte[] allocation1, allocation2, allocation3;
         allocation1 = new byte[_1MB / 4];
         allocation2 = new byte[4 * _1MB];
 
         // 什么时候进入老年代取决于 XX:MaxTenuringThreshold
-       allocation3 = new byte[4 * _1MB];
+        allocation3 = new byte[4 * _1MB];
         allocation3 = null;
         allocation3 = new byte[4 * _1MB];
+
+        Semaphore semaphore = new Semaphore(0);
+        semaphore.acquire();
     }
 }
