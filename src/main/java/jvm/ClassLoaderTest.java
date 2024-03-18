@@ -5,6 +5,9 @@ import java.io.InputStream;
 
 public class ClassLoaderTest {
     public static void main(String[] args) throws ClassNotFoundException {
+        Class<?> klass = Class.forName("java.sql.Driver");
+        System.out.println("java.sql.Driver classloader: " + klass.getClassLoader());
+
         ClassLoader c1 = new MyClassLoader1();
         ClassLoader c2 = new MyClassLoader2();
 
@@ -14,6 +17,9 @@ public class ClassLoaderTest {
         System.out.println(klass2.getName());
         System.out.println(klass1 == klass2);
 
+        System.out.println("klass1 classloader: " + klass1.getClassLoader());
+        System.out.println("klass2 classloader: " + klass2.getClassLoader());
+
         MyClassLoader3 c3 = new MyClassLoader3(); // change to MyClassLoader1
 
         Class klass3 = Class.forName("jvm.ClassLoaderTest", false, c3);
@@ -21,6 +27,10 @@ public class ClassLoaderTest {
         System.out.println(klass3.getName());
         System.out.println(klass4.getName());
         System.out.println(klass3.equals(klass4));
+
+        System.out.println("klass3 classloader: " + klass3.getClassLoader());
+        System.out.println("klass4 classloader: " + klass4.getClassLoader());
+
     }
 
     static class MyClassLoader3 extends ClassLoader {
