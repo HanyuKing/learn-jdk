@@ -4,7 +4,7 @@ package jvm;
  * @author wanghanyu
  * @create 2018-01-04 10:44
  *
- *  -XX:CompileCommand=compileonly,*VolatileByteCodeTest.increment
+ *  -XX:+UnlockDiagnosticVMOptions -XX:+PrintAssembly -Xcomp -XX:CompileCommand=compileonly,*VolatileByteCodeTest.increment
  */
 public class VolatileByteCodeTest {
 
@@ -18,7 +18,14 @@ public class VolatileByteCodeTest {
         return a + b;
     }
 
+    public synchronized int increment2() {
+        synchronized (VolatileByteCodeTest.class) {
+            a = a + 1;
+            return a;
+        }
+    }
+
     public static void main(String[] args) {
-        new VolatileByteCodeTest().increment();
+        new VolatileByteCodeTest().increment2();
     }
 }

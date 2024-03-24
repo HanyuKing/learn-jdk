@@ -1,5 +1,8 @@
 package jvm;
 
+/**
+ * -XX:+UnlockDiagnosticVMOptions -XX:+PrintAssembly -Xcomp -XX:CompileCommand=compileonly,*Singleton.getInstance
+ */
 public class Singleton {
 
    private volatile static Singleton instance;
