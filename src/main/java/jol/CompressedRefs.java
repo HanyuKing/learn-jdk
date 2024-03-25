@@ -35,6 +35,8 @@ public class CompressedRefs {
         MyClass myClass = new MyClass(1);
         ClassLayout layout = ClassLayout.parseInstance(myClass);
 
-        out.println(layout.toPrintable());
+        synchronized (myClass) {
+            out.println(layout.toPrintable());
+        }
     }
 }
