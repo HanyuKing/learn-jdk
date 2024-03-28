@@ -1,4 +1,4 @@
-package BasicType;
+package basictype;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -140,5 +140,21 @@ public class StringTest {
         System.out.print("ssssssssssss");
         System.out.print(s.replaceAll(" ", ""));
         System.out.print("ssssssssssss");
+    }
+
+    @Test
+    public void testEquals() {
+        String s = new String("a");
+        String s2 = new String("a");
+
+        System.out.println(s == s2); // false
+
+        System.out.println(s.intern() == s2.intern()); // true
+
+        s = "b";
+        s2 = "b";
+
+        System.out.println(s == s2); // true
+
     }
 }

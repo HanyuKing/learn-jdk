@@ -1,4 +1,4 @@
-package BasicType;
+package basictype;
 
 /**
  * @author wanghanyu

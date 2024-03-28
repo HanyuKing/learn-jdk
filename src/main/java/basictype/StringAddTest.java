@@ -1,4 +1,4 @@
-package BasicType;
+package basictype;
 
 public class StringAddTest {
     public static void main(String[] args) {
