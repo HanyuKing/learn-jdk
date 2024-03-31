@@ -1,5 +1,7 @@
 package threadlocal;
 
+import reflect.ReflectUtil;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -9,23 +11,50 @@ import java.lang.ref.WeakReference;
  * @create 2017-10-30 22:56
  */
 public class ThreadLocalTest {
-    public static void main(String[] args) {
-        String str = new String("Hanyu");
-        //ReferenceQueue<Object> refQueue = new ReferenceQueue<Object>();
-        //WeakReference<String> weakReference = new WeakReference<String>(str, refQueue);
-        ThreadLocal<String> local = new ThreadLocal<String>();
-        //MyThreadLocal myThreadLocal = new MyThreadLocal();
-        local.set(str);
+    private static ThreadLocal<String> threadLocalStatic = new ThreadLocal<>();
+    public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
+        String str = "Hanyu";
+        threadLocalStatic.set(str);
         str = null;
+        //threadLocalStatic = null;
         System.gc();
-        //refQueue.poll();
-        System.out.println(local.get());
-        //System.out.println(myThreadLocal.weakReference.get());
-       // System.out.println(weakReference.get());
+
+        // System.out.println(local.get());
+
+        Object map = ReflectUtil.getFieldValue(Thread.currentThread(), "threadLocals");
+
+        Object table = ReflectUtil.getFieldValue(map, "table");
+
+        System.out.println(table); // key == null
+
+        threadLocalStatic.set("Hanyu2");
+
+        System.out.println(table); // key == null removed;
+
     }
-}
 
-class MyThreadLocal {
-    WeakReference<String> weakReference = new WeakReference<String>("King");
+//    public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
+//        String str = "Hanyu";
+//
+//        ThreadLocal<String> local = new ThreadLocal<String>();
+//
+//        local.set(str);
+//        str = null;
+//        local = null;
+//        System.gc();
+//
+//        // System.out.println(local.get());
+//
+//        Object map = ReflectUtil.getFieldValue(Thread.currentThread(), "threadLocals");
+//
+//        Object table = ReflectUtil.getFieldValue(map, "table");
+//
+//        System.out.println(table); // key == null
+//
+//        ThreadLocal<String> local2 = new ThreadLocal<String>();
+//        local2.set("Hanyu");
+//
+//        System.out.println(table); // key == null removed;
+//
+//    }
 }
-

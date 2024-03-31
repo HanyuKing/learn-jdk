@@ -14,7 +14,7 @@ public class ThreadLocalEntryTest {
 
         ThreadLocalEntryTest.Entry entry = new Entry(threadLocal, obj);
         obj = null;
-        threadLocal = null;
+       // threadLocal = null;
         System.gc();
         System.out.println(entry.get());
     }
