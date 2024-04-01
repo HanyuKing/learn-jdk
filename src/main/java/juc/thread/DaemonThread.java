@@ -1,4 +1,4 @@
-package juc;
+package juc.thread;
 
 /**
  * @Author Hanyu.Wang
@@ -11,6 +11,7 @@ public class DaemonThread {
         Thread thread = new Thread(() -> {
             while (true) {
                 System.out.println("I'm running...");
+
 
                 try {
                     Thread.sleep(1000);
