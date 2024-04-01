@@ -1,7 +1,7 @@
 package error;
 
-import com.why.maven_test.HelloWorldHanyu;
-import org.example.a.Hanyu;
+//import com.why.maven_test.HelloWorldHanyu;
+//import org.example.a.Hanyu;
 
 /**
  * @Author Hanyu.Wang
@@ -10,7 +10,7 @@ import org.example.a.Hanyu;
  * @Version 1.0
  **/
 public class NoSuchMethodErrorTest {
-    public static void main(String[] args) {
-        HelloWorldHanyu.main(Hanyu.BBB);
-    }
+//   // public static void main(String[] args) {
+//        HelloWorldHanyu.main(Hanyu.BBB);
+//    }
 }
