@@ -2,6 +2,8 @@ package juc;
 
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
+
 public class VolatileTest {
 
     static int i = 0;
@@ -49,5 +51,28 @@ public class VolatileTest {
             }).start();
         }
         System.out.println(VolatileTest.i);
+    }
+
+    private static boolean stop = false;
+    @Test
+    public void test2() {
+        // Thread-A
+        new Thread("Thread A") {
+            @Override
+            public void run() {
+                while (!stop) {
+                }
+                System.out.println(Thread.currentThread() + " stopped");
+            }
+        }.start();
+
+        // Thread-main
+        try {
+            TimeUnit.SECONDS.sleep(1);
+            System.out.println(Thread.currentThread() + " after 1 seconds");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        stop = true;
     }
 }
