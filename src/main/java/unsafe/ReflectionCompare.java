@@ -17,7 +17,7 @@ public class ReflectionCompare {
         + " times, duration: " + duration);  
     duration = testUnsafe();  
     System.out.println("int unsafe test for  " + count  
-        + " times, duration: " + duration);  
+        + " times, duration: " + duration);
   }  
   private static long testUnsafe() {  
     long start = System.currentTimeMillis();  
