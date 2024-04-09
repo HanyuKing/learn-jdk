@@ -1,4 +1,4 @@
-package juc;
+package juc.cyclicbarrier;
 
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
