@@ -1,4 +1,4 @@
-package threadlocal;
+package juc.threadlocal;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;

@@ -1,8 +1,6 @@
-package threadlocal;
+package juc.threadlocal;
 
 import reflect.ReflectUtil;
-
-import java.lang.ref.WeakReference;
 
 /**
  * ThreadLocal 变量如果不及时remove会导致GC频繁

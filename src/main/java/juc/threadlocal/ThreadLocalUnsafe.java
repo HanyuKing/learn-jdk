@@ -1,4 +1,4 @@
-package threadlocal;
+package juc.threadlocal;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
