@@ -14,6 +14,9 @@ import java.util.concurrent.locks.StampedLock;
  * @Version 1.0
  **/
 public class StampedLockTest {
+    /*
+        CPU暴涨问题：https://developer.huawei.com/consumer/cn/forum/topic/0204100958151899035?fid=0101592429757310384
+     */
     public static void main(String[] args) throws InterruptedException {
         Point point = new Point();
         point.moveIfAtOrigin(4, 3);

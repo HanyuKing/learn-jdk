@@ -21,7 +21,7 @@ public class MyAtomicInteger {
     static {
         try {
             valueOffset = unsafe.objectFieldOffset
-                    (AtomicInteger.class.getDeclaredField("value"));
+                    (MyAtomicInteger.class.getDeclaredField("value"));
         } catch (Exception ex) { throw new Error(ex); }
     }
 

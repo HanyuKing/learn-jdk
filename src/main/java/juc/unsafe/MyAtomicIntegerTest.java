@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.junit.Test;
 
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +20,9 @@ import java.util.function.IntUnaryOperator;
  **/
 public class MyAtomicIntegerTest {
     @Test
+    /*
+        Safe
+     */
     public void testThreadSafe() throws Exception {
         MyAtomicInteger atomicInteger = new MyAtomicInteger(0);
 
@@ -40,6 +44,9 @@ public class MyAtomicIntegerTest {
     }
 
     @Test
+    /*
+        Unsafe
+     */
     public void testThreadSafe2() throws Exception {
         Value value = new Value(0);
 
@@ -61,6 +68,33 @@ public class MyAtomicIntegerTest {
         executorService.awaitTermination(1000, TimeUnit.MILLISECONDS);
 
         System.out.println(value);
+    }
+
+    @Test
+    /*
+        Safe
+     */
+    public void testThreadSafe3() throws Exception {
+        MyAtomicInteger2 atomicInteger = new MyAtomicInteger2();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(200);
+
+        int total = 10000000;
+        CountDownLatch latch = new CountDownLatch(total);
+
+        for (int i = 0; i < total; i++) {
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    atomicInteger.incrementAndGet();
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+
+        System.out.println("total: " + atomicInteger.getValue() + ", count: " + atomicInteger.count.get());
     }
 }
 
