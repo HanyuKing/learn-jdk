@@ -19,5 +19,7 @@ public class ReentrantLock {
     @Test
     public void testNoReentrantLock() {
         Lock lock = new java.util.concurrent.locks.ReentrantLock();
+        lock.lock();
+        lock.unlock();
     }
 }
