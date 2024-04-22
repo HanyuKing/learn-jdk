@@ -1,4 +1,4 @@
-package thread;
+package thread.threadpoolexception;
 
 import com.google.caliper.model.Run;
 import org.junit.Test;
@@ -14,6 +14,31 @@ import java.util.concurrent.*;
  * @create 2017-12-24 16:42
  */
 public class FutureTaskTest {
+
+    @Test
+    public void printException2() throws InterruptedException {
+        ExecutorService pool = Executors.newCachedThreadPool();
+
+        pool.execute(() -> {
+            throw new RuntimeException("execute异常能打印出来");
+        });
+
+        pool.awaitTermination(1000, TimeUnit.MICROSECONDS);
+        pool.shutdown();
+    }
+
+    @Test
+    public void printException() throws InterruptedException {
+        ExecutorService pool = Executors.newCachedThreadPool();
+
+        pool.submit((Runnable) () -> {
+            throw new RuntimeException("submit异常打印不出来");
+        });
+
+        pool.awaitTermination(1000, TimeUnit.MICROSECONDS);
+        pool.shutdown();
+    }
+
     public static void main(String[] args) {
         ExecutorService pool = Executors.newCachedThreadPool();
         List<Future> futures = new ArrayList<Future>();
