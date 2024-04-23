@@ -6,6 +6,13 @@ import java.util.concurrent.RecursiveTask;
 
 import static java.time.temporal.ChronoUnit.MILLIS;
 
+/**
+ * Q: This is a program for Fibonacci using Java 7 ForkJoin . But seems like there is a dead lock.
+ *    (https://stackoverflow.com/questions/51414388/fibonacci-using-fork-join-in-java-7)
+ *
+ * A: No. 50 is so larger，using 10
+ *
+ */
 class Fibonacci extends RecursiveTask<Long>{
 
     long num;
