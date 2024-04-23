@@ -30,7 +30,7 @@ class Fibonacci extends RecursiveTask<Long>{
 public class ForkJoinFibonacciEx {
 
     public static void main(String[] arg){
-        long n = 20;
+        long n = 30;
         long t1 = System.currentTimeMillis();
         long res = fibonacci(n);
         long t2 = System.currentTimeMillis();
