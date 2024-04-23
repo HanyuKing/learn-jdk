@@ -13,7 +13,11 @@ import java.util.concurrent.locks.Lock;
 public class ReentrantLock {
     @Test
     public void testReentrantLock() {
+        Lock lock = new java.util.concurrent.locks.ReentrantLock();
+        lock.unlock();
+        lock.lock();
 
+        lock.unlock();
     }
 
     @Test
