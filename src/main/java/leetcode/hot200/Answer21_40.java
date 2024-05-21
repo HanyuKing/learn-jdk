@@ -363,6 +363,235 @@ public class Answer21_40 extends Base {
         // 2. 是搜索树时：lowestCommonAncestor
     }
 
+    @Test
+    public void testP2244() {
+        int[] tasks = new int[] {2,2,3,3,2,4,4,4,4,4};
+        print(minimumRounds(tasks));
+
+        tasks = new int[] {2,3,3};
+        print(minimumRounds(tasks));
+
+        tasks = new int[] {5,5,5,5};
+        print(minimumRounds(tasks));
+
+        tasks = new int[] {9,9,11,9,22,22,11,552,22,22,55};
+        print(minimumRounds(tasks));
+    }
+
+    @Test
+    public void testP792() {
+        // todo 优化暴力方法
+
+        String s = "abcde";
+        String[] words = new String[] {"a","bb","acd","ace"};
+        int cnt = numMatchingSubseq(s, words);
+        print(cnt);
+
+        s = "dsahjpjauf";
+        words = new String[] {"ahjpjau","ja","ahbwzgqnuk","tnmlanowax"};
+        cnt = numMatchingSubseq(s, words);
+        print(cnt);
+    }
+
+    @Test
+    public void testP232() {
+        // PASS
+    }
+
+    @Test
+    public void testP82() {
+        // 输入：head = [1,2,3,3,4,4,5] 输出：[1,2,5]
+
+        ListNode head = new ListNode(1);
+        ListNode node1 = new ListNode(2);
+        ListNode node2 = new ListNode(3);
+        ListNode node3 = new ListNode(3);
+        ListNode node4 = new ListNode(4);
+        ListNode node5 = new ListNode(4);
+        ListNode node6 = new ListNode(5);
+
+        head.next = node1;
+        node1.next = node2;
+        node2.next = node3;
+        node3.next = node4;
+        node4.next = node5;
+        node5.next = node6;
+
+        print(head);
+
+        head = deleteDuplicates(head);
+
+        print(head);
+
+        ///////////////////////////////////////////
+        // 输入：head = [1,1,1,2,3] 输出：[2,3]
+    }
+
+    @Test
+    public void testP82_1() {
+        // // 输入：head = [1,1,1,2,3] 输出：[2,3]
+
+        ListNode head = new ListNode(1);
+        ListNode node1 = new ListNode(1);
+        ListNode node2 = new ListNode(2);
+//        ListNode node3 = new ListNode(2);
+//        ListNode node4 = new ListNode(3);
+
+        head.next = node1;
+        node1.next = node2;
+//        node2.next = node3;
+//        node3.next = node4;
+
+        print(head);
+
+        head = deleteDuplicates(head);
+
+        print(head);
+    }
+
+    public ListNode deleteDuplicates(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode tail = null;
+        ListNode p1 = head;
+        ListNode p2 = head.next;
+
+        boolean duplicate = false;
+
+        while (p2 != null) {
+            if (p1.val == p2.val) {
+                p2 = p2.next;
+                duplicate = true;
+                continue;
+            }
+
+            if (!duplicate) {
+                if (tail == null) {
+                    tail = p1;
+                    head = p1;
+                    tail.next = null;
+                } else {
+                    tail.next = p1;
+                    tail = p1;
+                    tail.next = null;
+                }
+            }
+
+            duplicate = false;
+
+            p1 = p2;
+            p2 = p2.next;
+
+        }
+
+        if (!duplicate) {
+            if (tail == null) {
+                head = tail = p1;
+            } else {
+                tail.next = p1;
+            }
+        }
+
+        return tail == null ? null : head;
+    }
+
+    class MyQueue {
+        Stack<Integer> s1 = new Stack<>();
+        Stack<Integer> s2 = new Stack<>();
+        public MyQueue() {
+
+        }
+
+        public void push(int x) {
+            // 1,2,3
+            s1.push(x);
+        }
+
+        public int pop() {
+            // 1,2,3
+            if (empty()) {
+                return -1;
+            }
+            if (s2.isEmpty()) {
+                while (!s1.isEmpty()) {
+                    s2.push(s1.pop());
+                }
+            }
+            return s2.pop();
+        }
+
+        public int peek() {
+            if (empty()) {
+                return -1;
+            }
+            if (s2.isEmpty()) {
+                while (!s1.isEmpty()) {
+                    s2.push(s1.pop());
+                }
+            }
+            return s2.peek();
+        }
+
+        public boolean empty() {
+            return s1.isEmpty() && s2.isEmpty();
+        }
+    }
+
+    public int numMatchingSubseq(String s, String[] words) {
+        int cnt = 0;
+        for (String word : words) {
+            if (matchingSubseq(s, word)) {
+                cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    private boolean matchingSubseq(String s, String word) {
+        if (s.length() < word.length()) {
+            return false;
+        }
+        int i1 = 0, i2 = 0;
+        while (i1 < word.length() && i2 < s.length()) {
+            if (word.charAt(i1) == s.charAt(i2)) {
+                i1++;
+                i2++;
+            } else {
+                i2++;
+            }
+        }
+
+        return i1 == word.length();
+    }
+
+    public int minimumRounds(int[] tasks) {
+        Map<Integer, Integer> data = new HashMap<>();
+        for (int t : tasks) {
+            data.compute(t, (k, v) -> v == null ? 1 : v + 1);
+        }
+        int totalStep = 0;
+        for (Map.Entry<Integer, Integer> entry : data.entrySet()) {
+            int step = taskRounds(entry.getValue());
+            if (step == -1) {
+                return -1;
+            }
+            totalStep += step;
+        }
+        return totalStep;
+    }
+
+    private int taskRounds(Integer count) {
+        if (count == 1) {
+            return -1;
+        } else if (count % 3 == 0) {
+            return count / 3;
+        } else {
+            return 1 + count / 3;
+        }
+    }
+
     public TreeNode lowestCommonAncestor3(TreeNode root, TreeNode p, TreeNode q) {
         if(root.val > p.val && root.val > q.val){
             return lowestCommonAncestor(root.left, p, q);
