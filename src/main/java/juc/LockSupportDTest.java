@@ -50,7 +50,7 @@ public class LockSupportDTest {
                 throw new RuntimeException(e);
             }
             LockSupport.park();
-            System.out.println("t1... unpark");
+            System.out.println("t1... park");
         });
         t1.start();
 
