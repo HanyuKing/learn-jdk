@@ -1,4 +1,4 @@
-package guava;
+package cache.guava;
 
 import org.junit.Test;
 

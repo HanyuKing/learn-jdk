@@ -2,12 +2,33 @@ package juc;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class LockSupportDTest {
+
+    @Test
+    public void testUnParkManyPark() throws Exception {
+        List<Thread> threadList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Thread t = new Thread(() -> {
+                LockSupport.park(this);
+                System.out.println(Thread.currentThread().getId() + " do work" );
+            });
+            threadList.add(t);
+            t.start();
+        }
+
+        Thread.sleep(2000);
+
+        for (Thread t : threadList) {
+            LockSupport.unpark(t);
+        }
+    }
 
     @Test
     public void testConditionAwait() throws InterruptedException {

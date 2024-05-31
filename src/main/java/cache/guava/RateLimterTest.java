@@ -1,8 +1,7 @@
-package guava;
+package cache.guava;
 
 import com.google.common.util.concurrent.RateLimiter;
 
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class RateLimterTest {
@@ -13,5 +12,4 @@ public class RateLimterTest {
             System.out.println(result);
         }
     }
-
 }

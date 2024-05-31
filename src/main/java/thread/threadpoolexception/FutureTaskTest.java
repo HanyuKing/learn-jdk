@@ -16,6 +16,36 @@ import java.util.concurrent.*;
 public class FutureTaskTest {
 
     @Test
+    public void testMultiConsumerOneFutureTask() throws Exception {
+        FutureTask<String> futureTask = new FutureTask<>(() -> {
+            Thread.sleep(2000);
+            return "hello";
+        });
+
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        executor.submit(futureTask);
+
+        List<Thread> threadList = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            Thread t = new Thread(() -> {
+                try {
+                    String value = futureTask.get();
+                    System.out.println(System.currentTimeMillis() + " -> " + value);
+                } catch (InterruptedException | ExecutionException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            threadList.add(t);
+            t.start();
+        }
+
+        for (Thread t : threadList) {
+            t.join();
+        }
+    }
+
+    @Test
     public void printException2() throws InterruptedException {
         ExecutorService pool = Executors.newCachedThreadPool();
 
