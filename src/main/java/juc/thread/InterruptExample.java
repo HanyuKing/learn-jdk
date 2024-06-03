@@ -1,6 +1,31 @@
 package juc.thread;
 
+import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
+
 public class InterruptExample {
+
+
+    @Test
+    public void testInterruptSelf() throws Exception {
+        Thread t = new Thread(() -> {
+            Thread ct = Thread.currentThread();
+            ct.interrupt();
+            System.out.println(System.currentTimeMillis() + "->isAlive: " + ct.isAlive() + ", interrupted: " + ct.isInterrupted());
+
+            long now = System.currentTimeMillis();
+            while (System.currentTimeMillis() - now < 1000) {}
+
+            System.out.println(System.currentTimeMillis() + "->end");
+        });
+        t.start();
+        Thread.sleep(100);
+        // t.join();
+        System.out.println("isAlive2: " + t.isAlive() + ", interrupted2: " + t.isInterrupted());
+        t.join();
+    }
 
     private static class MyThread1 extends Thread {
         @Override
