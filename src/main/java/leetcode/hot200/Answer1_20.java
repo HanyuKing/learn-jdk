@@ -205,6 +205,7 @@ public class Answer1_20 extends Base {
         this.j = new boolean[nums.length];
         doPermute(nums, new ArrayList<>(), result);
         return result;
+
     }
 
     public void doPermute2(int[] nums, int start, int end, List<List<Integer>> result) {
