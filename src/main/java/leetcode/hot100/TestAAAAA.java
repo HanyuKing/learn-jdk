@@ -333,6 +333,274 @@ public class TestAAAAA {
         return result;
     }
 
+    @Test
+    public void testP438() {
+        String s = "cbaebabacd", p = "abc"; // [0, 6]
 
+        System.out.println(findAnagrams(s, p));
+    }
 
+    public List<Integer> findAnagrams(String s, String p) {
+        int[] counts = new int[26];
+        int[] needCounts = new int[26];
+
+        int needValidCount = 0;
+        for (Character c : p.toCharArray()) {
+            needCounts[c - 'a']++;
+        }
+        for (int c : needCounts) {
+            if (c > 0) {
+                needValidCount++;
+            }
+        }
+
+        int left = 0;
+        int right = 0;
+        int validCount = 0;
+
+        List<Integer> result = new ArrayList<>();
+
+        while (right < s.length()) {
+            char rChar = s.charAt(right);
+            int rCharIndex = rChar - 'a';
+            if (needCounts[rCharIndex] > 0) { // 存在
+                counts[rCharIndex]++;
+                if (counts[rCharIndex] == needCounts[rCharIndex]) { // 数量相等，合法字符数加1
+                    validCount++;
+                }
+            }
+            right++;
+
+            while (validCount == needValidCount) {
+                if (right - left == p.length()) {
+                    result.add(left);
+                }
+                char lChar = s.charAt(left);
+                int lCharIndex = lChar - 'a';
+                if (counts[lCharIndex] > 0) {
+                    counts[lCharIndex]--;
+                    if (counts[lCharIndex] < needCounts[lCharIndex]) {
+                        validCount--;
+                    }
+                }
+                left++;
+            }
+        }
+
+        return result;
+    }
+
+    @Test
+    public void testP56() {
+        /*
+        输入：intervals = [[1,3],[2,6],[8,10],[15,18]]
+        输出：[[1,6],[8,10],[15,18]]
+        解释：区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
+         */
+        int[][] intervals = new int[][] {{1,3},{2,6},{8,10},{15,18}};
+        int[][] result = merge(intervals);
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i < result.length; i++) {
+            sb.append("[");
+            for (int j = 0; j < result[0].length; j++) {
+                sb.append(result[i][j]).append(",");
+            }
+            sb.deleteCharAt(sb.length() - 1);
+            sb.append("]");
+        }
+        sb.append("]");
+        System.out.println(sb);
+    }
+
+    public int[][] merge(int[][] intervals) {
+        int[][] result = new int[intervals.length][2];
+        Arrays.sort(intervals, new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[0] -  o2[0];
+            }
+        });
+        int index = 0;
+        result[index] = intervals[index];
+        for (int i = 1; i < intervals.length; i++) {
+            if (intervals[i][0] <= result[index][1]) {
+                result[index][1] = Math.max(result[index][1], intervals[i][1]);
+            } else {
+                result[++index] = intervals[i];
+            }
+        }
+        return Arrays.copyOf(result, index + 1);
+    }
+
+    @Test
+    public void testP189() {
+        int[] nums = new int[] {1,2,3,4,5,6,7,8,9,10,11,12,13};
+        int k = 17;
+        // [5,6,7,1,2,3,4]
+        // 4,3,2,1,7,6,5
+        // [-1,-100,3,99]
+        rotate(nums, k);
+
+        for (int n : nums) {
+            System.out.print(n + " ");
+        }
+        System.out.println();
+    }
+
+    public void rotate(int[] nums, int k) {
+        k = k % nums.length;
+        reverse(nums, 0, nums.length - k - 1);
+        reverse(nums, nums.length - k, nums.length - 1);
+        reverse(nums, 0, nums.length - 1);
+    }
+    private void reverse(int[] nums, int start, int end) {
+        if (start < 0 || end < 0 || end - start <= 0) {
+            return;
+        }
+        int len = end - start + 1;
+        for (int i = 0; i < len / 2; i++) {
+            int temp = nums[start + i];
+            nums[start + i] = nums[end - i];
+            nums[end - i] = temp;
+        }
+    }
+
+    @Test
+    public void testP238() {
+        /*
+            输入: nums = [1,2,3,4]
+            输出: [24,12,8,6]
+         */
+    }
+    public int[] productExceptSelf(int[] nums) {
+        int[] result = new int[nums.length];
+        result[nums.length - 1] = 1;
+        for (int i = nums.length - 2; i >= 0; i--) {
+            result[i] = nums[i + 1] * result[i + 1];
+        }
+        int leftMulti = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            result[i] = leftMulti * result[i];
+            leftMulti = leftMulti * nums[i];
+        }
+        return result;
+    }
+
+    @Test
+    public void testP73() {
+        int[][] matrix = {
+                {1,1,1},
+                {1,0,1},
+                {1,1,1}};
+                /*
+                [[1,0,1],
+                 [0,0,0],
+                 [1,0,1]]
+             */
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+
+        setZeroes(matrix);
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+    }
+
+    public void setZeroes3(int[][] matrix) {
+        boolean[] rows = new boolean[matrix.length];
+        boolean[] cols = new boolean[matrix[0].length];
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (matrix[i][j] == 0) {
+                    rows[i] = true;
+                    cols[j] = true;
+                }
+            }
+        }
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (rows[i] || cols[j]) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    public void setZeroes(int[][] matrix) {
+        boolean[][] changed = new boolean[matrix.length][matrix[0].length];
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                if (!changed[i][j] && matrix[i][j] == 0) {
+                    for (int k = 0; k < matrix[0].length; k++) {
+                        if (matrix[i][k] != 0) {
+                            matrix[i][k] = 0;
+                            changed[i][k] = true;
+                        }
+                    }
+                    for (int k = 0; k < matrix.length; k++) {
+                        if (matrix[k][j] != 0) {
+                            matrix[k][j] = 0;
+                            changed[k][j] = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void setZeroes2(int[][] matrix) {
+        int m = matrix.length, n = matrix[0].length;
+        boolean flagCol0 = false, flagRow0 = false;
+        for (int i = 0; i < n; i++) {
+            if (matrix[0][i] == 0) {
+                flagCol0 = true;
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            if (matrix[i][0] == 0) {
+                flagRow0 = true;
+            }
+        }
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (matrix[i][j] == 0) {
+                    matrix[i][0] = 0;
+                    matrix[0][j] = 0;
+                }
+            }
+        }
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                if (matrix[i][0] == 0 || matrix[0][j] == 0) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+
+        if (flagCol0) {
+            for (int i = 0; i < n; i++) {
+                matrix[0][i] = 0;
+            }
+        }
+        if (flagRow0) {
+            for (int i = 0; i < m; i++) {
+                matrix[i][0] = 0;
+            }
+        }
+    }
 }
