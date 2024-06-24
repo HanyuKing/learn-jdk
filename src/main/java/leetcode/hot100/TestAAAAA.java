@@ -1,5 +1,6 @@
 package leetcode.hot100;
 
+import leetcode.hot200.Base;
 import org.junit.Test;
 
 import java.util.*;
@@ -602,5 +603,75 @@ public class TestAAAAA {
                 matrix[i][0] = 0;
             }
         }
+    }
+
+    @Test
+    public void testP160() {
+
+    }
+
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        // a + c
+        // b + c
+        // a + c + b + c = b + c + a + c
+        ListNode pA = headA;
+        ListNode pB = headB;
+        while (pA != pB) {
+            pA = pA == null ? headB : pA.next;
+            pB = pB == null ? headA : pB.next;
+        }
+        return pA;
+    }
+
+    public ListNode reverseList2(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        ListNode p = head;
+        ListNode q = p.next;
+        p.next = null;
+        // null<-p q->r->null
+        // null<-1<-p  q->null
+        while (q.next != null) {
+            ListNode r = q.next;
+            q.next = p;
+            p = q;
+            q = r;
+        }
+
+        q.next = p;
+        return q;
+    }
+
+    @Test
+    public void tesyP206() {
+        ListNode head = new ListNode(1);
+        ListNode n1 = new ListNode(2);
+        ListNode n2 = new ListNode(3);
+        head.next = n1;
+        n1.next = n2;
+        reverseList(head);
+    }
+
+    public ListNode reverseList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        // 1->2>3->null
+        ListNode newHead = reverseList(head.next);
+        head.next.next = head;
+        head.next = null;
+
+        return newHead;
+    }
+
+
+
+    protected class ListNode {
+        int val;
+        ListNode next;
+        ListNode() {}
+        ListNode(int val) { this.val = val; }
+        ListNode(int val, ListNode next) { this.val = val; this.next = next; }
     }
 }
