@@ -665,7 +665,364 @@ public class TestAAAAA {
         return newHead;
     }
 
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        int nextLevelCount = 1;
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            List<Integer> levelResult = new ArrayList<>();
+            int currLevelCount = nextLevelCount;
+            nextLevelCount = 0;
+            for (int i = 0; i < currLevelCount; i++) {
+                TreeNode node = queue.poll();
+                levelResult.add(node.val);
+                if (node.left != null) {
+                    queue.add(node.left);
+                    nextLevelCount++;
+                }
+                if (node.right != null) {
+                    queue.add(node.right);
+                    nextLevelCount++;
+                }
+            }
+            result.add(levelResult);
+        }
+        return result;
+    }
 
+    public TreeNode sortedArrayToBST(int[] nums) {
+        if (nums.length == 0) {
+            return null;
+        }
+        int mid = nums.length / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+        root.left = sortedArrayToBST(Arrays.copyOfRange(nums, 0, mid));
+        root.right = sortedArrayToBST(Arrays.copyOfRange(nums, mid + 1, nums.length));
+        return root;
+    }
+
+    @Test
+    public void testP98() {
+        TreeNode root = new TreeNode(2);
+        TreeNode node1 = new TreeNode(1);
+        TreeNode node2 = new TreeNode(3);
+        TreeNode node3 = new TreeNode(3);
+        TreeNode node4 = new TreeNode(7);
+        root.left = node1;
+        root.right = node2;
+//        node2.left = node3;
+//        node2.right = node4;
+
+        System.out.println(isValidBST(root));
+    }
+
+    public boolean isValidBST2(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+        long min = Long.MIN_VALUE;
+        long max = Long.MAX_VALUE;
+        return isValidBST(root, min, max);
+    }
+
+    private boolean isValidBST(TreeNode root, long min, long max) {
+        if (root == null) {
+            return true;
+        }
+        if (root.val <= min || root.val >= max) {
+            return false;
+        }
+        return isValidBST(root.left, min, root.val) && isValidBST(root.right, root.val, max);
+    }
+
+    public boolean isValidBST(TreeNode root) {
+        if (root == null) {
+            return false;
+        }
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        long pre = Long.MIN_VALUE;
+        while (!stack.isEmpty()) {
+            root = stack.pop();
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+
+            if (stack.isEmpty()) break;
+
+            TreeNode node = stack.pop();
+
+            System.out.println(node.val);
+
+            if (node.val <= pre) {
+                return false;
+            }
+            pre = node.val;
+
+            if (node.right != null) {
+                stack.push(node.right);
+            } else {
+                stack.push(null);
+            }
+        }
+        return true;
+    }
+    @Test
+    public void testP230() {
+        TreeNode root = new TreeNode(3);
+        TreeNode node1 = new TreeNode(1);
+        TreeNode node2 = new TreeNode(2);
+        TreeNode node3 = new TreeNode(3);
+        TreeNode node4 = new TreeNode(7);
+        root.left = node1;
+        node1.right = node2;
+//        node2.left = node3;
+//        node2.right = node4;
+
+        System.out.println(kthSmallest(root, 3));
+    }
+
+    public int kthSmallest2(TreeNode root, int k) {
+        Stack<TreeNode> stack = new Stack<>();
+
+        int count = 0;
+
+        while (root != null || !stack.isEmpty()) {
+            while (root != null) {
+                stack.push(root);
+                root = root.left;
+            }
+            TreeNode node = stack.pop();
+            if (++count == k) {
+                return node.val;
+            }
+            if (node.right != null) {
+                root = node.right;
+            }
+        }
+        return -1;
+    }
+
+    private int count = 0;
+    private int val = 0;
+    public int kthSmallest(TreeNode root, int k) {
+        doKthSmallest(root, k);
+        return val;
+    }
+
+    public void doKthSmallest(TreeNode root, int k) {
+        if (root == null) {
+            return ;
+        }
+        kthSmallest(root.left, k);
+        if (++count == k) {
+            val = root.val;
+        }
+        kthSmallest(root.right, k);
+    }
+
+    @Test
+    public void testP199() {
+        TreeNode root = new TreeNode(1);
+        TreeNode node1 = new TreeNode(3);
+        root.right = node1;
+
+        System.out.println(doRightSideView(root));
+    }
+
+    public List<Integer> doRightSideView(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        int nextLevelCount = 1;
+        while (!queue.isEmpty()) {
+            TreeNode lastNode = null;
+            int count = 0;
+            for (int i = 0; i < nextLevelCount; i++) {
+                lastNode = queue.poll();
+                if (lastNode.left != null) {
+                    queue.offer(lastNode.left);
+                    count++;
+                }
+                if (lastNode.right != null) {
+                    queue.offer(lastNode.right);
+                    count++;
+                }
+            }
+            nextLevelCount = count;
+            result.add(lastNode.val);
+        }
+
+        return result;
+    }
+
+    @Test
+    public void testP103() {
+        TreeNode root = new TreeNode(1);
+        TreeNode node1 = new TreeNode(2);
+        TreeNode node2 = new TreeNode(3);
+        TreeNode node3 = new TreeNode(4);
+        TreeNode node4 = new TreeNode(5);
+        root.left = node1;
+        root.right = node2;
+        node2.right = node4;
+        node1.left = node3;
+
+        System.out.println(zigzagLevelOrder(root));
+    }
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        int nextLevelCount = 1;
+
+        boolean layerLeftStart = true;
+
+        while (!queue.isEmpty()) {
+            List<Integer> values = new ArrayList<>();
+            int count = 0;
+            for (int i = 0; i < nextLevelCount; i++) {
+                TreeNode node = queue.poll();
+                values.add(node.val);
+
+                if (node.left != null) {
+                    queue.offer(node.left);
+                    count++;
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                    count++;
+                }
+            }
+            nextLevelCount = count;
+            if (!layerLeftStart) {
+                Collections.reverse(values);
+            }
+            result.add(values);
+            layerLeftStart = !layerLeftStart;
+        }
+
+        return result;
+    }
+
+    @Test
+    public void testP114() {
+        TreeNode root = new TreeNode(1);
+        TreeNode node1 = new TreeNode(2);
+        TreeNode node2 = new TreeNode(5);
+        TreeNode node3 = new TreeNode(3);
+        TreeNode node4 = new TreeNode(4);
+        TreeNode node5 = new TreeNode(6);
+        root.left = node1;
+        root.right = node2;
+        node1.left = node3;
+        node1.right = node4;
+        node2.right = node5;
+        flatten(root);
+    }
+    public void flatten(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        List<TreeNode> nodeList = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode node = stack.pop();
+            nodeList.add(node);
+            if (node.right != null) {
+                stack.push(node.right);
+            }
+            if (node.left != null) {
+                stack.push(node.left);
+            }
+        }
+        for (int i = 0; i < nodeList.size() - 1; i++) {
+            nodeList.get(i).left = null;
+            nodeList.get(i).right= nodeList.get(i + 1);
+        }
+        nodeList.get(nodeList.size() - 1).right = null;
+        nodeList.get(nodeList.size() - 1).left = null;
+    }
+
+    @Test
+    public void testP437() {
+
+    }
+
+    public int pathSum(TreeNode root, int targetSum) {
+        int ans = 0;
+        if (root == null) {
+            return ans;
+        }
+        ans = rootSum(root, targetSum);
+        ans += pathSum(root.left, targetSum);
+        ans += pathSum(root.right, targetSum);
+        return ans;
+    }
+
+    private int rootSum(TreeNode root, long targetSum) {
+        int ret = 0;
+
+        if (root == null) {
+            return 0;
+        }
+
+        int val = root.val;
+        if (val == targetSum) {
+            ret++;
+        }
+        ret += rootSum(root.left, targetSum - val);
+        ret += rootSum(root.right, targetSum - val);
+        return ret;
+    }
+
+    @Test
+    public void testP236() {
+
+    }
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return null;
+        }
+        if (root == p || root == q) {
+            return root;
+        }
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+
+        if (left != null && right != null) {
+            return root;
+        }
+        return left == null ? right : left;
+    }
+
+    public class TreeNode {
+      int val;
+      TreeNode left;
+      TreeNode right;
+      TreeNode() {}
+      TreeNode(int val) { this.val = val; }
+      TreeNode(int val, TreeNode left, TreeNode right) {
+          this.val = val;
+          this.left = left;
+          this.right = right;
+      }
+  }
 
     protected class ListNode {
         int val;
