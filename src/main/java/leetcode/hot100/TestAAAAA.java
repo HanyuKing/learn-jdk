@@ -1,6 +1,5 @@
 package leetcode.hot100;
 
-import leetcode.hot200.Base;
 import org.junit.Test;
 
 import java.util.*;
@@ -1011,6 +1010,74 @@ public class TestAAAAA {
         return left == null ? right : left;
     }
 
+    @Test
+    public void testP124() {
+        TreeNode root = new TreeNode(1);
+        TreeNode node1 = new TreeNode(2);
+        TreeNode node2 = new TreeNode(3);
+        TreeNode node3 = new TreeNode(15);
+        TreeNode node4 = new TreeNode(7);
+        root.left = node1;
+        root.right = node2;
+//        node2.left = node3;
+//        node2.right = node4;
+
+        System.out.println(maxPathSum(root));
+    }
+
+    public int maxPathSum(TreeNode root) {
+        doMaxPathSum(root);
+        return max;
+    }
+
+    public int doMaxPathSum(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        int leftMax = Math.max(doMaxPathSum(root.left), 0);
+        int rightMax = Math.max(doMaxPathSum(root.right), 0);
+        max = Math.max(leftMax + rightMax + root.val, max);
+        return Math.max(leftMax, rightMax) + root.val;
+    }
+
+    public int maxPathSum2(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        rootMaxPathSum(root);
+        return max;
+    }
+    int max = Integer.MIN_VALUE;
+    public int rootMaxPathSum(TreeNode root) {
+        if (root == null) {
+            return Integer.MIN_VALUE;
+        }
+        int leftMax = rootMaxPathSum(root.left);
+        int rightMax = rootMaxPathSum(root.right);
+
+        int currMax = Integer.MIN_VALUE;
+        int maxPath = Integer.MIN_VALUE;
+        if (leftMax == Integer.MIN_VALUE && rightMax == Integer.MIN_VALUE) {
+            currMax = root.val;
+            maxPath = root.val;
+        } else if (leftMax != Integer.MIN_VALUE && rightMax != Integer.MIN_VALUE){
+            maxPath = Math.max(root.val, Math.max(leftMax, rightMax) + root.val);
+            currMax = Math.max(leftMax + rightMax + root.val, Math.max(maxPath, root.val));
+        } else if (leftMax == Integer.MIN_VALUE) {
+            maxPath = Math.max(root.val, root.val + rightMax);
+            currMax = Math.max(maxPath, rightMax);
+        } else {
+            maxPath = Math.max(root.val, root.val + leftMax);
+            currMax = Math.max(maxPath, leftMax);
+        }
+
+        //System.out.println(String.format("leftMax: %d, root: %d, rightMax: %d, currMax: %d, maxPath: %d", leftMax, root.val, rightMax, currMax, maxPath));
+
+        max = Math.max(root.val, Math.max(currMax, max));
+
+        return maxPath;
+    }
+
     public class TreeNode {
       int val;
       TreeNode left;
@@ -1030,5 +1097,312 @@ public class TestAAAAA {
         ListNode() {}
         ListNode(int val) { this.val = val; }
         ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+    }
+
+    @Test
+    public void testP200() {
+        char[][] grid = {
+                {'1','1','1','1','0'},
+                {'1','1','0','1','0'},
+                {'1','1','0','0','0'},
+                {'0','0','0','0','0'}};
+
+        System.out.println(numIslands(grid));
+    }
+
+    public int numIslands(char[][] grid) {
+        int r = grid.length;
+        int c = grid[0].length;
+        int num = 0;
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                if (grid[i][j] == '1') {
+                    visitLands(grid, i, j);
+                    num++;
+                }
+            }
+        }
+        return num;
+    }
+    public void visitLands(char[][] grid, int r, int c) {
+        if (grid[r][c] == '0') {
+            return;
+        }
+        grid[r][c] = '0';
+        if (c - 1 >= 0) visitLands(grid, r, c - 1);
+        if (c + 1 < grid[0].length) visitLands(grid, r, c + 1);
+        if (r - 1 >= 0) visitLands(grid, r - 1, c);
+        if (r + 1 < grid.length) visitLands(grid, r + 1, c);
+    }
+
+    @Test
+    public void testP994() {
+        int[][] grid = new int[][]{
+                {2,1,1},
+                {1,1,0},
+                {0,1,1}
+        };
+        /*
+            [[2,1,1],
+             [0,1,1],
+             [1,0,1]]
+         */
+
+        System.out.println(orangesRotting(grid));
+    }
+    public int orangesRotting(int[][] grid) {
+        int r = grid.length;
+        int c = grid[0].length;
+        int count = 0;
+        int round = 0;
+
+        Queue<int[]> queue = new LinkedList<>();
+
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < c; j++) {
+                if (grid[i][j] == 1) {
+                    count++;
+                } else if (grid[i][j] == 2) {
+                    queue.offer(new int[] {i, j});
+                }
+            }
+        }
+
+        while (count > 0 && !queue.isEmpty()) {
+            int n = queue.size();
+            for (int i = 0; i < n; i++) {
+                int[] rc = queue.poll();
+                int row = rc[0];
+                int col = rc[1];
+                if (col - 1 >= 0 && grid[row][col - 1] == 1) {
+                    count--;
+                    grid[row][col - 1] = 2;
+                    queue.offer(new int[] {row, col - 1});
+                }
+                if (col + 1 < c && grid[row][col + 1] == 1) {
+                    count--;
+                    grid[row][col + 1] = 2;
+                    queue.offer(new int[] {row, col + 1});
+                }
+                if (row - 1 >= 0 && grid[row - 1][col] == 1) {
+                    count--;
+                    grid[row - 1][col] = 2;
+                    queue.offer(new int[] {row - 1, col});
+                }
+                if (row + 1 < r && grid[row + 1][col] == 1) {
+                    count--;
+                    grid[row + 1][col] = 2;
+                    queue.offer(new int[] {row + 1, col});
+                }
+            }
+            round++;
+        }
+
+        return count > 0 ? -1: round;
+    }
+
+    @Test
+    public void testP207() {
+        int numCourses = 2;
+        int[][] prerequisites = new int[][]{{1,0}};
+        System.out.println(canFinish(numCourses, prerequisites));
+    }
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        List<List<Integer>> edges = new ArrayList<>();
+        for (int i = 0; i < numCourses; i++) {
+            edges.add(new ArrayList<>());
+        }
+        int[] inedgs = new int[numCourses];
+        for (int[] pre : prerequisites) {
+            edges.get(pre[1]).add(pre[0]);
+            inedgs[pre[0]]++;
+        }
+
+        Queue<Integer> ready = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (inedgs[i] == 0) {
+                ready.offer(i);
+            }
+        }
+
+        int finished = 0;
+
+        while (!ready.isEmpty()) {
+            int curr = ready.poll();
+            finished++;
+
+            for (Integer next : edges.get(curr)) {
+                if (--inedgs[next] == 0) {
+                    ready.offer(next);
+                }
+            }
+        }
+
+        return finished == numCourses;
+    }
+
+    @Test
+    public void testP208() {
+        Trie trie = new Trie();
+        boolean result = false;
+        trie.insert("apple");
+        result = trie.search("apple"); // 返回 True
+        System.out.println(result);
+        result = trie.search("app"); // 返回 False
+        System.out.println(result);
+        result = trie.startsWith("app"); // 返回 True
+        System.out.println(result);
+        trie.insert("app");
+        result = trie.search("app"); // 返回 True
+        System.out.println(result);
+    }
+
+    @Test
+    public void testP17() {
+        System.out.println(letterCombinations("23"));
+    }
+
+    private List<String> result = new ArrayList<>();
+    private StringBuilder sb = new StringBuilder();
+    public List<String> letterCombinations(String digits) {
+        if (digits == null || digits.isEmpty()) {
+            return new ArrayList<>();
+        }
+        Map<Character, String> map = new HashMap<>();
+        map.put('2', "abc");
+        map.put('3', "def");
+        map.put('4', "ghi");
+        map.put('5', "jkl");
+        map.put('6', "mno");
+        map.put('7', "pqrs");
+        map.put('8', "tuv");
+        map.put('9', "wxyz");
+        letterCombinations(digits, map, 0);
+        return result;
+    }
+
+    public void letterCombinations(String digits, Map<Character, String> map, int index) {
+        if (index == digits.length()) {
+            result.add(sb.toString());
+            return ;
+        }
+        Character c = digits.charAt(index);
+        String s = map.get(c);
+        for (int i = 0; i < s.length(); i++) {
+            sb.append(s.charAt(i));
+            letterCombinations(digits, map, index + 1);
+            sb.deleteCharAt(sb.length() - 1);
+        }
+    }
+
+    @Test
+    public void testP22() {
+        System.out.println(generateParenthesis(3));
+    }
+
+    List<String> list = new ArrayList<>();
+    public List<String> generateParenthesis(int n) {
+        generateParenthesis(n, n, "");
+        return list;
+    }
+
+    private void generateParenthesis(int leftCount, int rightCount, String s) {
+        if (leftCount < 0 || rightCount < leftCount) {
+            return;
+        }
+        if (leftCount == 0 && rightCount == 0) {
+            list.add(s);
+            return;
+        }
+        generateParenthesis(leftCount - 1, rightCount, s + "(");
+        generateParenthesis(leftCount, rightCount - 1, s + ")");
+    }
+
+    @Test
+    public void testP79() {
+        char[][] board = {
+                {'A','B','C','E'},
+                {'S','F','C','S'},
+                {'A','D','E','E'}};
+
+        String word = "ABCCED"; // false
+        System.out.println(exist(board, word));
+    }
+
+    public boolean exist(char[][] board, String word) {
+        visit = new boolean[board.length][board[0].length];
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == word.charAt(0)) {
+                    if (exist(board, word, i, j, 0)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    private boolean[][] visit;
+    private boolean exist(char[][] board, String word, int i, int j, int index) {
+        if (board[i][j] != word.charAt(index) || visit[i][j]) {
+            return false;
+        }
+        if (index == word.length() - 1) {
+            return true;
+        }
+        boolean exist = false;
+        visit[i][j] = true;
+        if (i - 1 >= 0) {
+            exist = exist(board, word, i - 1, j, index + 1);
+        }
+        if (!exist && i + 1 < board.length) {
+            exist = exist(board, word, i + 1, j, index + 1);
+        }
+        if (!exist && j - 1 >= 0) {
+            exist = exist(board, word, i, j - 1, index + 1);
+        }
+        if (!exist && j + 1 < board[0].length) {
+            exist = exist(board, word, i, j + 1, index + 1);
+        }
+        visit[i][j] = false;
+        return exist;
+    }
+
+    @Test
+    public void testP131() {
+        String s = "aab"; // [["a","a","b"],["aa","b"]]
+        System.out.println(partition(s));
+    }
+
+    public List<List<String>> partition(String s) {
+        partition(s, 0);
+        return result131;
+    }
+
+    List<List<String>> result131 = new ArrayList<>();
+    List<String> currResult131 = new ArrayList<>();
+
+    public void partition(String s, int index) {
+        System.out.println(currResult131);
+        if (!currResult131.isEmpty() && isHuiWen(currResult131)) {
+            result131.add(new ArrayList<>(currResult131));
+        }
+        if (index == s.length()) {
+            return;
+        }
+        for (int i = index; i < s.length(); i++) {
+            currResult131.add(s.charAt(i) + "");
+            partition(s, i + 1);
+            currResult131.remove(currResult131.size() - 1);
+        }
+    }
+    private boolean isHuiWen(List<String> list) {
+        int n = list.size();
+        for (int i = 0; i < n / 2; i++) {
+            if (!list.get(i).equals(list.get(n - 1 - i))) {
+                return false;
+            }
+        }
+        return true;
     }
 }
