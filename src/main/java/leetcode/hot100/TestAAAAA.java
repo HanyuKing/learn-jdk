@@ -1405,4 +1405,173 @@ public class TestAAAAA {
         }
         return true;
     }
+    int left_bound(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        // 搜索区间为 [left, right]
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] < target) {
+                // 搜索区间变为 [mid+1, right]
+                left = mid + 1;
+            } else if (nums[mid] > target) {
+                // 搜索区间变为 [left, mid-1]
+                right = mid - 1;
+            } else if (nums[mid] == target) {
+                // 收缩右侧边界
+                right = mid - 1;
+            }
+        }
+        // 判断 target 是否存在于 nums 中
+        // 如果越界，target 肯定不存在，返回 -1
+        if (left == nums.length) {
+            return -1;
+        }
+        // 判断一下 nums[left] 是不是 target
+        return nums[left] == target ? left : -1;
+    }
+
+    int right_bound(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] < target) {
+                left = mid + 1;
+            } else if (nums[mid] > target) {
+                right = mid - 1;
+            } else if (nums[mid] == target) {
+                // 这里改成收缩左侧边界即可
+                left = mid + 1;
+            }
+        }
+        // 最后改成返回 left - 1
+        if (left - 1 < 0 || left - 1 == nums.length) {
+            return -1;
+        }
+        return nums[left - 1] == target ? (left - 1) : -1;
+    }
+
+    public int[] searchRange(int[] nums, int target) {
+        return new int[] {left_bound(nums, target), right_bound(nums, target)};
+    }
+
+    // todo
+    @Test
+    public void testP4() {
+        // 1,2,3 -> 2
+        // 1,2,3,4 -> 2.5
+
+        // 1,2,3 + 1,2,3,4 = 1,1,2,2,3,3,4 -> 2
+        // 1,2,3 + 1,4,5,6 = 1,1,2,3,4,5,6 -> 3
+        // 1,2,3 + 2,2,3,4 = 1,2,2,2,3,3,4 -> 2
+        // 1,2,3 + 1,4,5 = 1,1,2,3,4,5 -> 2.5
+
+        // 1,2,3 + 4,5,6,7 = 1,2,3,4,5,6,7 -> 4
+        // 1,2,3 + 4,5 = 1,2,3,4,5 -> 3
+    }
+
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+        return -1;
+    }
+
+    @Test
+    public void testP20() {
+        String s = "()[]{}";
+        s = "(])";
+        System.out.println(isValid(s));
+    }
+    public boolean isValid(String s) {
+        Stack<Character> stack = new Stack<>();
+        for (char c : s.toCharArray()) {
+            if (c == '(' || c == '{' || c == '[') {
+                stack.push(c);
+                continue;
+            }
+            if (stack.isEmpty()) {
+                return false;
+            }
+            if (stack.peek() == '(' && c == ')'
+                    || stack.peek() == '[' && c == ']'
+                    || stack.peek() == '{' && c == '}') {
+                stack.pop();
+            } else {
+                return false;
+            }
+        }
+        return stack.isEmpty();
+    }
+
+    @Test
+    public void testP155() {
+        MinStack minStack = new MinStack();
+        minStack.push(-2);
+        minStack.push(0);
+        minStack.push(-3);
+        System.out.println(minStack.getMin()); // --> 返回 -3.
+        minStack.pop();
+        System.out.println(minStack.top()); // --> 返回 0.
+        System.out.println(minStack.getMin()); // --> 返回 -2.
+        /*
+        ["MinStack","push","push","push","top","pop","getMin","pop","getMin","pop","push","top","getMin","push","top","getMin","pop","getMin"]
+        [[],[2147483646],[2147483646],[2147483647],[],[],[],[],[],[],[2147483647],[],[],[-2147483648],[],[],[],[]]
+        [null,null,null,null,2147483647,null,2147483646,null,2147483646,null,null,2147483647,2147483647,null,-2147483648,-2147483648,null,2147483647]...
+        [null,null,null,null,2147483647,null,2147483646,null,2147483646,null,null,2147483647,2147483647,null,-2147483648,-2147483648,null,-2147483648]...
+         */
+    }
+
+    @Test
+    public void testP394() {
+        // 输入：s = "3[a]2[bc]" 输出："aaabcbc"
+        String s = "3[a]2[bc]";
+        // 输入：s = "3[a2[c]]" 输出："accaccacc"
+        //System.out.println(decodeString(s));
+
+        // s = "3[a2[c]]";
+
+        // s = "2[abc]3[cd]ef";
+        s = "abc3[cd]xyz";
+        System.out.println(decodeString(s));
+    }
+    public String decodeString(String s) {
+        Stack<Integer> numStack = new Stack<>();
+        Stack<Character> stack = new Stack<>();
+        Stack<String> sStack = new Stack<>();
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (Character.isDigit(c) || Character.isLetter(c) || c == '[') {
+                stack.push(c);
+            } else if (c == ']') {
+                StringBuilder currSb = new StringBuilder();
+                char currCh = stack.pop();
+                while (currCh != '[') {
+                    currSb.append(currCh);
+                    currCh = stack.pop();
+                }
+                currSb.reverse();
+                if (!sStack.isEmpty()) {
+                    currSb.append(sStack.pop());
+                }
+
+                int num = Integer.parseInt(stack.pop() + "");
+                StringBuilder newSb = new StringBuilder();
+                for (int repeat = 0; repeat < num; repeat++) {
+                    newSb.append(currSb);
+                }
+
+                if (!stack.isEmpty()) {
+                    sStack.push(newSb.toString());
+                } else {
+                    sb.append(newSb);
+                }
+            }
+        }
+        StringBuilder sb2 = new StringBuilder();
+        while (!stack.isEmpty()) {
+            sb2.append(stack.pop());
+        }
+        sb.append(sb2.reverse());
+        return sb.toString();
+    }
 }
