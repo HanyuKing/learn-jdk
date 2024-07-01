@@ -3,6 +3,8 @@ package leetcode.hot100;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.function.IntFunction;
+import java.util.function.ToIntFunction;
 
 /**
  * @Author Hanyu.Wang
@@ -1525,53 +1527,288 @@ public class TestAAAAA {
         // 输入：s = "3[a2[c]]" 输出："accaccacc"
         //System.out.println(decodeString(s));
 
-        // s = "3[a2[c]]";
+        //s = "3[a2[c]]";
 
         // s = "2[abc]3[cd]ef";
         s = "abc3[cd]xyz";
+        // s = "100[leetcode]";
         System.out.println(decodeString(s));
     }
-    public String decodeString(String s) {
-        Stack<Integer> numStack = new Stack<>();
-        Stack<Character> stack = new Stack<>();
-        Stack<String> sStack = new Stack<>();
 
+    public String decodeString(String s) {
+        StringBuilder ans = new StringBuilder();
+        Stack<Integer> multiStack = new Stack<>();
+        Stack<StringBuilder> ansStack = new Stack<>();
+
+        int multi = 0;
+
+        for (char c : s.toCharArray()) {
+            if (Character.isDigit(c)) {
+                multi = multi * 10 + c - '0';
+            } else if (Character.isLetter(c)) {
+                ans.append(c);
+            } else if (c == '[') {
+                multiStack.push(multi);
+                multi = 0;
+                ansStack.push(ans);
+                ans = new StringBuilder();
+            } else {
+                StringBuilder ansTmp = ansStack.pop();
+                int tmp = multiStack.pop();
+                for(int i = 0; i < tmp; i++) {
+                    ansTmp.append(ans);
+                }
+                ans = ansTmp;
+            }
+        }
+
+        return ans.toString();
+    }
+
+    public String decodeString2(String s) {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             if (Character.isDigit(c) || Character.isLetter(c) || c == '[') {
-                stack.push(c);
+                sb.append(c);
             } else if (c == ']') {
                 StringBuilder currSb = new StringBuilder();
-                char currCh = stack.pop();
+
+                int lastIndex = sb.length() - 1;
+                char currCh = sb.charAt(lastIndex);
+                sb.deleteCharAt(lastIndex);
+
                 while (currCh != '[') {
                     currSb.append(currCh);
-                    currCh = stack.pop();
+                    lastIndex = sb.length() - 1;
+                    currCh = sb.charAt(lastIndex);
+                    sb.deleteCharAt(lastIndex);
                 }
+
                 currSb.reverse();
-                if (!sStack.isEmpty()) {
-                    currSb.append(sStack.pop());
+
+                int num = 0;
+                int radix = 1;
+                while (sb.length() > 0) {
+                    lastIndex = sb.length() - 1;
+                    currCh = sb.charAt(lastIndex);
+                    if (!Character.isDigit(currCh)) {
+                        break;
+                    }
+                    num = radix * Integer.parseInt(String.valueOf(currCh)) + num;
+                    radix = radix * 10;
+                    sb.deleteCharAt(lastIndex);
                 }
 
-                int num = Integer.parseInt(stack.pop() + "");
-                StringBuilder newSb = new StringBuilder();
                 for (int repeat = 0; repeat < num; repeat++) {
-                    newSb.append(currSb);
-                }
-
-                if (!stack.isEmpty()) {
-                    sStack.push(newSb.toString());
-                } else {
-                    sb.append(newSb);
+                    sb.append(currSb);
                 }
             }
         }
-        StringBuilder sb2 = new StringBuilder();
-        while (!stack.isEmpty()) {
-            sb2.append(stack.pop());
-        }
-        sb.append(sb2.reverse());
+
         return sb.toString();
+    }
+
+    @Test
+    public void testP74() {
+        int[][] matrix = new int[][] {{1, 1}};
+        searchMatrix(matrix, 2);
+    }
+
+    public boolean searchMatrix(int[][] matrix, int target) {
+        int r = matrix.length;
+        int c = matrix[0].length;
+        int low = 0;
+        int high = r * c - 1;
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            int midVal = matrix[mid / c][mid % c];
+            if (target == midVal) {
+                return true;
+            } else if (target > midVal) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+        return false;
+    }
+
+    @Test
+    public void testP347() {
+
+    }
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int num : nums) {
+            map.put(num, map.getOrDefault(num, 0) + 1);
+        }
+        PriorityQueue<int[]> priorityQueue = new PriorityQueue<>(new Comparator<int[]>() {
+            @Override
+            public int compare(int[] o1, int[] o2) {
+                return o1[1] - o2[1];
+            }
+        });
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if (--k >= 0) {
+                priorityQueue.offer(new int[] {entry.getKey(), entry.getValue()});
+            } else {
+                if (entry.getValue() > priorityQueue.peek()[1]) {
+                    priorityQueue.poll();
+                    priorityQueue.add(new int[] {entry.getKey(), entry.getValue()});
+                }
+            }
+        }
+        int[] result = new int[priorityQueue.size()];
+        int index = 0;
+        while (!priorityQueue.isEmpty()) {
+            result[index++] = priorityQueue.poll()[0];
+        }
+        return result;
+    }
+
+    @Test
+    public void testP295() {
+        MedianFinder medianFinder = new MedianFinder();
+        medianFinder.addNum(1);
+        medianFinder.addNum(2);
+        System.out.println(medianFinder.findMedian());
+        medianFinder.addNum(3);
+        System.out.println(medianFinder.findMedian());
+        System.out.println((int)Math.sqrt(12.0));
+    }
+
+    @Test
+    public void testP322() {
+        System.out.println(coinChange(new int[] {1, 2, 5}, 11));
+    }
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Set<Integer> coinSet = new HashSet<>();
+        for (int i = 0; i < coins.length; i++) {
+            coinSet.add(coins[i]);
+        }
+        for (int i = 1; i <= amount; i++) {
+            int min = Integer.MAX_VALUE;
+            for (int j = 1; j <= i; j++) {
+                if (coinSet.contains(j) && dp[i - j] != Integer.MIN_VALUE) {
+                    min = Math.min(min, dp[i - j]);
+                }
+            }
+            dp[i] = min + 1;
+        }
+        for (int i = 1; i <= amount; i++) {
+            System.out.print(dp[i] + " ");
+        }
+        return dp[amount];
+    }
+
+    @Test
+    public void testP416() {
+        System.out.println(canPartition(new int[] {1,5,11,5}));
+    }
+    public boolean canPartition(int[] nums) {
+        int sum = Arrays.stream(nums).sum();
+        if ((sum & 1) == 1) {
+            return false;
+        }
+        Arrays.sort(nums);
+        int target = sum / 2;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int n : nums) {
+            map.put(n, map.getOrDefault(n, 0) + 1);
+        }
+        boolean[] f = new boolean[target + 1];
+        for (int i = 1; i <= target; i++) {
+            for (int j = 0; j < nums.length; j++) {
+                int t = i - nums[j];
+                if (t == 0) {
+                    f[i] = true;
+                } else if(map.containsKey(t)) {
+                    f[i] = true;
+                }
+            }
+        }
+        return f[target];
+    }
+
+    @Test
+    public void testP1143() {
+        System.out.println(longestCommonSubsequence("abcde", "ace"));
+
+        System.out.println(longestCommonSubsequence("abc", "abc"));
+
+        System.out.println(longestCommonSubsequence("abc", "def"));
+    }
+    public int longestCommonSubsequence(String text1, String text2) {
+        int[] pre = new int[text1.length() + 1];
+        int[] curr = new int[text1.length() + 1];
+
+        for (int i = 1; i <= text2.length(); i++) {
+            for (int j = 1; j <= text1.length(); j++) {
+                if (text2.charAt(i - 1) == text1.charAt(j - 1)) {
+                    curr[j] = pre[j - 1] + 1;
+                } else {
+                    curr[j] = Math.max(pre[j], curr[j - 1]);
+                }
+            }
+            pre = curr.clone();
+        }
+        return curr[text1.length()];
+    }
+
+    public int longestCommonSubsequence2(String text1, String text2) {
+        int[][] f = new int[text2.length() + 1][text1.length() + 1];
+        for (int i = 1; i <= text2.length(); i++) {
+            for (int j = 1; j <= text1.length(); j++) {
+                if (text2.charAt(i - 1) == text1.charAt(j - 1)) {
+                    f[i][j] = f[i - 1][j - 1] + 1;
+                } else {
+                    f[i][j] = Math.max(f[i - 1][j], f[i][j - 1]);
+                }
+            }
+        }
+        return f[text2.length()][text1.length()];
+    }
+
+    @Test
+    public void testP72() {
+        // System.out.println(minDistance("horse", "ros"));
+
+        System.out.println(minDistance("pneumonoultramicroscopicsilicovolcanoconiosis", "ultramicroscopically"));
+    }
+
+    public int minDistance(String word1, String word2) {
+        if (word1.isEmpty() || word2.isEmpty()) {
+            return word1.length() + word2.length();
+        }
+
+        int w1Len = word1.length();
+        int w2Len = word2.length();
+
+        int[][] f = new int[w2Len + 1][w1Len + 1];
+        char[] w1Array = word1.toCharArray();
+        char[] w2Array = word2.toCharArray();
+
+        for (int j = 0; j <= w1Len; j++) {
+            f[0][j] = j;
+        }
+        for (int i = 0; i <= w2Len; i++) {
+            f[i][0] = i;
+        }
+
+        for (int i = 1; i <= w2Len; i++) {
+            for (int j = 1; j <= w1Len; j++) {
+                if (w1Array[j - 1] == w2Array[i - 1]) {
+                    f[i][j] = f[i - 1][j - 1];
+                } else {
+                    f[i][j] = 1 + Math.min(f[i - 1][j - 1], Math.min(f[i - 1][j], f[i][j - 1]));
+                }
+            }
+        }
+        return f[w2Len][w1Len];
     }
 }
