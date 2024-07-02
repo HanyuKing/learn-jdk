@@ -1776,12 +1776,87 @@ public class TestAAAAA {
 
     @Test
     public void testP72() {
-        // System.out.println(minDistance("horse", "ros"));
+        System.out.println(minDistance("horse", "ros"));
 
         System.out.println(minDistance("pneumonoultramicroscopicsilicovolcanoconiosis", "ultramicroscopically"));
+
+        System.out.println(minDistance("sea", "ate"));
+
+        System.out.println(minDistance("park", "spake"));
+    }
+    public int minDistance(String word1, String word2) {
+        if (word1.isEmpty() || word2.isEmpty()) {
+            return word1.length() + word2.length();
+        }
+
+        int w1Len = word1.length();
+        int w2Len = word2.length();
+
+        char[] w1Array = word1.toCharArray();
+        char[] w2Array = word2.toCharArray();
+
+        int[] curr = new int[w1Len + 1];
+
+        for (int j = 0; j <= w1Len; j++) {
+            curr[j] = j;
+        }
+
+        for (int i = 1; i <= w2Len; i++) {
+            int pre = curr[0];
+            curr[0] = i;
+
+            for (int j = 1; j <= w1Len; j++) {
+                int temp = curr[j];
+                if (w1Array[j - 1] == w2Array[i - 1]) {
+                    curr[j] = pre;
+                } else {
+                    curr[j] = 1 + Math.min(pre, Math.min(curr[j], curr[j - 1]));
+                }
+                pre = temp;
+            }
+        }
+        return curr[w1Len];
+    }
+    /*
+        s e a
+      a 1 2 2
+      t 2 2 3
+      e 3 2 3
+     */
+    public int minDistance3(String word1, String word2) {
+        if (word1.isEmpty() || word2.isEmpty()) {
+            return word1.length() + word2.length();
+        }
+
+        int w1Len = word1.length();
+        int w2Len = word2.length();
+
+        char[] w1Array = word1.toCharArray();
+        char[] w2Array = word2.toCharArray();
+
+        int[] curr = new int[w1Len + 1];
+        int[] pre = new int[w2Len + 1];
+
+        for (int j = 0; j <= w1Len; j++) {
+            curr[j] = j;
+        }
+        pre = curr.clone();
+
+        for (int i = 1; i <= w2Len; i++) {
+            curr[0] = i;
+            for (int j = 1; j <= w1Len; j++) {
+                if (w1Array[j - 1] == w2Array[i - 1]) {
+                    curr[j] = pre[j - 1];
+                } else {
+                    curr[j] = 1 + Math.min(pre[j - 1], Math.min(pre[j], curr[j - 1]));
+                }
+            }
+            pre = curr.clone();
+        }
+        return curr[w1Len];
     }
 
-    public int minDistance(String word1, String word2) {
+    public int minDistance2(String word1, String word2) {
         if (word1.isEmpty() || word2.isEmpty()) {
             return word1.length() + word2.length();
         }
@@ -1810,5 +1885,88 @@ public class TestAAAAA {
             }
         }
         return f[w2Len][w1Len];
+    }
+    @Test
+    public void testP75() {
+        int[] nums = new int[] {1,0,2,1,1,0}; // [0,0,1,1,2,2]
+        sortColors(nums);
+
+        for (int n : nums) {
+            System.out.print(n + " ");
+        }
+
+        System.out.println();
+    }
+    public void sortColors(int[] nums) {
+        int a = 0;
+        int b = nums.length - 1;
+        int c = 0;
+        while (c <= b) {
+            if (nums[c] == 0) {
+                swap(nums, a, c);
+                a++;
+                c++;
+            } else if (nums[c] == 2) {
+                swap(nums, c, b);
+                b--;
+            } else {
+                c++;
+            }
+        }
+    }
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+    @Test
+    public void testP31() {
+        int[] nums = new int[] {1,1,5}; // 1,3,2
+        nextPermutation(nums);
+        for (int n : nums) {
+            System.out.print(n + " ");
+        }
+        System.out.println();
+    }
+    public void nextPermutation(int[] nums) {
+        int len = nums.length;
+        if (len == 1) {
+            return;
+        }
+        int j = len - 1;
+        int i = j - 1;
+        while (i >= 0 && nums[i] >= nums[j]) {
+            i--;
+            j--;
+        }
+        if (i == -1) {
+            reverse(nums, 0, len - 1);
+        } else if (j == len - 1) {
+            reverse(nums, len - 2, len - 1);
+        } else {
+            for (int k = len - 1; k > i; k--) {
+                if (nums[k] > nums[i]) {
+                    swap(nums, k, i);
+                    reverse(nums, i + 1, len - 1);
+                    break;
+                }
+            }
+        }
+    }
+
+    @Test
+    public void test287() {
+        int[] nums = new int[] {1,2,4,3,2};
+        System.out.println(findDuplicate(nums));
+    }
+
+    public int findDuplicate(int[] nums) {
+        while (true) {
+            if (nums[0] == nums[nums[0]]) {
+                return nums[0];
+            } else {
+                swap(nums, 0, nums[0]);
+            }
+        }
     }
 }
