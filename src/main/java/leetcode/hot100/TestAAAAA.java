@@ -1685,23 +1685,48 @@ public class TestAAAAA {
     public void testP322() {
         System.out.println(coinChange(new int[] {1, 2, 5}, 11));
     }
+    /*
+    1 2 3 4 5 6 7 8 9 10 11
+  1 1 2 3 4 5 6 7 8 9 10 11
+  2 0 1 2 2 3 3 4
+  5 0 0 0 0 1 2 2
+     */
     public int coinChange(int[] coins, int amount) {
         int[] dp = new int[amount + 1];
-        Set<Integer> coinSet = new HashSet<>();
+        Arrays.fill(dp, amount + 1);
+        dp[0] = 0;
         for (int i = 0; i < coins.length; i++) {
-            coinSet.add(coins[i]);
-        }
-        for (int i = 1; i <= amount; i++) {
-            int min = Integer.MAX_VALUE;
-            for (int j = 1; j <= i; j++) {
-                if (coinSet.contains(j) && dp[i - j] != Integer.MIN_VALUE) {
-                    min = Math.min(min, dp[i - j]);
+            int coin = coins[i];
+            for (int j = 1; j <= amount ; j++) {
+                if (j - coin >= 0) {
+                    dp[j] = Math.min(dp[j - coin] + 1, dp[j]);
                 }
             }
-            dp[i] = min + 1;
         }
+        // for (int i = 1; i <= amount; i++) {
+        //     System.out.print(dp[i] + " ");
+        // }
+        if (dp[amount] == amount + 1) {
+            return -1;
+        }
+        return dp[amount];
+    }
+    public int coinChange2(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
         for (int i = 1; i <= amount; i++) {
-            System.out.print(dp[i] + " ");
+            for (int j = 0; j < coins.length; j++) {
+                if (i - coins[j] >= 0) {
+                    dp[i] = Math.min(dp[i], 1 + dp[i - coins[j]]);
+                }
+            }
+        }
+        // for (int i = 1; i <= amount; i++) {
+        //     System.out.print(dp[i] + " ");
+        // }
+        if (dp[amount] == Integer.MAX_VALUE) {
+            return -1;
         }
         return dp[amount];
     }
@@ -1968,5 +1993,44 @@ public class TestAAAAA {
                 swap(nums, 0, nums[0]);
             }
         }
+    }
+
+    /*
+    int left = 0, right = 0;
+
+    while (right < nums.size()) {
+        // 增大窗口
+        window.add(nums[right]);
+        right++;
+
+        while (window needs shrink) {
+            // 缩小窗口
+            window.remove(nums[left]);
+            left++;
+        }
+    }
+     */
+    @Test
+    public void testP3_3() {
+        System.out.println(lengthOfLongestSubstring3("eeydgwdykpv"));
+    }
+    public int lengthOfLongestSubstring3(String s) {
+        int l = 0;
+        int r = 0;
+        Map<Character, Integer> map = new HashMap<>();
+        int max = 0;
+        while(r < s.length()) {
+            char rValue = s.charAt(r);
+            r++;
+            if (!map.containsKey(rValue)) {
+                map.put(rValue, r - 1);
+            } else {
+                int lIndex = Math.max(map.get(rValue) + 1, l);
+                map.put(rValue, r - 1);
+                l = lIndex;
+            }
+            max = Math.max(max, r - l);
+        }
+        return max;
     }
 }
