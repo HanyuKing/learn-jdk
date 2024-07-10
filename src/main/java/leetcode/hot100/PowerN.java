@@ -8,8 +8,10 @@ package leetcode.hot100;
  **/
 public class PowerN {
     public static void main(String[] args) {
-        double x = 0.00001;
-        int n = Integer.MAX_VALUE; // 9.26100
+//        double x = 2;
+//        int n = Integer.MIN_VALUE; // 9.26100
+        double x = 2;
+        int n = 10;
         System.out.println(new PowerN().myPow(x, n));
     }
 
@@ -20,30 +22,21 @@ public class PowerN {
         if (n == 1) {
             return x;
         }
-        int absN = Math.abs(n);
-        double absX = Math.abs(x);
-        double result = absX;
-
-        long i = 2;
-        while (i < absN) {
-            result *= result;
-            i *= 2;
-        }
-        // 2 * 2
-        // 4 * 4
-        // 16 * 16
-        i = absN - i / 2;
-        while (--i >= 0) {
-            result *= absX;
+        double result = 1;
+        // 11
+        // 10
+        // 110
+        // 1010
+        long absN = Math.abs((long)n);
+        double c = x;
+        while (absN > 0) {
+            if ((absN & 1) == 1) {
+                result = result * c;
+            }
+            c = c * c;
+            absN = absN >> 1;
         }
 
-        if (x < 0 && (n & 1) == 1) {
-            result = -result;
-        }
-
-        if (n < 0) {
-            result = 1 / result;
-        }
-        return result;
+        return n > 0 ? result : 1 / result;
     }
 }
