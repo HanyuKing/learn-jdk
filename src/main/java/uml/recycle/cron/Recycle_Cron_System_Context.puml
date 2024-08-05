@@ -1,5 +1,5 @@
 @startuml
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include ../../C4_Container.puml
 
 AddBoundaryTag("recycle_cron_bg", $bgColor="#F0B775", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")
 AddBoundaryTag("outer_sys_bg", $bgColor="#fbe2b4", $fontColor="black", $borderColor="white", $shadowing="true", $shape = RoundedBoxShape(), $type="System Boundary")

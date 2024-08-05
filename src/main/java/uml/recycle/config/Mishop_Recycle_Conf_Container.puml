@@ -1,14 +1,31 @@
 @startuml
-!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include ../../C4_Container.puml
 
 Person(operator, "运营")
+Person(user, "C端用户")
 
 System_Boundary(backend, "管理后台") {
 
 }
+System_Boundary(mall_app, "小米商城APP") {
+
+}
+System_Boundary(mall_mini_program, "小米商城小程序") {
+
+}
+System_Boundary(mall_h5, "小米商城H5") {
+
+}
+System_Boundary(mall_trade, "商城交易") {
+
+}
+System_Boundary(recycle_trade, "换新交易") {
+
+}
 
 System_Boundary(gateway, "网关") {
-    Container(mone, "mone", "mione网关")
+    Container(mone, "ToB", "B端网关")
+    Container(c_mone, "ToC", "C端网关")
 }
 
 System_Boundary(mishop_recycleconf, "换新配置系统") {
@@ -33,7 +50,18 @@ Rel(app, common, "Uses")
 Rel(app, infra, "Uses")
 Rel(infra, database, "Uses")
 Rel(infra, redis, "Uses")
-Rel(infra, middle, "RPC", "DUBBO")
+Rel(infra, tag_center, "RPC", "DUBBO")
+Rel(infra, goods_center, "RPC", "DUBBO")
+
+Rel(user, mall_app, "Uses")
+Rel(user, mall_mini_program, "Uses")
+Rel(user, mall_h5, "Uses")
+Rel(mall_app, c_mone, "Call", "HTTPS")
+Rel(mall_mini_program, c_mone, "Call", "HTTPS")
+Rel(mall_h5, c_mone, "Call", "HTTPS")
+Rel(c_mone, recycle_trade, "Uses")
+Rel(recycle_trade, api, "DUBBO")
+Rel(recycle_trade, tag_center, "DUBBO")
 
 Lay_U(app, api)
 
