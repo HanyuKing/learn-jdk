@@ -24,8 +24,8 @@ public class StreamTest {
     public void testCompleteFutureAllCompleted() {
         final int MAX_CPU = Runtime.getRuntime().availableProcessors();
 
-        ThreadPoolExecutor asyncThreadPool = new ThreadPoolExecutor(MAX_CPU * 2,
-                    MAX_CPU * 6,
+        ThreadPoolExecutor asyncThreadPool = new ThreadPoolExecutor(10,
+                    10,
                     60L,
                     TimeUnit.SECONDS,
                     new ArrayBlockingQueue<>(MAX_CPU * 120));
@@ -35,14 +35,20 @@ public class StreamTest {
 
         CompletableFuture<Boolean>[] completableFutures = IntStream.rangeClosed(1, total / pageSize + 1)
                 .mapToObj(index -> CompletableFuture
-                        .supplyAsync(() -> doFlow(index, pageSize), asyncThreadPool)
+                        .supplyAsync(() -> {
+                            try {
+                                doFlow(index, pageSize);
+                            } catch (Exception e) {
+                                return Boolean.FALSE;
+                            }
+                            return Boolean.TRUE;
+                        }, asyncThreadPool)
                         .whenComplete((res, throwable) -> Optional.ofNullable(res).orElse(Boolean.FALSE)))
                 .toArray((IntFunction<CompletableFuture<Boolean>[]>) CompletableFuture[]::new);
         CompletableFuture.allOf(completableFutures).join();
         Boolean success = Arrays.stream(completableFutures).map(CompletableFuture::join).reduce(new BinaryOperator<Boolean>() {
                     @Override
                     public Boolean apply(Boolean aBoolean, Boolean aBoolean2) {
-                        System.out.println("aBoolean: " + aBoolean + ", aBoolean2: " + aBoolean2);
                         return aBoolean || aBoolean2;
                     }
                 })
@@ -56,8 +62,8 @@ public class StreamTest {
     }
 
     private Boolean doFlow(int index, int pageSize) {
-        System.out.println("offset: " + ((index - 1) * pageSize) + ", pageSize: " + pageSize);
-        if (index >= 1) {
+        System.out.println(Thread.currentThread().getId() + " -> " + "offset: " + ((index - 1) * pageSize) + ", pageSize: " + pageSize);
+        if (index > 1) {
             return Boolean.FALSE;
         }
         return Boolean.TRUE;
