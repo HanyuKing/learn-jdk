@@ -1,5 +1,6 @@
 package cache.caffine;
 
+import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import org.junit.Test;
@@ -7,9 +8,11 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 /**
  * @Author Hanyu.Wang
@@ -19,6 +22,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  **/
 public class CacheTest {
 
+    /**
+     * refreshAfterWrite < now < expireAfterWrite 时
+     * ForkJoin#commonPoll 的线程去异步load，所有线程都返回老数据
+     * @throws Exception
+     */
     @Test
     public void testConcurrentLoadingCache() throws Exception {
         AtomicInteger atomicInteger = new AtomicInteger();
@@ -26,15 +34,15 @@ public class CacheTest {
         LoadingCache<String, String> loadingCache = Caffeine.newBuilder()
                 .expireAfterWrite(2000L, TimeUnit.MILLISECONDS)
                 .refreshAfterWrite(1000L, TimeUnit.MILLISECONDS)
-                .expireAfterAccess(5000L, TimeUnit.MILLISECONDS)
+                //.expireAfterAccess(5000L, TimeUnit.MILLISECONDS)
                 .build(key -> {
                     Thread.sleep(1000);
+                    System.out.println(Thread.currentThread() + " load new Value");
                     atomicInteger.incrementAndGet();
                     return "newValue";
                 });
-
-        // loadingCache.put("key", "oldValue");
-        // Thread.sleep(1995);
+        loadingCache.put("key", "oldValue");
+        Thread.sleep(1500);
 
         int partis = 100;
         CyclicBarrier cyclicBarrier = new CyclicBarrier(partis, () -> {
@@ -47,7 +55,7 @@ public class CacheTest {
                 try {
                     cyclicBarrier.await();
                     String value = loadingCache.get("key");
-                    System.out.println(System.currentTimeMillis() + "->" + value);
+                    System.out.println(Thread.currentThread() + ":" + System.currentTimeMillis() + "->" + value);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -61,6 +69,9 @@ public class CacheTest {
         }
 
         System.out.println(atomicInteger.get());
+
+        // waiting load
+        Thread.sleep(2000);
     }
 
     @Test
@@ -77,5 +88,58 @@ public class CacheTest {
         String value = loadingCache.get("key");
 
         System.out.println("value->" + value);
+    }
+
+    @Test
+    public void testRefreshAfterWrite() throws InterruptedException {
+        LoadingCache<String, String> loadingCache = Caffeine.newBuilder()
+                //创建缓存或者最近一次更新缓存后经过指定时间间隔，刷新缓存；refreshAfterWrite仅支持LoadingCache
+                .refreshAfterWrite(2, TimeUnit.SECONDS)
+                .maximumSize(10)
+                //根据key查询数据库里面的值，这里是个lamba表达式
+                .build(key -> new Date().toString());
+
+        System.out.println("value->" + loadingCache.get("key"));
+
+        Thread.sleep(2500);
+
+        System.out.println("value->" + loadingCache.get("key"));
+    }
+
+    @Test
+    public void testRefreshAfterWriteAndExpireAfterWrite() throws InterruptedException {
+        LoadingCache<String, String> loadingCache = Caffeine.newBuilder()
+                //创建缓存或者最近一次更新缓存后经过指定时间间隔，刷新缓存；refreshAfterWrite仅支持LoadingCache
+                .refreshAfterWrite(2, TimeUnit.SECONDS)
+                .expireAfterWrite(4, TimeUnit.SECONDS)
+                .maximumSize(10)
+                //根据key查询数据库里面的值，这里是个lamba表达式
+                .build(key -> new Date().toString());
+
+        System.out.println("value->" + loadingCache.get("key"));
+
+        Thread.sleep(2500);
+
+        System.out.println("value->" + loadingCache.get("key"));
+
+        Thread.sleep(2000);
+
+        System.out.println("value->" + loadingCache.get("key"));
+    }
+
+    @Test
+    public void testExpireAfterWrite() throws InterruptedException {
+        LoadingCache<String, String> loadingCache = Caffeine.newBuilder()
+                //创建缓存或者最近一次更新缓存后经过指定时间间隔，刷新缓存；refreshAfterWrite仅支持LoadingCache
+                .expireAfterWrite(2, TimeUnit.SECONDS)
+                .maximumSize(10)
+                //根据key查询数据库里面的值，这里是个lamba表达式
+                .build(key -> new Date().toString());
+
+        System.out.println("value->" + loadingCache.get("key"));
+
+        Thread.sleep(2500);
+
+        System.out.println("value->" + loadingCache.get("key"));
     }
 }
