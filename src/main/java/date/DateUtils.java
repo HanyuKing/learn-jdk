@@ -3,6 +3,9 @@ package date;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  * @Author Hanyu.Wang
@@ -11,6 +14,12 @@ import java.time.LocalDateTime;
  * @Version 1.0
  **/
 public class DateUtils {
+
+
+    public static Date parse(String dateTimeStr, String pattern) {
+        LocalDateTime localDateTime = DateTimeUtils.parse(dateTimeStr, pattern);
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+    }
 
     /**
      * 计算两个时间段的交集
