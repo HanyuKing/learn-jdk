@@ -10,6 +10,7 @@
 
     <properties>
         <dubbo.version>3.2.14</dubbo.version>
+        <feign.version>13.3</feign.version>
     </properties>
 
     <build>
@@ -264,6 +265,16 @@
             <artifactId>dubbo-dependencies-zookeeper</artifactId>
             <version>${dubbo.version}</version>
             <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-core</artifactId>
+            <version>${feign.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-gson</artifactId>
+            <version>${feign.version}</version>
         </dependency>
     </dependencies>
 </project>
