@@ -1,6 +1,5 @@
-package cache.caffine;
+package cache.caffeine;
 
-import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import org.junit.Test;
@@ -8,11 +7,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 
 /**
  * @Author Hanyu.Wang
@@ -24,7 +21,7 @@ public class CacheTest {
 
     /**
      * refreshAfterWrite < now < expireAfterWrite 时
-     * ForkJoin#commonPoll 的线程去异步load，所有线程都返回老数据
+     * ForkJoin#commonPoll 的一个线程去异步load，所有请求线程都返回老数据
      * @throws Exception
      */
     @Test
@@ -43,6 +40,58 @@ public class CacheTest {
                 });
         loadingCache.put("key", "oldValue");
         Thread.sleep(1500);
+
+        int partis = 100;
+        CyclicBarrier cyclicBarrier = new CyclicBarrier(partis, () -> {
+            System.out.println(System.currentTimeMillis() + "->start...");
+        });
+
+        List<Thread> threadList = new ArrayList<>();
+        for (int i = 0; i < partis; i++) {
+            Thread t = new Thread(() -> {
+                try {
+                    cyclicBarrier.await();
+                    String value = loadingCache.get("key");
+                    System.out.println(Thread.currentThread() + ":" + System.currentTimeMillis() + "->" + value);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            threadList.add(t);
+            t.start();
+        }
+
+        for (Thread t : threadList) {
+            t.join();
+        }
+
+        System.out.println(atomicInteger.get());
+
+        // waiting load
+        Thread.sleep(2000);
+    }
+
+    /**
+     * refreshAfterWrite < expireAfterWrite < now 时
+     * 主线程的一个线程去异步load，所有线程都等待这个线程加载完，然后返回新数据
+     * @throws Exception
+     */
+    @Test
+    public void testConcurrentLoadingCache2() throws Exception {
+        AtomicInteger atomicInteger = new AtomicInteger();
+
+        LoadingCache<String, String> loadingCache = Caffeine.newBuilder()
+                .expireAfterWrite(2000L, TimeUnit.MILLISECONDS)
+                .refreshAfterWrite(1000L, TimeUnit.MILLISECONDS)
+                //.expireAfterAccess(5000L, TimeUnit.MILLISECONDS)
+                .build(key -> {
+                    Thread.sleep(1000);
+                    System.out.println(Thread.currentThread() + ":" + System.currentTimeMillis() + " load new Value");
+                    atomicInteger.incrementAndGet();
+                    return "newValue";
+                });
+        loadingCache.put("key", "oldValue");
+        Thread.sleep(2500);
 
         int partis = 100;
         CyclicBarrier cyclicBarrier = new CyclicBarrier(partis, () -> {

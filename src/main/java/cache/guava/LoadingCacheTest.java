@@ -11,19 +11,19 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.LockSupport;
 
-public class CacheTest {
+public class LoadingCacheTest {
     /**
      *  refreshAfterWrite < now < expireAfterWrite 时
      *
-     * 请求线程的其中一个线程load，其它线程返回旧值
+     * 请求线程的其中一个线程load，load完此线程返回新值，其它线程返回旧值
      */
     public static void main(String[] args) throws ExecutionException, BrokenBarrierException, InterruptedException {
 
         AtomicInteger atomicInteger = new AtomicInteger();
 
         LoadingCache<String, String> loadingCache = CacheBuilder.newBuilder()
+                .maximumSize(100)
                 .expireAfterWrite(2000L, TimeUnit.MILLISECONDS)
                 .refreshAfterWrite(1000L, TimeUnit.MILLISECONDS)
                 .concurrencyLevel(8)
@@ -32,7 +32,7 @@ public class CacheTest {
                     @Override
                     public String load(String o) throws Exception {
                         Thread.sleep(2000);
-                        System.out.println(Thread.currentThread() + " load new Value");
+                        System.out.println(Thread.currentThread() + ":" + System.currentTimeMillis() + " load new Value");
                         atomicInteger.incrementAndGet();
                         return "newValue";
                     }
