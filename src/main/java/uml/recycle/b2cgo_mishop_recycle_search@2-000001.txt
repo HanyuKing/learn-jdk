@@ -1,0 +1,38 @@
+{
+  "mappings": {
+    "_doc": {
+      "_meta": {},
+      "dynamic_templates": [
+        {
+          "strings_as_keywords": {
+            "match_mapping_type": "string",
+            "mapping": {
+              "type": "keyword"
+            }
+          }
+        }
+      ],
+      "properties": {
+        "brand_id": {
+          "type": "long"
+        },
+        "cat_id": {
+          "type": "long"
+        },
+        "image_url": {
+          "type": "text"
+        },
+        "name": {
+          "type": "text",
+          "analyzer": "standard"
+        },
+        "product_id": {
+          "type": "long"
+        },
+        "timestamp": {
+          "type": "date"
+        }
+      }
+    }
+  }
+}
