@@ -1,0 +1,9 @@
+@startuml
+autoactivate on
+activate First
+First -> Second
+Second -> Third
+Third --> Second
+Second --> First
+deactivate First
+@enduml
