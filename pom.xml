@@ -283,6 +283,11 @@
             <version>${feign.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <version>3.36.0</version>
+        </dependency>
 
     </dependencies>
 </project>
