@@ -3,6 +3,7 @@ package redis.redisson;
 import org.junit.Before;
 import org.junit.Test;
 import org.redisson.Redisson;
+import org.redisson.api.RBitSet;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -22,6 +23,16 @@ public class TestCase {
         Config config = new Config();
         config.useSingleServer().setAddress("redis://127.0.0.1:6379");
         redissonClient = Redisson.create(config);
+    }
+
+    @Test
+    public void testBitSetSet() {
+        RBitSet rBitSet = redissonClient.getBitSet("bitset");
+        rBitSet.set(10, true);
+        assert rBitSet.get(10);
+
+        rBitSet.set(10, false);
+        assert !rBitSet.get(10);
     }
 
     @Test
