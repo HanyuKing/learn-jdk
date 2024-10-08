@@ -288,6 +288,10 @@
             <artifactId>redisson</artifactId>
             <version>3.36.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+            <version>6.1.5</version>
+        </dependency>
     </dependencies>
 </project>

@@ -1,12 +1,14 @@
 package redis.redisson;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.redisson.Redisson;
-import org.redisson.api.RBitSet;
-import org.redisson.api.RBloomFilter;
-import org.redisson.api.RedissonClient;
+import org.redisson.api.*;
+import org.redisson.client.codec.StringCodec;
 import org.redisson.config.Config;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * @Author Hanyu.Wang
@@ -23,6 +25,32 @@ public class TestCase {
         Config config = new Config();
         config.useSingleServer().setAddress("redis://127.0.0.1:6379");
         redissonClient = Redisson.create(config);
+    }
+
+    @After
+    public void after() {
+        redissonClient.shutdown();
+    }
+
+    /**
+     * 本质是client发送批量格式的命令
+     *
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
+    @Test
+    public void testPipeline() throws ExecutionException, InterruptedException {
+        RBatch rBatch = redissonClient.createBatch();
+        // "*2\r\n$3\r\nGET\r\n$1\r\na\r\n*2\r\n$3\r\nGET\r\n$1\r\nb\r\n*2\r\n$3\r\nGET\r\n$1\r\nc\r\n"
+        RFuture rFutureA = rBatch.getBucket("a", StringCodec.INSTANCE).getAsync();
+        RFuture rFutureB = rBatch.getBucket("b", StringCodec.INSTANCE).getAsync();
+        RFuture rFutureC = rBatch.getBucket("c", StringCodec.INSTANCE).getAsync();
+
+        BatchResult batchResult = rBatch.execute();
+
+        System.out.println(rFutureA.get());
+        System.out.println(rFutureB.get());
+        System.out.println(rFutureC.get());
     }
 
     @Test
