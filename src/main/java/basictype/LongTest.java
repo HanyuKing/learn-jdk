@@ -27,4 +27,18 @@ public class LongTest {
         map.put("key", 123);
         System.out.println(Long.valueOf((String) map.get("key")));
     }
+
+    @Test
+    public void testNull() {
+        Long orderId = null;
+        String s = orderId + "";
+        System.out.println(s);
+    }
+
+    @Test
+    public void testNull2() {
+        Long orderId = null;
+        Long s = orderId + Long.valueOf(1);
+        System.out.println(s);
+    }
 }
