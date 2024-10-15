@@ -15,6 +15,49 @@ import java.util.List;
 public class Answer extends Base {
 
     @Test
+    public void testP48() {
+        int[][] matrix = new int[][]{
+                {5, 1, 9, 11},
+                {2, 4, 8, 10},
+                {13, 3, 6, 7},
+                {15, 14, 12, 16}
+        };
+
+        // [[15,13,2,5],
+        // [14,3,4,1],
+        // [12,6,8,9],
+        // [16,7,10,11]]
+
+        rotate(matrix);
+
+        print(matrix);
+    }
+
+    public void rotate(int[][] matrix) {
+        int n = matrix.length;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+        for (int i = 0; i < n; i++) {
+            reverse(matrix[i], 0, n - 1);
+        }
+    }
+
+    private void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
+        }
+    }
+
+    @Test
     public void testP54() {
         int[][] matrix = new int[][] {
                 {1,2,3},
@@ -22,10 +65,41 @@ public class Answer extends Base {
                 {7,8,9}}; // [1,2,3,6,9,8,7,4,5]
 
         print(spiralOrder(matrix));
+
+        matrix = new int[][] {
+                {1,2,3,4},
+                {5,6,7,8},
+                {9,10,11,12} // 1,2,3,4,8,12,11,10,9,5,6,7
+        };
+        print(spiralOrder(matrix));
     }
 
     public List<Integer> spiralOrder(int[][] matrix) {
         List<Integer> result = new ArrayList<>();
+        int l = 0;
+        int r = matrix[0].length - 1;
+        int u = 0;
+        int d = matrix.length - 1;
+
+        while (l <= r && u <= d) {
+            int i = l;
+            while (i <= r && u <= d) {
+                result.add(matrix[u][i++]);
+            }
+            i = ++u;
+            while (i <= d && l <= r) {
+                result.add(matrix[i++][r]);
+            }
+            i = --r;
+            while (i >= l && u <= d) {
+                result.add(matrix[d][i--]);
+            }
+            i = --d;
+            while (i >= u && l <= r) {
+                result.add(matrix[i--][l]);
+            }
+            l++;
+        }
 
         return result;
     }
