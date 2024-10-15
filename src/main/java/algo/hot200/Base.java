@@ -9,10 +9,10 @@ import com.google.gson.Gson;
  * @Version 1.0
  **/
 public class Base {
-    protected class TreeNode {
-        int val;
-        Answer1_20.TreeNode left;
-        Answer1_20.TreeNode right;
+    public class TreeNode {
+        public int val;
+        public Answer1_20.TreeNode left;
+        public Answer1_20.TreeNode right;
         TreeNode() {}
         TreeNode(int val) { this.val = val; }
         TreeNode(int val, Answer1_20.TreeNode left, Answer1_20.TreeNode right) {
@@ -37,11 +37,10 @@ public class Base {
         }
     }
 
-    protected class ListNode {
-      int val;
-      ListNode next;
-      ListNode() {}
-      ListNode(int val) { this.val = val; }
-      ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+    public class ListNode {
+        public int val;
+        public ListNode next;
+        public ListNode() {}public ListNode(int val) { this.val = val; }
+        public ListNode(int val, ListNode next) { this.val = val; this.next = next; }
   }
 }
