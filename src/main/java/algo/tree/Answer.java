@@ -15,8 +15,71 @@ import java.util.List;
 public class Answer extends Base {
 
     @Test
-    public void testP230() {
+    public void testP236() {
+        TreeNode root = new TreeNode(3);
+        TreeNode node5 = new TreeNode(5);
+        TreeNode node1 = new TreeNode(1);
+        root.left = node5;
+        root.right = node1;
 
+        print(lowestCommonAncestor2(root, node5, node1));
+    }
+
+    public TreeNode lowestCommonAncestor2(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return null;
+        }
+        if (p == root || q == root) {
+            return root;
+        }
+        TreeNode left = lowestCommonAncestor2(root.left, p, q);
+        TreeNode right = lowestCommonAncestor2(root.right, p, q);
+        if (left != null && right != null) {
+            return root;
+        } else if (left == null) {
+            return right;
+        } else {
+            return left;
+        }
+    }
+
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        boolean leftFindP = findNode(root.left, p);
+        boolean leftFindQ = findNode(root.left, q);
+        boolean rightFindP = findNode(root.right, p);
+        boolean rightFindQ = findNode(root.right, q);
+
+        boolean rootP = root == p;
+        boolean rootQ = root == q;
+
+        if (leftFindQ && rightFindP
+                || leftFindP && rightFindQ
+                || rootP && leftFindQ
+                || rootP && rightFindQ
+                || rootQ && leftFindP
+                || rootQ && rightFindP ) {
+            return root;
+        } else if (leftFindP && leftFindQ) {
+            return lowestCommonAncestor(root.left, p, q);
+        } else if (rightFindP && rightFindQ) {
+            return lowestCommonAncestor(root.right, p, q);
+        }
+        return null;
+    }
+
+    private boolean findNode(TreeNode root, TreeNode target) {
+        if (root == null) {
+            return false;
+        }
+        if (root == target) {
+            return true;
+        }
+        return findNode(root.left, target) || findNode(root.right, target);
+    }
+
+    @Test
+    public void testP230() {
+        // kthSmallest
     }
 
     public int kthSmallest(TreeNode root, int k) {
