@@ -41,7 +41,7 @@ public class Answer extends Base {
                 flag[i][j] = flag[i + 1][j - 1] && s.charAt(i) == s.charAt(j);
             }
         }
-        doPartition2(s, 0);
+        doPartition(s, 0);
         return ret;
     }
 
