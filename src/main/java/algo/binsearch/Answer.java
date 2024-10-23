@@ -43,7 +43,7 @@ public class Answer extends Base {
 
         nums = new int[] {3, 5, 1};
         target = 3;
-        print(search(nums, target)); // 1
+        print(search(nums, target)); // 0
     }
 
     public int search(int[] nums, int target) {
@@ -57,25 +57,16 @@ public class Answer extends Base {
             int midValue = nums[mid];
             if (midValue == target) {
                 return mid;
-            } else if (target > midValue) {
-                boolean isHighPart = midValue >= firstValue && midValue >= lastValue;
-                if (isHighPart) {
-                    low = mid + 1;
+            }
+            if (midValue >= firstValue) {
+                if (target >= firstValue && target < midValue) {
+                    high = mid - 1;
                 } else {
-                    if (target > lastValue) {
-                        high = mid - 1;
-                    } else {
-                        low = mid + 1;
-                    }
+                    low = mid + 1;
                 }
             } else {
-                boolean isHighPart = midValue >= firstValue && midValue >= lastValue;
-                if (isHighPart) {
-                    if (target >= firstValue) {
-                        high = mid - 1;
-                    } else {
-                        low = mid + 1;
-                    }
+                if (target > midValue && target <= lastValue) {
+                    low = mid + 1;
                 } else {
                     high = mid - 1;
                 }
