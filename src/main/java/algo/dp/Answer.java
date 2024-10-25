@@ -1,11 +1,10 @@
 package algo.dp;
 
 import algo.hot200.Base;
+import jol.A;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Author Hanyu.Wang
@@ -74,67 +73,45 @@ public class Answer extends Base {
 
         nums = new int[] {2,1,1,2};
         print(rob2(nums)); // 4
+    public void testP300() {
+        int[] nums = new int[] {1,3,6,7,9,4,10,5,6};
+        print(lengthOfLIS(nums));
     }
 
-    public int rob2(int[] nums) {
-        int prePre = 0;
-        int pre = nums[0];
-        for (int i = 1; i < nums.length; i++) {
-            if (i == 1) {
-                prePre = pre;
-                pre = Math.max(nums[i], nums[i - 1]);
-            } else {
-                int curr = nums[i] + prePre;
-                curr = Math.max(curr, pre);
-                prePre = pre;
-                pre = curr;
-            }
-        }
-        return pre;
-    }
-
-    public int rob(int[] nums) {
+    public int lengthOfLIS(int[] nums) {
         int[] dp = new int[nums.length];
-        dp[0] = nums[0];
+        Arrays.fill(dp, 1);
+        int max = 1;
         for (int i = 1; i < nums.length; i++) {
-            if (i == 1) {
-                dp[i] = Math.max(nums[i], nums[i - 1]);
-            } else {
-                dp[i] = nums[i] + dp[i - 2];
-                dp[i] = Math.max(dp[i], dp[i - 1]);
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
             }
+            max = Math.max(max, dp[i]);
         }
-        return dp[nums.length - 1];
-    }
 
+        return max;
+    }
     @Test
-    public void testP118() {
-        print(generate(5));
     }
 
-    public List<List<Integer>> generate(int numRows) {
-        List<List<Integer>> result = new ArrayList<>();
-        List<Integer> first = new ArrayList<>();
-        first.add(1);
-        result.add(first);
 
-        for (int i = 1; i < numRows; i++) {
-            List<Integer> newRow = new ArrayList<>();
-            newRow.add(1);
-            for (int j = 1; j < i; j++) {
-                List<Integer> preRow = result.get(i - 1);
-                newRow.add(preRow.get(j) + preRow.get(j - 1));
             }
             newRow.add(1);
             result.add(newRow);
         }
 
-        return result;
+        return dp[s.length()];
     }
 
     @Test
     public void testP70() {
         print(climbStairs(4));
+    public void testP322() {
+        int[] coins = new int[] {2};
+        int amount = 3;
+        print(coinChange(coins, amount));
     }
 
     public int climbStairs(int n) {
@@ -147,7 +124,17 @@ public class Answer extends Base {
             int curr = a + b;
             a = b;
             b = curr;
+    public int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+
+        for (int i = 1; i <= amount; i++) {
+            for (int coin : coins) {
+                if (i - coin >= 0 && dp[i - coin] != Integer.MAX_VALUE) {
+                    dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+                }
+            }
         }
-        return b;
     }
 }
