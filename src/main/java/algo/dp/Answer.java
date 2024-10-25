@@ -1,7 +1,6 @@
 package algo.dp;
 
 import algo.hot200.Base;
-import jol.A;
 import org.junit.Test;
 
 import java.util.*;
@@ -65,14 +64,16 @@ public class Answer extends Base {
 
     @Test
     public void testP198() {
-        int[] nums = new int[] {1,2,3,1};
+        int[] nums = new int[]{1, 2, 3, 1};
 //        print(rob(nums)); // 4
 //
 //        nums = new int[] {2,7,9,3,1};
 //        print(rob(nums)); // 12
 
-        nums = new int[] {2,1,1,2};
-        print(rob2(nums)); // 4
+        nums = new int[]{2, 1, 1, 2};
+//        print(rob2(nums)); // 4
+    }
+
     public void testP300() {
         int[] nums = new int[] {1,3,6,7,9,4,10,5,6};
         print(lengthOfLIS(nums));
@@ -94,24 +95,8 @@ public class Answer extends Base {
         return max;
     }
     @Test
-    }
-
-
-            }
-            newRow.add(1);
-            result.add(newRow);
-        }
-
-        return dp[s.length()];
-    }
-
-    @Test
     public void testP70() {
         print(climbStairs(4));
-    public void testP322() {
-        int[] coins = new int[] {2};
-        int amount = 3;
-        print(coinChange(coins, amount));
     }
 
     public int climbStairs(int n) {
@@ -124,6 +109,16 @@ public class Answer extends Base {
             int curr = a + b;
             a = b;
             b = curr;
+        }
+        return b;
+    }
+
+    public void testP322() {
+        int[] coins = new int[] {2};
+        int amount = 3;
+        print(coinChange(coins, amount));
+    }
+
     public int coinChange(int[] coins, int amount) {
         int[] dp = new int[amount + 1];
         Arrays.fill(dp, Integer.MAX_VALUE);
@@ -136,5 +131,7 @@ public class Answer extends Base {
                 }
             }
         }
+
+        return dp[amount] == Integer.MAX_VALUE ? -1 : dp[amount];
     }
 }
