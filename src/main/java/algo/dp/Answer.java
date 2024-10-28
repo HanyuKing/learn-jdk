@@ -14,6 +14,166 @@ import java.util.*;
 public class Answer extends Base {
 
     @Test
+    public void testP712() {
+        String s1 = "sea", s2 = "eat";
+        print(minimumDeleteSum(s1, s2)); // 231
+
+        s1 = "delete"; s2 = "leet";
+        print(minimumDeleteSum(s1, s2)); // 403
+    }
+
+    public int minimumDeleteSum(String s1, String s2) {
+        // todo
+    /*
+                  e a t
+                0 1 2 3
+              s 1 2 3 4
+              e 2 1 2 3
+              a 3 2 1 2
+         */
+        int l1 = s1.length();
+        int l2 = s2.length();
+        int[][] dp = new int[l1 + 1][l2 + 1];
+        for (int i = 1; i < l1 + 1; i++) {
+            dp[i][0] = s1.charAt(i - 1);
+        }
+        for (int j = 1; j < l2 + 1; j++) {
+            dp[0][j] = s2.charAt(j - 1);
+        }
+        for (int i = 1; i < dp.length; i++) {
+            for (int j = 1; j < dp[0].length; j++) {
+                if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    int left = s1.charAt(i - 1);
+                    int up = s2.charAt(j - 1);
+                    dp[i][j] = Math.min(dp[i - 1][j - 1] + left + up, Math.min(dp[i - 1][j] + left, dp[i][j - 1] + up));
+                }
+            }
+        }
+        return dp[l1][l2];
+    }
+
+    @Test
+    public void testP583() {
+        String word1 = "sea", word2 = "eat";
+        print(minDistance583(word1, word2)); // 2
+
+        word1 = "leetcode"; word2 = "etco";
+        print(minDistance583(word1, word2)); // 4
+    }
+
+    public int minDistance583(String word1, String word2) {
+        /*
+                  e a t
+                0 1 2 3
+              s 1 2 3 4
+              e 2 1 2 3
+              a 3 2 1 2
+         */
+        int l1 = word1.length();
+        int l2 = word2.length();
+        int[][] dp = new int[l1 + 1][l2 + 1];
+        for (int i = 0; i < l1 + 1; i++) {
+            dp[i][0] = i;
+        }
+        for (int j = 0; j < l2 + 1; j++) {
+            dp[0][j] = j;
+        }
+        for (int i = 1; i < dp.length; i++) {
+            for (int j = 1; j < dp[0].length; j++) {
+                if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = Math.min(dp[i - 1][j - 1] + 2, Math.min(dp[i - 1][j], dp[i][j - 1]) + 1);
+                }
+            }
+        }
+        return dp[l1][l2];
+    }
+
+    @Test
+    public void testP72() {
+        String word1 = "hh";
+        String word2 = "hhh";
+        print(minDistance(word1, word2)); // 1
+
+        word1 = "horse";
+        word2 = "ros";
+        print(minDistance(word1, word2)); // 3
+
+        word1 = "intention";
+        word2 = "execution";
+        print(minDistance(word1, word2)); // 5
+    }
+
+    public int minDistance(String word1, String word2) {
+        /*
+              r o s
+            0 1 2 3
+          h 1 1 2 3
+          o 2 2 1 2
+          r 3 2 2 3
+          s 4 3 3 2
+          e 5 4 4 3
+         */
+        int l2 = word2.length();
+        char[] array1 = word1.toCharArray();
+        char[] array2 = word2.toCharArray();
+        int[] dp = new int[l2 + 1];
+
+        for (int j = 0; j < l2 + 1; j++) {
+            dp[j] = j;
+        }
+
+        int[] pre = dp.clone();
+
+        for (int i = 1; i <= word1.length(); i++) {
+            dp[0] = i;
+            for (int j = 1; j <= word2.length(); j++) {
+                if (array1[i - 1] == array2[j - 1]) {
+                    dp[j] = pre[j - 1];
+                } else {
+                    dp[j] = Math.min(pre[j - 1], Math.min(pre[j], dp[j - 1])) + 1;
+                }
+            }
+            pre = dp.clone();
+        }
+        return pre[l2];
+    }
+
+    public int minDistance2(String word1, String word2) {
+        /*
+              r o s
+            0 1 2 3
+          h 1 1 2 3
+          o 2 2 1 2
+          r 3 2 2 3
+          s 4 3 3 2
+          e 5 4 4 3
+         */
+        int l1 = word1.length();
+        int l2 = word2.length();
+        int[][] dp = new int[l1 + 1][l2 + 1];
+        for (int i = 0; i < l1 + 1; i++) {
+            dp[i][0] = i;
+        }
+        for (int j = 0; j < l2 + 1; j++) {
+            dp[0][j] = j;
+        }
+        for (int i = 1; i < dp.length; i++) {
+            for (int j = 1; j < dp[0].length; j++) {
+                if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = Math.min(dp[i - 1][j - 1], Math.min(dp[i - 1][j], dp[i][j - 1])) + 1;
+                }
+            }
+        }
+        return dp[l1][l2];
+    }
+
+    @Test
     public void testP279() {
         print(numSquares2(12)); // 12 = 4 + 4 + 4
 
