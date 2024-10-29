@@ -3,9 +3,7 @@ package algo.backtracking;
 import algo.hot200.Base;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Author Hanyu.Wang
@@ -14,6 +12,141 @@ import java.util.List;
  * @Version 1.0
  **/
 public class Answer extends Base {
+
+    @Test
+    public void testP47() {
+        print(permuteUnique(new int[] {1, 1, 2}));
+    }
+
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        Arrays.sort(nums);
+        return permuteUnique3(nums);
+    }
+    public List<List<Integer>> permuteUnique3(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        boolean[] visited = new boolean[nums.length];
+        getAllPermuteUnique3(nums, result, visited, new ArrayList<>());
+
+        return result;
+    }
+
+    public void getAllPermuteUnique3(int[] nums, List<List<Integer>> result, boolean[] visited, List<Integer> curr) {
+        if (curr.size() == nums.length) {
+            result.add(new ArrayList<>(curr));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (visited[i] || (i > 0 && nums[i] == nums[i - 1] && !visited[i - 1])) {
+                continue;
+            }
+
+            curr.add(nums[i]);
+
+            visited[i] = true;
+
+            getAllPermuteUnique3(nums, result, visited, curr);
+
+            visited[i] = false;
+
+            curr.remove(curr.size() - 1);
+        }
+    }
+
+    @Test
+    public void testP46() {
+//        print(permute(new int[]{1, 2, 3}));
+        print(permute3(new int[]{1, 2, 3}));
+    }
+
+    public List<List<Integer>> permute3(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        boolean[] visited = new boolean[nums.length];
+        getAllPermute3(nums, result, visited, new ArrayList<>());
+        return result;
+    }
+
+    public void getAllPermute3(int[] nums, List<List<Integer>> result, boolean[] visited, List<Integer> curr) {
+        if (curr.size() == nums.length) {
+            result.add(new ArrayList<>(curr));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            if (visited[i]) {
+                continue;
+            }
+
+            curr.add(nums[i]);
+
+            visited[i] = true;
+
+            getAllPermute3(nums, result, visited, curr);
+
+            visited[i] = false;
+
+            curr.remove(curr.size() - 1);
+        }
+    }
+
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        getAllPermute(nums, result, new ArrayList<>(), 0);
+        return result;
+    }
+
+    public void getAllPermute(int[] nums, List<List<Integer>> result, List<Integer> curr, int start) {
+        if (curr.size() == nums.length) {
+            result.add(new ArrayList<>(curr));
+            return;
+        }
+        for (int i = start; i < nums.length; i++) {
+            curr.add(nums[i]);
+
+            swap(nums, start, i);
+
+            getAllPermute(nums, result, curr, start + 1);
+
+            swap(nums, start, i);
+
+            curr.remove(curr.size() - 1);
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    public List<List<Integer>> permute2(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        doPermute2(nums, 0, nums.length, result);
+        return result;
+    }
+
+    public void doPermute2(int[] nums, int start, int end, List<List<Integer>> result) {
+        if (end - start == 1) {
+            List<Integer> ans = new ArrayList<>();
+            for (int num : nums) {
+                ans.add(num);
+            }
+            result.add(ans);
+            return;
+        }
+
+        for (int i = start; i < end; i++) {
+
+            int temp = nums[start];
+            nums[start] = nums[i];
+            nums[i] = temp;
+
+            doPermute2(nums, start + 1, nums.length, result);
+
+            temp = nums[i];
+            nums[i] = nums[start];
+            nums[start] = temp;
+        }
+
+    }
 
     @Test
     public void testP131() {

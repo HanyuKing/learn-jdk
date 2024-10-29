@@ -12,6 +12,134 @@ import java.util.*;
  * @Version 1.0
  **/
 public class Answer extends Base {
+    @Test
+    public void testP12() {
+        // intToRoman
+        // intToRoman2
+        // intToRoman3
+        print(intToRoman(3749));
+
+        print(intToRoman(58));
+
+        print(intToRoman(1994));
+    }
+
+    public String intToRoman(int num) {
+        String[] thousands = new String[] {"", "M", "MM", "MMM"};
+        String[] hundreds = new String[] {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+        String[] tens = new String[] {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+        String[] digits = new String[] {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
+
+        String result = "";
+
+        if (num / 1000 > 0) {
+            result += thousands[num / 1000];
+            num = num - (num / 1000) * 1000;
+        }
+        if (num / 100 > 0) {
+            result += hundreds[num / 100];
+            num = num - (num / 100) * 100;
+        }
+        if (num / 10 > 0) {
+            result += tens[num / 10];
+            num = num - (num / 10) * 10;
+        }
+        if (num > 0) {
+            result += digits[num];
+            // num = 0;
+        }
+
+        return result;
+    }
+
+    public String intToRoman3(int num) {
+//        TreeMap<Integer, String> map = new TreeMap<>((o1, o2) -> o2 - o1);
+//        map.put(1, "I");
+//        map.put(2, "II");
+//        map.put(3, "III");
+//        map.put(4, "IV");
+//        map.put(5, "V");
+//        map.put(9, "IX");
+//        map.put(10, "X");
+//        map.put(20, "XX");
+//        map.put(30, "XXX");
+//        map.put(40, "XL");
+//        map.put(50, "L");
+//        map.put(90, "XC");
+//        map.put(100, "C");
+//        map.put(200, "CC");
+//        map.put(300, "CCC");
+//        map.put(400, "CD");
+//        map.put(500, "D");
+//        map.put(900, "CM");
+//        map.put(1000, "M");
+//        map.put(2000, "MM");
+//        map.put(3000, "MMM");
+
+        int[] values = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+        String[] symbols = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+
+        StringBuilder result = new StringBuilder();
+
+        while (num > 0) {
+            for (int i = 0; i < values.length; i++) {
+                int value = values[i];
+                if (num - value >= 0) {
+                    result.append(symbols[i]);
+                    num -= value;
+                    break;
+                }
+            }
+        }
+
+        return result.toString();
+    }
+
+    public String intToRoman2(int num) {
+        TreeMap<Integer, String> map = new TreeMap<>((o1, o2) -> o2 - o1);
+        map.put(1, "I");
+        map.put(2, "II");
+        map.put(3, "III");
+        map.put(4, "IV");
+        map.put(5, "V");
+        map.put(9, "IX");
+        map.put(10, "X");
+        map.put(20, "XX");
+        map.put(30, "XXX");
+        map.put(40, "XL");
+        map.put(50, "L");
+        map.put(90, "XC");
+        map.put(100, "C");
+        map.put(200, "CC");
+        map.put(300, "CCC");
+        map.put(400, "CD");
+        map.put(500, "D");
+        map.put(900, "CM");
+        map.put(1000, "M");
+        map.put(2000, "MM");
+        map.put(3000, "MMM");
+
+        StringBuilder result = new StringBuilder();
+
+        for (Map.Entry<Integer, String> entry : map.entrySet()) {
+            if (map.containsKey(num)) {
+                result.append(map.get(num));
+                break;
+            }
+            while (num - entry.getKey() > 0) {
+                result.append(entry.getValue());
+                num -= entry.getKey();
+                break;
+            }
+            if (num == 0) {
+                break;
+            }
+        }
+
+        return result.toString();
+    }
+
+
 
     @Test
     public void testP128() {

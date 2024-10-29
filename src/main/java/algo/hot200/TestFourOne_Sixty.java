@@ -2,6 +2,7 @@ package algo.hot200;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +23,10 @@ public class TestFourOne_Sixty extends Base {
 
         String s = "25525511135"; // ["255.255.11.135","255.255.111.35"]
         List<String> result = restoreIpAddresses(s);
+        print(result);
+
+        s = "101023";
+        result = restoreIpAddresses(s);
         print(result);
     }
 
@@ -125,6 +130,38 @@ public class TestFourOne_Sixty extends Base {
     }
 
     public List<String> restoreIpAddresses(String s) {
-        return null;
+        // "25525511135"; // ["255.255.11.135","255.255.111.35"]
+        // "101023"
+        List<String> result = new ArrayList<>();
+        doRestoreIpAddresses(s, 0, 1, new StringBuilder(), result);
+        return result;
+    }
+
+    private void doRestoreIpAddresses(String s,
+                                      int start,
+                                      int level,
+                                      StringBuilder currStr,
+                                      List<String> result) {
+        if (start > s.length()) {
+            return;
+        }
+        if (start == s.length() && level == 5) {
+            result.add(currStr.toString().substring(0, currStr.length() - 1));
+            return;
+        }
+        for (int i = start; i < s.length(); i++) {
+            String subStr = s.substring(start, i + 1);
+            if (subStr.charAt(0) == '0' && subStr.length() > 1) {
+                break;
+            }
+            int subStrVal = Integer.parseInt(subStr);
+            if (subStrVal >= 0 && subStrVal <= 255) {
+                currStr.append(subStr).append(".");
+                doRestoreIpAddresses(s, i + 1, level + 1, currStr, result);
+                currStr.delete(currStr.length() - subStr.length() - 1, currStr.length());
+            } else {
+                break;
+            }
+        }
     }
 }
