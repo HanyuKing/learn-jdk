@@ -3,10 +3,7 @@ package algo.dfs;
 import algo.hot200.Base;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * @Author Hanyu.Wang
@@ -21,23 +18,30 @@ public class Answer extends Base {
         // TODO
         int numCourses = 2;
         int[][] prerequisites = new int[][]{{1, 0}}; // true
-        print(canFinish(numCourses, prerequisites));
-
-        prerequisites = new int[][]{{1, 0}, {0, 1}}; // false
-        print(canFinish(numCourses, prerequisites));
+//         print(canFinish(numCourses, prerequisites));
+//
+//        prerequisites = new int[][]{{1, 0}, {0, 1}}; // false
+//        print(canFinish(numCourses, prerequisites));
+        prerequisites = new int[][] {{1,4},{2,4},{3,1},{3,2}};
+        print(canFinish(5, prerequisites)); // true
     }
 
     public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if (prerequisites.length == 0 || prerequisites.length == 1) {
+            return true;
+        }
         int finishedCourseTotal = 0;
 
-        Map<Integer, Integer> map = new HashMap<>();
+        Map<Integer, List<Integer>> map = new HashMap<>();
 
         Queue<Integer> finishedQueue = new LinkedList<>();
         for (int i = 0; i < prerequisites.length; i++) {
             if (prerequisites[i][1] == 0) {
                 finishedQueue.offer(prerequisites[i][0]);
             }
-            map.put(prerequisites[i][1], prerequisites[i][0]);
+            List<Integer> list = map.getOrDefault(prerequisites[i][1], new ArrayList<>());
+            list.add(prerequisites[i][0]);
+            map.put(prerequisites[i][1], list);
         }
         if (!finishedQueue.isEmpty()) {
             finishedCourseTotal++;
@@ -46,9 +50,16 @@ public class Answer extends Base {
             int currFinishedCourseSize = finishedQueue.size();
             finishedCourseTotal += currFinishedCourseSize;
 
+            if (finishedCourseTotal > numCourses) {
+                return false;
+            }
+
             while (currFinishedCourseSize-- > 0) {
                 Integer currFinishedCourse = finishedQueue.poll();
-
+                List<Integer> nextFinishedCourse = map.get(currFinishedCourse);
+                if (nextFinishedCourse != null && !nextFinishedCourse.isEmpty()) {
+                    finishedQueue.addAll(nextFinishedCourse);
+                }
             }
         }
 

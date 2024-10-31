@@ -23,7 +23,6 @@ public class Answer extends Base {
     }
 
     public int minimumDeleteSum(String s1, String s2) {
-        // todo
     /*
                   e a t
                 0 1 2 3

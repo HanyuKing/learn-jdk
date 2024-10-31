@@ -1,5 +1,6 @@
 package algo.hot200;
 
+import algo.twopointer.Answer;
 import org.junit.Test;
 
 import java.util.*;
@@ -227,9 +228,12 @@ public class Answer21_40 extends Base {
         print(node1);
     }
 
+    /**
+     * @see Answer#testP42()
+     */
     @Test
     public void testP42() {
-        // todo
+
     }
 
     @Test
@@ -300,9 +304,11 @@ public class Answer21_40 extends Base {
         print(result);
     }
 
+    /**
+     * @see algo.dp.Answer#testP72()
+     */
     @Test
     public void testP72() {
-        // todo
         /*
         示例 1：
 

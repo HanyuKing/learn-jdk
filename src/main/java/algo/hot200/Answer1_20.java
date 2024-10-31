@@ -157,9 +157,87 @@ public class Answer1_20 extends Base {
                 {'0', '0', '0', '1', '1'}};
         print(numIslands(grid));
 
-        // todo P695 岛屿的最大面积
+    }
 
+    @Test
+    public void testP419() {
+        char[][] board = new char[][] {
+                {'X','.','.','X'},
+                {'.','.','.','X'},
+                {'.','.','.','X'}
+        };
+        print(countBattleships(board));
+    }
+    public int countBattleships(char[][] grid) {
+        int count = 0;
 
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                if (grid[i][j] == '.') {
+                    continue;
+                }
+                // or
+                /*
+                    if (grid[i][j] == '1')
+                 */
+                doCountBattleships(grid, i, j);
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public void doCountBattleships(char[][] grid, int i, int j) {
+        grid[i][j] = '.';
+        if (i - 1 >= 0 && grid[i - 1][j] == 'X') doCountBattleships(grid, i - 1, j);
+        if (j - 1 >= 0 && grid[i][j - 1] == 'X') doCountBattleships(grid, i, j - 1);
+        if (j + 1 < grid[0].length && grid[i][j + 1] == 'X') doCountBattleships(grid, i, j + 1);
+        if (i + 1 < grid.length && grid[i + 1][j] == 'X') doCountBattleships(grid, i + 1, j);
+    }
+
+    @Test
+    public void testP695() {
+        int[][] grid = {
+                {0,0,1,0,0,0,0,1,0,0,0,0,0},
+                {0,0,0,0,0,0,0,1,1,1,0,0,0},
+                {0,1,1,0,1,0,0,0,0,0,0,0,0},
+                {0,1,0,0,1,1,0,0,1,0,1,0,0},
+                {0,1,0,0,1,1,0,0,1,1,1,0,0},
+                {0,0,0,0,0,0,0,0,0,0,1,0,0},
+                {0,0,0,0,0,0,0,1,1,1,0,0,0},
+                {0,0,0,0,0,0,0,1,1,0,0,0,0}};
+
+        print(maxAreaOfIsland(grid));
+    }
+
+    public int maxAreaOfIsland(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int maxArea = 0;
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int currMax = getMaxAreaOfIsland(grid, m, n, i, j, 0);
+                maxArea = Math.max(currMax, maxArea);
+            }
+        }
+        return maxArea;
+    }
+
+    private int getMaxAreaOfIsland(int[][] grid, int m, int n, int i, int j, int area) {
+        if (i < 0 || i == m || j < 0 || j == n
+                || grid[i][j] != 1) {
+            return area;
+        }
+        grid[i][j] = 2;
+        area += 1;
+
+        area += getMaxAreaOfIsland(grid, m, n, i + 1, j, 0);
+        area += getMaxAreaOfIsland(grid, m, n, i - 1, j, 0);
+        area += getMaxAreaOfIsland(grid, m, n, i, j + 1, 0);
+        area += getMaxAreaOfIsland(grid, m, n, i, j - 1, 0);
+
+        return area;
     }
 
     @Test
