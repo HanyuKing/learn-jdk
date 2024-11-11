@@ -83,6 +83,13 @@ public class HashMapTest {
 
         // map.containsKey()
     }
+
+    @Test
+    public void decreaseCapacity() {
+        HashMap<Integer, Integer> hashMap = new HashMap<>(16);
+        hashMap.put(1, 1);
+    }
+
     public static void main(String[] args) {
 
         Map<Object, Object> map = new HashMap<>();

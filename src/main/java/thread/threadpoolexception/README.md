@@ -1,4 +1,7 @@
 ### ThreadPoolExecutor异常捕获问题
+参考：https://www.51cto.com/article/745551.html
+
+
 1. submit 封装FutureTask, 返回FutureTask，除非使用get，否则不会抛异常
 2. execute 会抛异常
 
@@ -32,6 +35,5 @@
             }
         };
 ```
-
-### 参考
-https://www.51cto.com/article/745551.html
+## 优雅关闭线程
+https://www.cnblogs.com/Andrew-Zhou/p/16099670.html
