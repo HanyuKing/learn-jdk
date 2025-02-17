@@ -145,8 +145,8 @@ public class Answer extends Base {
     @Test
     public void testP560() {
         int[] nums = new int[] {1,1,1};
-        int k = 2;
-        //print(subarraySum(nums, k)); // 2
+        int k = 1;
+        print(subarraySum2(nums, k)); // 2
 
         nums = new int[] {1,2,3};
         k = 5;

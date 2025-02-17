@@ -28,8 +28,12 @@ public class FutureTaskTest {
         List<Thread> threadList = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
+            final int j = i;
             Thread t = new Thread(() -> {
                 try {
+                    if (j == 1) {
+                        throw new RuntimeException("异常");
+                    }
                     String value = futureTask.get();
                     System.out.println(System.currentTimeMillis() + " -> " + value);
                 } catch (InterruptedException | ExecutionException e) {
