@@ -32,4 +32,10 @@ public class FloatTest {
                 .divide(new BigDecimal(100))
                 .floatValue());
     }
+
+    @Test
+    public void test4() {
+        System.out.println(0.1 * 3 == 0.3);
+        System.out.println(0.1 * 3);
+    }
 }
