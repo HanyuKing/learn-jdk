@@ -2,3 +2,4 @@
 learn-jdk.iml
 .idea
 src/main/java/rocksdb/data
+target/*

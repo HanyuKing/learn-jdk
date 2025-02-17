@@ -1,9 +1,6 @@
 package thread.threadpoolexception;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -40,6 +37,9 @@ public class ThreadPoolException {
         // execute 方法被线程工厂factory 的UncaughtExceptionHandler捕捉到异常
         executorService.execute(new task());
 
+        executorService.shutdown();
+
+        executorService.awaitTermination(10, TimeUnit.SECONDS);
 
     }
 

@@ -2,6 +2,10 @@ package other;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.GsonBuilder;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -17,6 +21,39 @@ public class JSONTest {
         String str = "{\"coupon\":\"{\\\"endTime\\\":\\\"2018-04-24 23:59:59\\\",\\\"quota\\\":100,\\\"discount\\\":99,\\\"startTime\\\":\\\"2018-04-21 00:00:00\\\"}\",\"points\":12,\"sendType\":2}";
         Ext ext = JSON.parseObject(str, Ext.class);
         System.out.println(new JSONTest().getClass().getSimpleName());
+    }
+
+    @Test
+    public void testNumberSerializeDefaultValue() throws JsonProcessingException {
+        Map<String, Object> dataMap = new HashMap<>(2);
+        dataMap.put("aInteger", 1);
+        dataMap.put("aLong", 2L);
+        String jsonStr = JSON.toJSONString(dataMap);
+        System.out.println(jsonStr);
+
+
+        // fastjson
+        System.out.println("--- fastjson -----");
+        Map<String, Object> fastMap = JSON.parseObject(jsonStr, new com.alibaba.fastjson.TypeReference<Map<String, Object>>() {
+        });
+        printMap(fastMap);
+
+        System.out.println("--- gson -----");
+        Map<String, Object> gsonMap = new GsonBuilder().create()
+                .fromJson(jsonStr, (new TypeReference<Map<String, Object>>(){}).getType() );
+        printMap(gsonMap);
+
+        System.out.println("--- jackson -----");
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> jacksonMap = objectMapper.readValue(jsonStr, new TypeReference<Map<String, Object>>() {
+        });
+        printMap((jacksonMap));
+    }
+
+    private static void printMap(Map<String, Object> map) {
+        map.forEach((key, value) -> {
+            System.out.println("key:" + key + ",value=" + value + ",valueClass=" + value.getClass());
+        });
     }
 
     @Test
