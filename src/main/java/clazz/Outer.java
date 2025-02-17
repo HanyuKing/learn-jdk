@@ -13,5 +13,8 @@ public class Outer {
   public static void main(String[] args) {
     Outer p = new Outer();
     p.accessInnerProp();
+
+    B b = new C(); // new B(); ? error
+    C c = (C) (b);
   }
 }
