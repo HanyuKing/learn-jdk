@@ -63,6 +63,31 @@ import java.util.concurrent.ConcurrentHashMap;
  **/
 public class HashMapTest {
 
+    /**
+     * https://juejin.cn/post/6844904202271981581
+     * HashMap中对象作Key为什么要重写equals和hashcode?
+     *
+     */
+    @Test
+    public void testHashCodeEquals() {
+        HashMap<Demo, String> hashMap = new HashMap<>();
+        Demo a = new Demo("A");
+        Demo b = new Demo("A");
+
+        System.out.println("a.hashCode(): " + a.hashCode() + " b.hashCode(): " + b.hashCode() + " equals: " + a.equals(b));
+
+        hashMap.put(a, "hello");
+        String s = hashMap.get(b);
+
+        System.out.println(s); // null
+    }
+    private class Demo {
+        String key;
+
+        Demo(String key) {
+            this.key = key;
+        }
+    }
     @Test
     public void testConcurrentHashMapPutNull() {
         ConcurrentHashMap<Object, Object> map = new ConcurrentHashMap<>();
