@@ -12,6 +12,14 @@ import java.util.Objects;
  */
 public class IntegerTest {
 
+    @Test
+    public void testEquals() {
+        Integer a = 200;
+        Integer b = 200;
+        System.out.println(a == b);
+        System.out.println(a.equals(b));
+    }
+
     public static void main(String[] args) {
         Integer i = 14;
         Integer b = 199;
