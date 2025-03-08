@@ -312,4 +312,72 @@ public class Answer extends Base {
 
         return false;
     }
+
+    @Test
+    public void testP39() {
+        print(combinationSum(new int[] {1,2,4,5,7}, 5));
+    }
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        List<List<Integer>> result = new ArrayList<>();
+        doCombinationSum(candidates, result, 0, new ArrayList<>(), target);
+        return result;
+    }
+
+    public void doCombinationSum(int[] candidates,
+                                 List<List<Integer>> result,
+                                 int index,
+                                 List<Integer> selected,
+                                 int target) {
+        if (target < 0) {
+            return;
+        }
+
+        if (target == 0) {
+            result.add(new ArrayList<>(selected));
+            return;
+        }
+
+        for (int i = index; i < candidates.length; i++) {
+            selected.add(candidates[i]);
+            doCombinationSum(candidates, result, i, selected, target - candidates[i]);
+            selected.remove(selected.size() - 1);
+        }
+    }
+
+    @Test
+    public void testP40() {
+        print(combinationSum2(new int[] {1,2,4,5,7}, 20));
+    }
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> result = new ArrayList<>();
+        dfs(result,  new ArrayList<>(), candidates, target, 0);
+        return result;
+    }
+
+    private void dfs(List<List<Integer>> result,
+                     List<Integer> currSelected,
+                     int[] candidates,
+                     int target,
+                     int level) {
+
+        if (target < 0) {
+            return ;
+        }
+        if (target == 0) {
+            result.add(new ArrayList(currSelected));
+            return ;
+        }
+
+        for (int i = level; i < candidates.length; i++) {
+            if (i > level && candidates[i] == candidates[i - 1]) {
+                continue;
+            }
+            currSelected.add(candidates[i]);
+            dfs(result, currSelected, candidates, target - candidates[i], i + 1);
+            currSelected.remove(currSelected.size() - 1);
+        }
+    }
 }
