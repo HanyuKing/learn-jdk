@@ -19,25 +19,25 @@ public class Main {
         String path = "http://127.0.0.1:8080/myserver?123=456";
         String resp = HttpUtils.get(path,  null, 2000);
 
-        new Thread(() -> {
-            try {
-                PoolingHttpClientConnectionManager poolManager = HttpUtils.getPoolCollectionManager();
-
-                while (true) {
-
-                    for (HttpRoute httpRoute : poolManager.getRoutes()) {
-                        System.out.println(poolManager.getStats(httpRoute));
-                    }
-
-                    System.out.println(poolManager.getTotalStats());
-
-                    Thread.sleep(1000);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
+//        new Thread(() -> {
+//            try {
+//                PoolingHttpClientConnectionManager poolManager = HttpUtils.getPoolCollectionManager();
+//
+//                while (true) {
+//
+//                    for (HttpRoute httpRoute : poolManager.getRoutes()) {
+//                        System.out.println(poolManager.getStats(httpRoute));
+//                    }
+//
+//                    System.out.println(poolManager.getTotalStats());
+//
+//                    Thread.sleep(1000);
+//                }
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
 
         System.out.println(resp);
 

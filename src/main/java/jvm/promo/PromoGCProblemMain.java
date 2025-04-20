@@ -10,6 +10,7 @@ import java.util.List;
  **/
 public class PromoGCProblemMain {
     public static void main(String[] args)  throws Exception {
+        Thread.sleep(10000);
         ProductQuery productQuery = ProductQuery.builder().pageIndex(1).pageIndexTemp(1).build();
         List<PromoSkuVO> list = new SkuService().getAllSku(productQuery);
 

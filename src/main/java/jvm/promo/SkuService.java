@@ -42,6 +42,6 @@ public class SkuService {
     }
 
     private Integer getSkuCountFromCenter(ProductQuery productQuery) {
-        return 101;
+        return 10000;
     }
 }

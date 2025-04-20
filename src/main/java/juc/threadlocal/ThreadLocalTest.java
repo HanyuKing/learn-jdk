@@ -1,6 +1,10 @@
 package juc.threadlocal;
 
+import org.junit.Test;
 import reflect.ReflectUtil;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * ThreadLocal 变量如果不及时remove会导致GC频繁
@@ -55,4 +59,30 @@ public class ThreadLocalTest {
 //        System.out.println(table); // key == null removed;
 //
 //    }
+
+    @Test
+    public void testNullKey() throws Exception {
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        final Thread[] t = {null};
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                ThreadLocal<ThreadLocalTest> threadLocal = new ThreadLocal<>();
+                ThreadLocalTest object = new ThreadLocalTest();
+                threadLocal.set(object);
+                t[0] = Thread.currentThread();
+            }
+        });
+
+        Thread.sleep(100);
+
+        Object map = ReflectUtil.getFieldValue(t[0], "threadLocals");
+        Object table = ReflectUtil.getFieldValue(map, "table");
+
+
+        System.gc();
+
+        map = ReflectUtil.getFieldValue(t[0], "threadLocals");
+        table = ReflectUtil.getFieldValue(map, "table");
+    }
 }

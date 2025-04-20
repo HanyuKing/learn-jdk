@@ -1,7 +1,6 @@
 package interview;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Author Hanyu.Wang
@@ -47,17 +46,13 @@ n == rooms.length
      */
 
     public static void main(String[] args) {
-        int[][] rooms = new int[][] {{1},{2},{3},{}};
-        System.out.println(canEnterAllRoom(rooms));
-
-        rooms = new int[][] {{1,3},{3,0,1},{2},{0}};
-        System.out.println(canEnterAllRoom(rooms));
+        Queue<Integer> queue = new PriorityQueue<Integer>((o1, o2) -> o2-o1);
     }
 
-    public static boolean canEnterAllRoom(int[][] rooms) {
-        boolean[] entered = new boolean[rooms.length];
+    public static boolean canVisitAllRooms(List<List<Integer>> rooms) {
+        boolean[] entered = new boolean[rooms.size()];
         Set<Integer> roomIndexSet = new HashSet<>();
-        for (int rooIndex : rooms[0]) {
+        for (int rooIndex : rooms.get(0)) {
             roomIndexSet.add(rooIndex);
         }
         entered[0] = true;
@@ -69,7 +64,7 @@ n == rooms.length
                     continue;
                 }
                 entered[roomIndex] = true;
-                for (int rooIndex : rooms[roomIndex]) {
+                for (int rooIndex : rooms.get(roomIndex)) {
                     newRoomIndexSet.add(rooIndex);
                 }
             }

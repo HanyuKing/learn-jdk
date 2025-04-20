@@ -37,5 +37,10 @@ public class ThreadPoolExecuteException {
         protected void afterExecute(Runnable r, Throwable t) {
             System.out.println(t.toString());
         }
+
+        @Override
+        public void execute(Runnable command) {
+            super.execute(command);
+        }
     }
 }
