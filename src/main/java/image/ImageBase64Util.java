@@ -1,4 +1,4 @@
-package imageBase64;
+package image;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
