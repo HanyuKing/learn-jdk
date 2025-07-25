@@ -364,5 +364,11 @@
             <version>3.9.4</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>3.2.14</version>
+        </dependency>
+
     </dependencies>
 </project>
