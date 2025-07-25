@@ -358,5 +358,11 @@
             <version>2.3.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.twelvemonkeys.imageio</groupId>
+            <artifactId>imageio-webp</artifactId>
+            <version>3.9.4</version>
+        </dependency>
+
     </dependencies>
 </project>
