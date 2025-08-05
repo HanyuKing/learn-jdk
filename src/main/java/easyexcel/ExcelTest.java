@@ -1,9 +1,12 @@
 package easyexcel;
 
+import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author hanyu.wang
@@ -13,10 +16,19 @@ import java.util.List;
 public class ExcelTest {
     @Test
     public void testRead() {
-        String filePath = "/Users/rogerswang/my/source_code/learn-jdk/src/main/java/easyexcel/t221754378172059.xlsx";
+        String filePath = "/Users/hanyuking/my/source_code/learn-jdk/src/main/java/easyexcel/t221754378172059.xlsx";
         List<DemoData> users = ExcelReader.readFile(filePath, DemoData.class);
         System.out.println(JSON.toJSONString(users));
     }
+
+    @Test
+    public void testRead2() {
+        String filePath = "/Users/hanyuking/my/source_code/learn-jdk/src/main/java/easyexcel/product.xlsx";
+        List<ProductImportDTO> users = new ArrayList<>();
+        ExcelReader.readFile(filePath,  new ProductImportListener(users));
+        System.out.println(JSON.toJSONString(users));
+    }
+
 
     @Test
     public void testReadFromUrl() {

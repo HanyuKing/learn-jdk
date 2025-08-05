@@ -30,13 +30,23 @@ public class ExcelReader {
      * 读取本地Excel文件
      *
      * @param filePath 文件路径
-     * @param clazz    数据模型类
      * @return 数据列表
      */
     public static <T> List<T> readFile(String filePath, Class<T> clazz) {
         List<T> dataList = new ArrayList<>();
         EasyExcel.read(filePath, clazz, new SimpleListener<>(dataList)).sheet().doRead();
         return dataList;
+    }
+
+    /**
+     * 读取本地Excel文件
+     *
+     * @param filePath 文件路径
+     * @param listener listener
+     * @return 数据列表
+     */
+    public static <T> void readFile(String filePath, ReadListener listener) {
+        EasyExcel.read(filePath, listener).sheet().doRead();
     }
 
     /**
