@@ -43,13 +43,26 @@ public class ProductImportListener implements ReadListener<Map<Integer, String>>
 //        }
         ProductImportDTO productImportDTO = new ProductImportDTO();
         productImportDTO.setProductId(integerStringMap.get(0));
-        Map<String, String> skuPropMap = new HashMap<>();
+
+        Map<String, List<String>> skuPropMap = new HashMap<>();
         productImportDTO.setSkuPropMap(skuPropMap);
+
+        Map<String, List<String>> categoryKeyPropMap = new HashMap<>();
+        productImportDTO.setCategoryKeyPropMap(categoryKeyPropMap);
+
+        Map<String, List<String>> categoryOtherPropMap = new HashMap<>();
+        productImportDTO.setCategoryOtherPropMap(categoryOtherPropMap);
 
         integerStringMap.forEach((index, val) -> {
             String header = headMap.get(index);
             if (header != null && header.startsWith("商品规格-")) {
-                skuPropMap.put(header.replace("商品规格-", ""), val);
+                skuPropMap.put(header.replace("商品规格-", ""), Arrays.asList(val.split(",")));
+            }
+            if (header != null && header.startsWith("关键属性-")) {
+                categoryKeyPropMap.put(header.replace("关键属性-", ""), Arrays.asList(val.split(",")));
+            }
+            if (header != null && header.startsWith("其它属性-")) {
+                categoryOtherPropMap.put(header.replace("其它属性-", ""), Arrays.asList(val.split(",")));
             }
         });
 

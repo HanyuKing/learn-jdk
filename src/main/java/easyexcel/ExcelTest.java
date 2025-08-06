@@ -23,7 +23,7 @@ public class ExcelTest {
 
     @Test
     public void testRead2() {
-        String filePath = "/Users/hanyuking/my/source_code/learn-jdk/src/main/java/easyexcel/product.xlsx";
+        String filePath = "/Users/rogerswang/my/source_code/learn-jdk/src/main/java/easyexcel/product.xlsx";
         List<ProductImportDTO> users = new ArrayList<>();
         ExcelReader.readFile(filePath,  new ProductImportListener(users));
         System.out.println(JSON.toJSONString(users));
