@@ -29,6 +29,13 @@ public class ExcelTest {
         System.out.println(JSON.toJSONString(users));
     }
 
+    @Test
+    public void testReadXls() {
+        String filePath = "/Users/rogerswang/my/source_code/learn-jdk/src/main/java/easyexcel/product.xls";
+        List<ProductImportDTO> users = new ArrayList<>();
+        ExcelReader.readFile(filePath,  new ProductImportListener(users));
+        System.out.println(JSON.toJSONString(users));
+    }
 
     @Test
     public void testReadFromUrl() {
