@@ -41,6 +41,10 @@ public class HtmlToImageConverter {
         options.addArguments("--window-size=1200,800"); // 设置默认窗口大小
         // 可选：禁用图片加载以加快速度（如果不需要截图中的图片）
         // options.addArguments("--blink-settings=imagesEnabled=false");
+        // 设置高DPI渲染
+        options.addArguments("--force-device-scale-factor=2"); // 2倍缩放
+        options.addArguments("--high-dpi-support=2");         // 高DPI支持
+        options.addArguments("--window-size=1200,800");
 
         this.driver = new ChromeDriver(options);
     }
@@ -88,6 +92,44 @@ public class HtmlToImageConverter {
         } catch (Exception e) {
             throw new Exception("HTML转图片失败", e);
         }
+    }
+
+    /**
+     * 高质量截图方法
+     * @param scaleFactor 缩放因子，2.0表示2倍分辨率
+     */
+    public byte[] takeHighQualityScreenshot(String htmlContent, double scaleFactor) throws Exception {
+        try {
+            int baseWidth = 1200;
+            int baseHeight = 800;
+
+            // 根据缩放因子调整窗口大小
+            int scaledWidth = (int) (baseWidth * scaleFactor);
+            int scaledHeight = (int) (baseHeight * scaleFactor);
+
+            driver.manage().window().setSize(new org.openqa.selenium.Dimension(scaledWidth, scaledHeight));
+
+            // 加载HTML内容
+            String encodedHtml = java.net.URLEncoder.encode(htmlContent, "UTF-8");
+            String dataUrl = "data:text/html;charset=utf-8," + encodedHtml;
+            driver.get(dataUrl);
+
+            Thread.sleep(2000); // 等待渲染
+
+            // 截图
+            TakesScreenshot screenshotTaker = (TakesScreenshot) driver;
+            return screenshotTaker.getScreenshotAs(OutputType.BYTES);
+
+        } catch (Exception e) {
+            throw new Exception("高质量截图失败", e);
+        }
+    }
+
+    /**
+     * 使用默认高质量设置（2倍缩放）
+     */
+    public byte[] takeHighQualityScreenshot(String htmlContent) throws Exception {
+        return takeHighQualityScreenshot(htmlContent, 2.0);
     }
 
     /**
