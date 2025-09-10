@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>富文本编辑器 - 支持图片上传</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .editor-container {
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 500px;
+        }
+        
+        .editor-panel, .preview-panel {
+            flex: 1;
+            min-width: 300px;
+            padding: 25px;
+            border-right: 1px solid #eee;
+        }
+        
+        .preview-panel {
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .panel-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 15px;
+            background-color: #f0f2f5;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .toolbar button, .toolbar select {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .toolbar button:hover {
+            background-color: #e9ecef;
+        }
+        
+        .toolbar button.active {
+            background-color: #6a11cb;
+            color: white;
+        }
+        
+        .export-options {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto;
+            padding: 0 10px;
+        }
+        
+        .export-options label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+        }
+        
+        .export-options select, .export-options input {
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
+        .editor {
+            min-height: 350px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            overflow-y: auto;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .preview-content {
+            flex: 1;
+            padding: 25px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow-y: auto;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 25px;
+            background-color: #f0f2f5;
+            border-top: 1px solid #ddd;
+        }
+        
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #6a11cb;
+            color: #6a11cb;
+        }
+        
+        .btn-outline:hover {
+            background-color: #6a11cb;
+            color: white;
+        }
+        
+        .color-picker {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .color-picker input {
+            width: 30px;
+            height: 30px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .editor-panel, .preview-panel {
+                flex: 100%;
+                border-right: none;
+                border-bottom: 1px solid #eee;
+            }
+            
+            .export-options {
+                flex-wrap: wrap;
+                margin-top: 10px;
+                margin-left: 0;
+                justify-content: center;
+            }
+        }
+        
+        .quality-slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #qualitySlider {
+            width: 80px;
+        }
+        
+        #imageUpload {
+            display: none;
+        }
+        
+        .image-preview-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .image-preview {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            margin: 15px 0;
+        }
+        
+        .preview-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .upload-result {
+            padding: 15px 25px;
+            background: #f6ffed;
+            border: 1px solid #b7eb8f;
+            color: #389e0d;
+            border-radius: 8px;
+            margin: 15px 25px 0 25px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            word-break: break-all;
+        }
+        
+        .upload-result.error {
+            background: #fff2f0;
+            border-color: #ffccc7;
+            color: #cf1322;
+        }
+        
+        .upload-actions {
+            display: flex;
+            gap: 10px;
+            margin-left: auto;
+        }
+        
+        .upload-url-preview {
+            padding: 15px 25px;
+            background: #fff;
+            border: 1px dashed #ddd;
+            border-radius: 8px;
+            margin: 10px 25px 0 25px;
+            display: none;
+        }
+        
+        .upload-url-preview img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 10px;
+        }
+        
+        .image-size-notice {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .editor img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .preview-content img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>富文本编辑器 - 支持图片上传</h1>
+            <p class="subtitle">编辑内容并生成高质量图片</p>
+        </header>
+        
+        <div class="toolbar">
+            <button onclick="formatText('bold')" title="粗体"><i class="fas fa-bold"></i></button>
+            <button onclick="formatText('italic')" title="斜体"><i class="fas fa-italic"></i></button>
+            <button onclick="formatText('underline')" title="下划线"><i class="fas fa-underline"></i></button>
+            <button onclick="formatText('insertUnorderedList')" title="无序列表"><i class="fas fa-list-ul"></i></button>
+            <button onclick="formatText('insertOrderedList')" title="有序列表"><i class="fas fa-list-ol"></i></button>
+            <button onclick="formatText('justifyLeft')" title="左对齐"><i class="fas fa-align-left"></i></button>
+            <button onclick="formatText('justifyCenter')" title="居中"><i class="fas fa-align-center"></i></button>
+            <button onclick="formatText('justifyRight')" title="右对齐"><i class="fas fa-align-right"></i></button>
+            <select onchange="formatText('formatBlock', this.value)">
+                <option value="p">段落</option>
+                <option value="h1">标题1</option>
+                <option value="h2">标题2</option>
+                <option value="h3">标题3</option>
+                <option value="h4">标题4</option>
+                <option value="blockquote">引用</option>
+            </select>
+            <div class="color-picker">
+                <span>颜色:</span>
+                <input type="color" id="textColor" onchange="changeColor()">
+            </div>
+            
+            <button onclick="document.getElementById('imageUpload').click()" title="上传图片">
+                <i class="fas fa-image"></i> 上传图片
+            </button>
+            <input type="file" id="imageUpload" accept="image/*" onchange="handleImageUpload(event)">
+            
+            <div class="export-options">
+                <label>缩放: 
+                    <select id="scaleOption">
+                        <option value="1">1x</option>
+                        <option value="2" selected>2x</option>
+                        <option value="3">3x</option>
+                    </select>
+                </label>
+                <label>格式: 
+                    <select id="formatOption">
+                        <option value="png">PNG</option>
+                        <option value="jpeg">JPEG</option>
+                        <option value="webp">WEBP</option>
+                    </select>
+                </label>
+                <label id="qualityLabel" style="display:none;">质量: 
+                    <div class="quality-slider-container">
+                        <input type="range" id="qualitySlider" min="0" max="1" step="0.1" value="0.9">
+                        <span id="qualityValue">90%</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+        
+        <div class="editor-container">
+            <div class="editor-panel">
+                <div class="panel-header">
+                    <div class="panel-title">编辑区</div>
+                </div>
+                <div 
+                    id="editor" 
+                    class="editor" 
+                    contenteditable="true"
+                    oninput="updatePreview()"
+                >
+                    <h1>欢迎使用富文本编辑器</h1>
+                    <p>W202508150009这是一个功能强大的编辑器，您可以：</p>
+                    <ul>
+                        <li>使用上方工具栏格式化文本</li>
+                        <li>上传本地图片并插入到编辑器中</li>
+                        <li>在右侧实时预览效果</li>
+                        <li>将内容导出为<strong>高质量图片</strong></li>
+                    </ul>
+                    <p>尝试使用不同的<em>缩放级别</em>和<u>格式选项</u>来获得最佳输出质量！</p>
+                </div>
+            </div>
+            
+            <div class="preview-panel">
+                <div class="panel-header">
+                    <div class="panel-title">预览区</div>
+                </div>
+                <div id="preview" class="preview-content">
+                    <!-- 预览内容将通过JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="exportToImage()">导出为图片</button>
+            <button class="btn btn-primary" id="saveAsUrlBtn" onclick="saveImageAsUrl()">保存为URL</button>
+            <button class="btn btn-outline" onclick="clearEditor()">清空内容</button>
+        </div>
+        <div id="uploadResult" class="upload-result"></div>
+    </div>
+
+    <div class="image-preview-container" id="imagePreviewContainer">
+        <div class="image-preview">
+            <h3>图片预览</h3>
+            <img id="previewImage" class="preview-image" src="" alt="预览图片">
+            <p class="image-size-notice">提示：图片将以内联方式插入到编辑器中</p>
+            <div class="preview-buttons">
+                <button class="btn btn-outline" onclick="cancelImageInsert()">取消</button>
+                <button class="btn btn-primary" onclick="insertImage()">插入图片</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        // 初始化预览
+        updatePreview();
+        
+        // 存储当前上传的图片数据
+        let currentImageData = null;
+        
+        // 更新预览函数
+        function updatePreview() {
+            const editorContent = document.getElementById('editor').innerHTML;
+            document.getElementById('preview').innerHTML = editorContent;
+        }
+        
+        // 格式化文本函数
+        function formatText(command, value = null) {
+            document.getElementById('editor').focus();
+            
+            if (value) {
+                document.execCommand(command, false, value);
+            } else {
+                document.execCommand(command, false, null);
+            }
+            
+            updatePreview();
+        }
+        
+        // 改变文本颜色
+        function changeColor() {
+            const color = document.getElementById('textColor').value;
+            document.execCommand('styleWithCSS', false, true);
+            document.execCommand('foreColor', false, color);
+            updatePreview();
+        }
+        
+        // 处理图片上传
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // 检查文件类型
+            if (!file.type.match('image.*')) {
+                alert('请选择图片文件！');
+                return;
+            }
+            
+            // 检查文件大小（限制为5MB）
+            if (file.size > 5 * 1024 * 1024) {
+                alert('图片大小不能超过5MB！');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentImageData = e.target.result;
+                
+                // 显示图片预览
+                document.getElementById('previewImage').src = currentImageData;
+                document.getElementById('imagePreviewContainer').style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+            
+            // 重置文件输入，允许再次选择同一文件
+            event.target.value = '';
+        }
+        
+        // 插入图片到编辑器
+        function insertImage() {
+            if (currentImageData) {
+                // 将光标移动到当前选择位置
+                const editor = document.getElementById('editor');
+                editor.focus();
+                
+                // 插入图片
+                document.execCommand('insertImage', false, currentImageData);
+                
+                // 更新预览
+                updatePreview();
+            }
+            
+            // 关闭预览窗口
+            cancelImageInsert();
+        }
+        
+        // 取消图片插入
+        function cancelImageInsert() {
+            document.getElementById('imagePreviewContainer').style.display = 'none';
+            currentImageData = null;
+        }
+        
+        // 导出为图片
+        function exportToImage() {
+            const previewElement = document.getElementById('preview');
+            const scale = parseInt(document.getElementById('scaleOption').value);
+            const format = document.getElementById('formatOption').value;
+            const quality = parseFloat(document.getElementById('qualitySlider').value);
+            
+            const options = {
+                scale: scale,
+                backgroundColor: '#ffffff',
+                useCORS: true,
+                logging: false,
+                allowTaint: true,
+                onclone: (doc) => {
+                    try { doc.fonts && doc.fonts.ready && doc.fonts.ready.catch(()=>{}); } catch(e) {}
+                }
+            };
+            
+            // 使用html2canvas将预览区域转换为图片
+            html2canvas(previewElement, options).then(canvas => {
+                // 根据选择的格式设置MIME类型和质量
+                let mimeType;
+                switch(format) {
+                    case 'jpeg':
+                        mimeType = 'image/jpeg';
+                        break;
+                    case 'webp':
+                        mimeType = 'image/webp';
+                        break;
+                    default:
+                        mimeType = 'image/png';
+                }
+                
+                // 创建下载链接
+                const link = document.createElement('a');
+                link.download = `rich-text-content.${format}`;
+                link.href = canvas.toDataURL(mimeType, format !== 'png' ? quality : undefined);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }).catch(error => {
+                console.error('导出图片时出错:', error);
+                alert('导出图片时出错，请重试或选择较低缩放比例');
+            });
+        }
+        
+        // 将 canvas 转为 Blob 的 Promise 封装
+        function canvasToBlob(canvas, type, quality) {
+            return new Promise((resolve, reject) => {
+                try {
+                    canvas.toBlob(blob => {
+                        if (blob) resolve(blob); else reject(new Error('toBlob 返回空'));
+                    }, type, quality);
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+        
+        // 过去的临时容器与 padding 逻辑已移除，直接基于预览区截图
+        
+        // 保存为 URL：把预览渲染为图片 -> 上传 -> 显示 URL
+        async function saveImageAsUrl() {
+            const btn = document.getElementById('saveAsUrlBtn');
+            const resultEl = document.getElementById('uploadResult');
+            resultEl.style.display = 'none';
+            resultEl.classList.remove('error');
+            resultEl.textContent = '';
+            
+            try {
+                btn.disabled = true;
+                btn.textContent = '生成并上传中…';
+                
+                const previewElement = document.getElementById('preview');
+                const scale = parseInt(document.getElementById('scaleOption').value);
+                const format = document.getElementById('formatOption').value;
+                const quality = parseFloat(document.getElementById('qualitySlider').value);
+                
+                const options = {
+                    scale: scale,
+                    backgroundColor: '#ffffff',
+                    useCORS: true,
+                    logging: false,
+                    allowTaint: true,
+                    onclone: (doc) => {
+                        try { doc.fonts && doc.fonts.ready && doc.fonts.ready.catch(()=>{}); } catch(e) {}
+                    }
+                };
+                const canvas = await html2canvas(previewElement, options);
+                let mimeType;
+                switch(format) {
+                    case 'jpeg': mimeType = 'image/jpeg'; break;
+                    case 'webp': mimeType = 'image/webp'; break;
+                    default: mimeType = 'image/png';
+                }
+                const blob = await canvasToBlob(canvas, mimeType, format !== 'png' ? quality : undefined);
+                const fileName = `rich-text-content.${format}`;
+                const file = new File([blob], fileName, { type: mimeType });
+                
+                const url = await uploadImageFile(file);
+                
+                showUploadSuccess(url);
+            } catch (err) {
+                console.error('保存为URL失败:', err);
+                showUploadError(err);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '保存为URL';
+            }
+        }
+        
+        // 上传图片文件，返回 originalUrl
+        async function uploadImageFile(file) {
+            const form = new FormData();
+            form.append('resources[0].file', file);
+            
+            const uploadUrl = 'http://127.0.0.1:8084/op/api/trade/product/resource/upload';
+            const resp = await fetch(uploadUrl, {
+                method: 'POST',
+                body: form,
+                credentials: 'include'
+            });
+            const data = await resp.json().catch(() => ({}));
+            if (!resp.ok || (data.code && data.code !== 200)) {
+                if (resp.status === 401 || data.code === 401) {
+                    throw new Error('未登录或登录已过期 (401)');
+                }
+                const msg = (data && (data.msg || data.message)) ? (data.msg || data.message) : `HTTP ${resp.status}`;
+                throw new Error(`上传失败：${msg}`);
+            }
+            const originalUrl = data && data.data && data.data[0] && data.data[0].originalUrl;
+            if (!originalUrl) {
+                throw new Error('响应中未找到 originalUrl');
+            }
+            return originalUrl;
+        }
+        
+        function showUploadSuccess(url) {
+            const resultEl = document.getElementById('uploadResult');
+            resultEl.classList.remove('error');
+            resultEl.innerHTML = `图片已上传：<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>
+                <span class="upload-actions">
+                    <button class="btn btn-outline" onclick="copyText('${encodeURIComponent(url)}', this)">复制URL</button>
+                </span>`;
+            resultEl.style.display = 'flex';
+        }
+        
+        function showUploadError(err) {
+            const resultEl = document.getElementById('uploadResult');
+            resultEl.classList.add('error');
+            resultEl.textContent = (err && err.message) ? err.message : '上传失败';
+            resultEl.style.display = 'flex';
+        }
+        
+        async function copyText(encoded, btn) {
+            const text = decodeURIComponent(encoded);
+            try {
+                await navigator.clipboard.writeText(text);
+                btn.textContent = '已复制';
+                setTimeout(() => btn.textContent = '复制URL', 1500);
+            } catch (e) {
+                alert('复制失败，请手动复制');
+            }
+        }
+        
+        // 清空编辑器
+        function clearEditor() {
+            if (confirm('确定要清空所有内容吗？')) {
+                document.getElementById('editor').innerHTML = '';
+                updatePreview();
+            }
+        }
+        
+        // 格式选择变化时显示/隐藏质量滑块
+        document.getElementById('formatOption').addEventListener('change', function() {
+            const qualityLabel = document.getElementById('qualityLabel');
+            qualityLabel.style.display = this.value === 'png' ? 'none' : 'block';
+        });
+        
+        // 更新质量百分比显示
+        document.getElementById('qualitySlider').addEventListener('input', function() {
+            document.getElementById('qualityValue').textContent = Math.round(this.value * 100) + '%';
+        });
+        
+        // 点击预览窗口外部关闭窗口
+        document.getElementById('imagePreviewContainer').addEventListener('click', function(e) {
+            if (e.target === this) {
+                cancelImageInsert();
+            }
+        });
+    </script>
+</body>
+</html>
