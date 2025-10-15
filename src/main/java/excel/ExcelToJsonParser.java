@@ -9,7 +9,7 @@ public class ExcelToJsonParser {
 
     public static void main(String[] args) {
         try {
-            String filePath = "/Users/hanyuking/my/source_code/learn-jdk/src/main/java/excel/顾客定制技术侧所需.xlsx";
+            String filePath = "顾客定制技术侧所需.xlsx";
             List<ProductTemplate> productList = parseExcel(filePath);
 
             // 输出JSON
