@@ -30,6 +30,28 @@ public class ExcelToJsonParser {
         java.io.FileWriter fileWriter = new java.io.FileWriter(path + "顾客定制技术侧所需.json");
         fileWriter.write(JSON.toJSONString(customProductTemplateList));
         fileWriter.close();
+
+        String sql = generateSQL(customProductTemplateList);
+        fileWriter = new java.io.FileWriter(path + "顾客定制技术侧所需.sql");
+        fileWriter.write(sql);
+        fileWriter.close();
+    }
+
+    private String generateSQL(List<CustomProductTemplate> customProductTemplateList) {
+        StringBuilder sqlBuilder = new StringBuilder();
+        for (CustomProductTemplate customProductTemplate : customProductTemplateList) {
+            String sql = String.format(
+                    "INSERT INTO `trade_pd_custom_product_config` (" +
+                            "`product_id`, " +
+                            "`product_config`, " +
+                            "`product_template_config`) values ('%s', '%s', '%s');\n",
+                    customProductTemplate.productId,
+                    "",
+                    JSON.toJSONString(customProductTemplate)
+            );
+            sqlBuilder.append(sql);
+        }
+        return sqlBuilder.toString();
     }
 
     private List<CustomProductTemplate> toCustomProductList(List<ProductTemplate> productTemplateList) {
@@ -40,7 +62,7 @@ public class ExcelToJsonParser {
                 continue;
             }
             CustomProductTemplate customProductTemplate = new CustomProductTemplate();
-
+            customProductTemplate.setProductId(product.productId);
             // 设置产品信息
             customProductTemplate.productInfo = new ProductInfo();
             customProductTemplate.productInfo.productName = product.productName;
@@ -423,6 +445,7 @@ public class ExcelToJsonParser {
     @NoArgsConstructor
     @AllArgsConstructor
     static class CustomProductTemplate {
+        private String productId;
         ProductInfo productInfo;
         List<ProductSide> productSide;
     }
