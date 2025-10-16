@@ -18,7 +18,7 @@ public class ExcelToJsonParser {
 
     @Test
     public void parseJson() throws Exception {
-        String path = "/Users/rogerswang/my/source_code/learn-jdk/src/main/java/excel/";
+        String path = "/Users/hanyuking/my/source_code/learn-jdk/src/main/java/excel/";
         String filePath = path + "exce.xlsx";
         List<ProductTemplate> productTemplateList = parseExcel(filePath);
 
@@ -60,8 +60,12 @@ public class ExcelToJsonParser {
                 ProductSide backSide = toCustomProductSide(back);
                 backSide.title = "背面";
 
-                customProductTemplate.productSide.add(frontSide);
-                customProductTemplate.productSide.add(backSide);
+                if (!CollectionUtils.isEmpty(frontSide.frontSide.getLevelInfo())) {
+                    customProductTemplate.productSide.add(frontSide);
+                }
+                if (!CollectionUtils.isEmpty(backSide.frontSide.getLevelInfo())) {
+                    customProductTemplate.productSide.add(backSide);
+                }
             }
 
             // group by title
@@ -74,8 +78,12 @@ public class ExcelToJsonParser {
             List<ProductSide> allFrontProductSide = productSideMap.get("正面");
             List<ProductSide> allBackProductSide = productSideMap.get("背面");
 
-            finalProductSideList.add(mergeLevelInfo(allFrontProductSide, "正面"));
-            finalProductSideList.add(mergeLevelInfo(allBackProductSide, "背面"));
+            if (!CollectionUtils.isEmpty(allFrontProductSide)) {
+                finalProductSideList.add(mergeLevelInfo(allFrontProductSide, "正面"));
+            }
+            if (!CollectionUtils.isEmpty(allBackProductSide)) {
+                finalProductSideList.add(mergeLevelInfo(allBackProductSide, "背面"));
+            }
 
             customProductTemplate.productSide = finalProductSideList;
             customProductTemplateList.add(customProductTemplate);
@@ -152,7 +160,7 @@ public class ExcelToJsonParser {
         productSide.frontSide = new CustomFrontSide();
         productSide.frontSide.levelInfo = new ArrayList<>();
 
-        if (front.layer1 != null) {
+        if (front.layer1 != null && StringUtils.isNotEmpty(front.layer1.layerType)) {
             productSide.frontSide.levelInfo.add(LevelInfo.builder()
                     .type(levelTypeMap.get(front.layer1.layerType))
                     .name(levelNameMap.get(front.layer1.layerType))
@@ -162,7 +170,7 @@ public class ExcelToJsonParser {
                     .frameList(null)
                     .build());
         }
-        if (front.layer2 != null) {
+        if (front.layer2 != null && StringUtils.isNotEmpty(front.layer2.layerType)) {
             productSide.frontSide.levelInfo.add(LevelInfo.builder()
                     .type(levelTypeMap.get(front.layer2.layerType))
                     .name(levelNameMap.get(front.layer2.layerType))
@@ -172,7 +180,7 @@ public class ExcelToJsonParser {
                     .frameList(null)
                     .build());
         }
-        if (front.layer3 != null) {
+        if (front.layer3 != null && StringUtils.isNotEmpty(front.layer3.layerType)) {
             productSide.frontSide.levelInfo.add(LevelInfo.builder()
                     .type(levelTypeMap.get(front.layer3.layerType))
                     .name(levelNameMap.get(front.layer3.layerType))
