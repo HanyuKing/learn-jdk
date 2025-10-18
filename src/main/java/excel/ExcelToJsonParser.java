@@ -12,13 +12,15 @@ import org.junit.Test;
 import org.springframework.util.CollectionUtils;
 
 import java.io.FileInputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 
 public class ExcelToJsonParser {
 
     @Test
     public void parseJson() throws Exception {
-        String path = "/Users/hanyuking/my/source_code/learn-jdk/src/main/java/excel/";
+        String path = "/Users/rogerswang/my/source_code/learn-jdk/src/main/java/excel/";
         String filePath = path + "exce.xlsx";
         List<ProductTemplate> productTemplateList = parseExcel(filePath);
 
@@ -54,7 +56,7 @@ public class ExcelToJsonParser {
         return sqlBuilder.toString();
     }
 
-    private List<CustomProductTemplate> toCustomProductList(List<ProductTemplate> productTemplateList) {
+    private List<CustomProductTemplate> toCustomProductList(List<ProductTemplate> productTemplateList) throws Exception {
         List<CustomProductTemplate> customProductTemplateList = new ArrayList<>();
 
         for (ProductTemplate product : productTemplateList) {
@@ -111,10 +113,42 @@ public class ExcelToJsonParser {
             customProductTemplateList.add(customProductTemplate);
         }
 
+        for (CustomProductTemplate customProductTemplate : customProductTemplateList) {
+            if (customProductTemplate.productSide.size() > 1) {
+                List<SideOption> totalSideOptionList = new ArrayList<>();
+                for (int i = 0; i < customProductTemplate.productSide.size(); i++) {
+                    ProductSide productSide = customProductTemplate.productSide.get(i);
+                    SideOption sideOption = new SideOption();
+                    sideOption.index = i;
+                    sideOption.type = sideNameMap.get(productSide.title);
+                    sideOption.name = productSide.title;
+                    totalSideOptionList.add(sideOption);
+                }
+
+                for (int i = 0; i < customProductTemplate.productSide.size(); i++) {
+                    ProductSide productSide = customProductTemplate.productSide.get(i);
+                    List<SideOption> otherSideOptionList = new ArrayList<>();
+                    for (int j = 0; j < totalSideOptionList.size(); j++) {
+                        if (i == j) {
+                            continue;
+                        }
+                        SideOption othertSideOption = totalSideOptionList.get(j);
+                        otherSideOptionList.add(othertSideOption);
+                    }
+                    productSide.sideOptions = otherSideOptionList;
+                }
+            }
+        }
+
         return customProductTemplateList;
     }
 
-    private ProductSide mergeLevelInfo(List<ProductSide> allFrontProductSide, String sideName) {
+    Map<String, String> sideNameMap = new HashMap<String, String>() {{
+        put("正面", "front");
+        put("背面", "back");
+    }};
+
+    private ProductSide mergeLevelInfo(List<ProductSide> allFrontProductSide, String sideName) throws UnsupportedEncodingException {
         ProductSide productSideResult = new ProductSide();
         List<LevelInfo> allLevelInfo = new ArrayList<>();
         for (ProductSide productSide : allFrontProductSide) {
@@ -136,11 +170,17 @@ public class ExcelToJsonParser {
             if (entry.getValue() != null && !entry.getValue().isEmpty()) {
                 List<Frame> allFrameList = new ArrayList<>();
                 for (LevelInfo levelInfo : entry.getValue()) {
+                    String image = levelInfo.getImage();
+                    String sImage = null;
+                    if (image != null && !image.isEmpty()) {
+                        image = URLDecoder.decode(image, "UTF-8");
+                        sImage = image + "?x-tos-process=image/resize,p_10";
+                    }
                     allFrameList.add(Frame.builder()
                             .id(String.valueOf(idCount++))
                             .name(String.valueOf(nameCount++))
-                            .image(levelInfo.getImage())
-                            .s_image(levelInfo.getImage() == null ? null : levelInfo.getImage() + "?x-tos-process=image/resize,p_10")
+                            .image(image)
+                            .s_image(sImage)
                             .frameMask(levelInfo.getFrameMask())
                             .build());
                 }
@@ -177,7 +217,7 @@ public class ExcelToJsonParser {
         put("用户定制", "图片");
     }};
 
-    private ProductSide toCustomProductSide(FrontSide front) {
+    private ProductSide toCustomProductSide(FrontSide front) throws UnsupportedEncodingException {
         ProductSide productSide = new ProductSide();
         productSide.frontSide = new CustomFrontSide();
         productSide.frontSide.levelInfo = new ArrayList<>();
@@ -215,8 +255,8 @@ public class ExcelToJsonParser {
 
         for (LevelInfo levelInfo : productSide.frontSide.levelInfo) {
             if ("border".equals(levelInfo.getType())) {
-                if (front.maskLayer != null) {
-                    levelInfo.setFrameMask(front.maskLayer.imageUrl);
+                if (front.maskLayer != null && StringUtils.isNotEmpty(front.maskLayer.imageUrl)) {
+                    levelInfo.setFrameMask(URLDecoder.decode(front.maskLayer.imageUrl, "UTF-8"));
                 }
             }
         }
@@ -457,6 +497,7 @@ public class ExcelToJsonParser {
     static class ProductSide {
         String title;
         CustomFrontSide frontSide;
+        List<SideOption> sideOptions;
     }
 
     @Data
@@ -502,5 +543,15 @@ public class ExcelToJsonParser {
     static class ProductInfo {
         String productName;
         String productId;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    static class SideOption {
+        int index;
+        String type; // back
+        String name; // "反面"
     }
 }
