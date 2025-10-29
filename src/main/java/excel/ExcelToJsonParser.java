@@ -1,12 +1,17 @@
 package excel;
 
 import com.alibaba.fastjson.JSON;
+import excel.dto.CustomProductConfigDto;
+import excel.dto.ProductConfig;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 import org.springframework.util.CollectionUtils;
@@ -14,14 +19,18 @@ import org.springframework.util.CollectionUtils;
 import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ExcelToJsonParser {
 
     @Test
     public void parseJson() throws Exception {
         String path = "/Users/rogerswang/my/source_code/learn-jdk/src/main/java/excel/";
-        String filePath = path + "exce.xlsx";
+        String fileName = "顾客定制-服务端配置所需-正式.xlsx";
+        String filePath = path + fileName;
         List<ProductTemplate> productTemplateList = parseExcel(filePath);
 
         List<CustomProductTemplate> customProductTemplateList = toCustomProductList(productTemplateList);
@@ -29,17 +38,37 @@ public class ExcelToJsonParser {
         System.out.println(JSON.toJSONString(customProductTemplateList));
 
         // 将JSON写入文件
-        java.io.FileWriter fileWriter = new java.io.FileWriter(path + "顾客定制技术侧所需.json");
+        java.io.FileWriter fileWriter = new java.io.FileWriter(path + "output/" + fileName + "-模板.json");
         fileWriter.write(JSON.toJSONString(customProductTemplateList));
         fileWriter.close();
 
-        String sql = generateSQL(customProductTemplateList);
-        fileWriter = new java.io.FileWriter(path + "顾客定制技术侧所需.sql");
+        List<ProductConfig> productConfigList = ProductConfigParser.parseProductSheet(filePath, "商品相关");
+
+        String sql = generateSQL(customProductTemplateList, productConfigList);
+        fileWriter = new java.io.FileWriter(path + "output/" + fileName + "-模板.sql");
         fileWriter.write(sql);
         fileWriter.close();
     }
 
-    private String generateSQL(List<CustomProductTemplate> customProductTemplateList) {
+    private String generateSQL(List<CustomProductTemplate> customProductTemplateList,
+                               List<ProductConfig> productConfigList) {
+
+        Map<String, String> productConfigMap = new HashMap<>();
+        for (ProductConfig config : productConfigList) {
+            try {
+                CustomProductConfigDto customProductConfigDto = CustomProductConfigDto.builder()
+                        .productId(config.getProductId())
+                        .dpi(Integer.parseInt(config.getResolution()))
+                        .ratio(Float.parseFloat(config.getAspectRatio().split(":")[0]) / Float.parseFloat(config.getAspectRatio().split(":")[1]))
+                        .productFileType(Integer.parseInt(config.getFileType()))
+                        .hasBorder("是".equals(config.getHasBorder()))
+                        .build();
+                productConfigMap.put(config.getSpuName(), JSON.toJSONString(customProductConfigDto));
+            } catch (NumberFormatException e) {
+                System.out.println("商品相关格式配置错误: " + e + ", config: " + JSON.toJSONString(config));
+            }
+        }
+
         StringBuilder sqlBuilder = new StringBuilder();
         for (CustomProductTemplate customProductTemplate : customProductTemplateList) {
             String sql = String.format(
@@ -48,7 +77,7 @@ public class ExcelToJsonParser {
                             "`product_config`, " +
                             "`product_template_config`) values ('%s', '%s', '%s');\n",
                     customProductTemplate.productId,
-                    "",
+                    productConfigMap.get(StringUtils.trim(customProductTemplate.productInfo.productName)),
                     JSON.toJSONString(customProductTemplate)
             );
             sqlBuilder.append(sql);
@@ -140,8 +169,28 @@ public class ExcelToJsonParser {
             }
         }
 
+        // 排序
+        levelSort(customProductTemplateList);
+
         return customProductTemplateList;
     }
+
+    private void levelSort(List<CustomProductTemplate> customProductTemplateList) {
+        for (CustomProductTemplate customProductTemplate : customProductTemplateList) {
+            List<ProductSide> productSideList = customProductTemplate.productSide;
+            for (ProductSide productSide : productSideList) {
+                List<LevelInfo> levelInfoList = productSide.frontSide.levelInfo;
+                levelInfoList.sort((o1, o2) -> levelSortMap.get(o1.getName()) - levelSortMap.get(o2.getName()));
+                productSide.frontSide.levelInfo = levelInfoList;
+            }
+        }
+    }
+
+    Map<String, Integer> levelSortMap = new HashMap<String, Integer>() {{
+        put("图片", 1);
+        put("边框", 2);
+        put("背景", 3);
+    }};
 
     Map<String, String> sideNameMap = new HashMap<String, String>() {{
         put("正面", "front");
@@ -173,15 +222,16 @@ public class ExcelToJsonParser {
                     String image = levelInfo.getImage();
                     String sImage = null;
                     if (image != null && !image.isEmpty()) {
-                        image = URLDecoder.decode(image, "UTF-8");
-                        sImage = image + "?x-tos-process=image/resize,p_10";
+                        // image = image.replace("https://mm-jjewelry-prod-bj.tos-cn-beijing.volces.com/", "https://static.zaohaowu.com/");
+                        image = image + "?x-tos-process=image/format,webp";// URLDecoder.decode(image, "UTF-8");
+                        sImage = image + ",image/resize,p_10";
                     }
                     allFrameList.add(Frame.builder()
                             .id(String.valueOf(idCount++))
                             .name(String.valueOf(nameCount++))
                             .image(image)
                             .s_image(sImage)
-                            .frameMask(levelInfo.getFrameMask())
+                            .frameMask(levelInfo.getFrameMask() + "?x-tos-process=image/format,webp")
                             .build());
                 }
                 if ("customMade".equals(entry.getKey())) {
@@ -213,7 +263,7 @@ public class ExcelToJsonParser {
     }};
     private Map<String, String> levelNameMap = new HashMap<String, String>() {{
         put("背景", "背景");
-        put("边框", "相框");
+        put("边框", "边框");
         put("用户定制", "图片");
     }};
 
@@ -256,7 +306,8 @@ public class ExcelToJsonParser {
         for (LevelInfo levelInfo : productSide.frontSide.levelInfo) {
             if ("border".equals(levelInfo.getType())) {
                 if (front.maskLayer != null && StringUtils.isNotEmpty(front.maskLayer.imageUrl)) {
-                    levelInfo.setFrameMask(URLDecoder.decode(front.maskLayer.imageUrl, "UTF-8"));
+                    // levelInfo.setFrameMask(URLDecoder.decode(front.maskLayer.imageUrl, "UTF-8"));
+                    levelInfo.setFrameMask(front.maskLayer.imageUrl);
                 }
             }
         }
