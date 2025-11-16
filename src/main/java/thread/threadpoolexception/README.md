@@ -37,3 +37,7 @@
 ```
 ## 优雅关闭线程
 https://www.cnblogs.com/Andrew-Zhou/p/16099670.html
+
+## 线程池死锁
+https://cloud.tencent.com/developer/article/2481388
+https://juejin.cn/post/7065098084606279693

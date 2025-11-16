@@ -1,0 +1,50 @@
+为某家医院设计一套（专家）挂号系统。
+
+专家医生排班后即确定了每天的出诊时间，排班的最小时间段为半天（上午/下午），每个时间段的号源有限，挂满为止。
+
+就诊流程为：
+
+选择就诊科室
+
+根据选择的科室，给出给定天数内，每一天的上午及下午分别有哪些医生出诊以及每位医生的剩余号源数量
+
+就诊人选择某位医生有剩余号源的时段，进入支付流程
+
+支付成功后，挂号成功
+
+Q. 请以符合数据库三范式为原则，设计出该系统在关系数据库中需要的表以及关键的字段，并描述表之间的关系。
+
+
+-------
+Department(
+    id, dept_id
+)
+
+Doctor(
+    id, dept_id, doctor_id
+)
+
+DoctorOutpatientTime(
+    id, doctor_id, ot_id, count
+)
+
+OutpatientTime(
+    id, ot_id, dept_id, date, morning
+)
+
+Order (
+    payed
+)
+User (
+
+)
+-----
+select dot.id, dot.count
+    from OutpatientTime ot, DoctorOutpatientTime dot
+    where ot.dept_id = 1 and ot.date = '2025-04-18' and ot.morning = 2
+
+select count as beforeCount from DoctorOutpatientTime where DoctorOutpatientTime.id = 1;
+update DoctorOutpatientTime set count = count - 1 where count = beforeCount;
+
+
+
