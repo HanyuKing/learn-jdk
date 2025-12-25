@@ -3,9 +3,12 @@ package basictype;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -195,5 +198,13 @@ public class StringTest {
         String s2 = "1284, 1285, 1286, 1287, 1288, 1289, 1290, 1292, 1293, 1294, 1200, 1199, 1198, 1197, 1196, 1195, 1194, 1193, 1192, 1191, 1280, 1279, 1273, 1281, 1283, 1295, 1278, 1277, 1276, 1275, 1274, 1272, 1271, 1270, 1269, 1268, 1267, 1266, 1265, 1264, 1185, 1183";
         System.out.println(s.split(", ").length);
         System.out.println(s2.split(", ").length);
+    }
+
+    @Test
+    public void testSplitURL() {
+        List<String> urlList = new ArrayList<>();
+        String url = "https://mm-jjewelry-test-bj.tos-cn-beijing.volces.com/jjewelry/web/images/20251223/d9d2368e-a030-489e-83ba-417ef604cffd.svg;https://mm-jjewelry-test-bj.tos-cn-beijing.volces.com/jjewelry/web/images/20251223/8568ca83-0fc4-4a6d-9df6-ed8dadc5bc60/output_cmyk.tif";
+        urlList.addAll(Lists.newArrayList(url.split(";")));
+        System.out.println(urlList);
     }
 }
