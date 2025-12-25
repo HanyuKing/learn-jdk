@@ -1,0 +1,15 @@
+1. mysql调优
+   1. 删除表数据
+2. jvm调优
+3. es设计
+4. 分库分表设计
+5. dubbo流程
+6. rocketmq架构
+7. tidb架构
+8. redis使用的地方
+9. log4f
+   1. 同步打印与异步打印
+   2. 异步打印、多线程情况下traceId怎么连起来的
+10. ReentrantLock
+    1. AQS主要字段（state、head、tail）
+    2. 非公平锁用到了队列吗？()

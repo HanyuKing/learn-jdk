@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Scanner;
 import java.util.ServiceLoader;
 
 /**
@@ -19,6 +20,9 @@ public class SpiTest {
 //        while (enumeration.hasMoreElements()) {
 //            System.out.println(enumeration.nextElement());
 //        }
+
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
 
         ServiceLoader<SpiTestI> spiTests = ServiceLoader.load(SpiTestI.class, null);
         Iterator<SpiTestI> it = spiTests.iterator();
