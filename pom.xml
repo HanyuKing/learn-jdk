@@ -452,5 +452,14 @@
             <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
             <version>2.2.10.RELEASE</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.xiaohongshu</groupId>
+            <artifactId>xiaohongshu-fls-openskd</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/xiaohongshu.jar</systemPath>
+        </dependency>
+
     </dependencies>
 </project>
