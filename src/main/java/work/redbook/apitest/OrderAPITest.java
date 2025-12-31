@@ -11,7 +11,9 @@ import com.xiaohongshu.fls.opensdk.entity.afterSale.request.ReceiveAndShipReques
 import com.xiaohongshu.fls.opensdk.entity.data.request.BatchDecryptRequest;
 import com.xiaohongshu.fls.opensdk.entity.data.response.BatchDecryptResponse;
 import com.xiaohongshu.fls.opensdk.entity.oauth.request.GetAccessTokenRequest;
+import com.xiaohongshu.fls.opensdk.entity.oauth.request.RefreshTokenRequest;
 import com.xiaohongshu.fls.opensdk.entity.oauth.response.GetAccessTokenResponse;
+import com.xiaohongshu.fls.opensdk.entity.oauth.response.RefreshTokenResponse;
 import com.xiaohongshu.fls.opensdk.entity.order.Requset.GetOrderDetailRequest;
 import com.xiaohongshu.fls.opensdk.entity.order.Requset.GetOrderListRequest;
 import com.xiaohongshu.fls.opensdk.entity.order.Requset.GetOrderReceiverInfoRequest;
@@ -85,6 +87,7 @@ public class OrderAPITest {
 
         request.setBaseInfos(Lists.newArrayList(receiverAddress, receiverName, receiverPhone));
 
+
         BaseResponse<BatchDecryptResponse> baseResponse = dataClient.execute(request, this.accessToken);
 
         System.out.println(JSON.toJSONString(baseResponse));
@@ -93,7 +96,7 @@ public class OrderAPITest {
 
     @Test
     public void testGetReceiveAddressDetail() throws IOException {
-        OrderClient orderClient = new OrderClient("http://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
+        OrderClient orderClient = new OrderClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
 
         GetOrderReceiverInfoRequest request = new GetOrderReceiverInfoRequest();
 
@@ -111,7 +114,7 @@ public class OrderAPITest {
 
     @Test
     public void testGetOrderDetail() throws IOException {
-        OrderClient orderClient = new OrderClient("http://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
+        OrderClient orderClient = new OrderClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
 
         GetOrderDetailRequest request = new GetOrderDetailRequest();
         request.setOrderId("P782011893460274131");
@@ -123,7 +126,7 @@ public class OrderAPITest {
 
     @Test
     public void testGetOrderList() throws IOException {
-        OrderClient orderClient = new OrderClient("http://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
+        OrderClient orderClient = new OrderClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
 
         GetOrderListRequest request = new GetOrderListRequest();
         request.setTimeType(1);
@@ -158,6 +161,23 @@ public class OrderAPITest {
             return baseResponse.getData().getAccessToken();
         }
         return null;
+    }
+
+    private String refreshAccessToken() throws IOException {
+        OauthClient oauthClient = new OauthClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
+        BaseResponse<RefreshTokenResponse> baseResponse = oauthClient.execute(new RefreshTokenRequest("refresh-5c0a882d94a9411c89b1cac8bdb8b476-25a6c939aa8544768528bc7f8fa6e037"));
+
+        System.out.println(JSON.toJSONString(baseResponse));
+
+        if (baseResponse != null && baseResponse.isSuccess()) {
+            return baseResponse.getData().getAccessToken();
+        }
+        return null;
+    }
+
+    @Test
+    public void testGetRefreshToken() throws Exception {
+        System.out.println(refreshAccessToken());
     }
 
 }
