@@ -1,15 +1,17 @@
 package work.redbook.apitest;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.xiaohongshu.fls.opensdk.client.DataClient;
+import com.xiaohongshu.fls.opensdk.client.MaterialClient;
 import com.xiaohongshu.fls.opensdk.client.OauthClient;
 import com.xiaohongshu.fls.opensdk.client.OrderClient;
 import com.xiaohongshu.fls.opensdk.entity.BaseResponse;
-import com.xiaohongshu.fls.opensdk.entity.afterSale.request.ReceiveAndShipRequest;
 import com.xiaohongshu.fls.opensdk.entity.data.request.BatchDecryptRequest;
 import com.xiaohongshu.fls.opensdk.entity.data.response.BatchDecryptResponse;
+import com.xiaohongshu.fls.opensdk.entity.material.MaterialType;
+import com.xiaohongshu.fls.opensdk.entity.material.request.UploadMaterialInfoRequest;
+import com.xiaohongshu.fls.opensdk.entity.material.response.MaterialDetail;
 import com.xiaohongshu.fls.opensdk.entity.oauth.request.GetAccessTokenRequest;
 import com.xiaohongshu.fls.opensdk.entity.oauth.request.RefreshTokenRequest;
 import com.xiaohongshu.fls.opensdk.entity.oauth.response.GetAccessTokenResponse;
@@ -23,14 +25,11 @@ import com.xiaohongshu.fls.opensdk.entity.order.Response.GetOrderReceiverInfoRes
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 /**
  * @author hanyu.wang
@@ -42,7 +41,55 @@ public class OrderAPITest {
     private String version = "2.0";
     private String appSecre = "7f86dcecb3237a5502ae51eff5a232bb";
     String code = "code-d92e34bac40f46818092a0d13e28be72-0dc69dfa92844c2897f08f95d9e00d06";
-    private String accessToken = "token-2859f39a464a4df2b75b38f7bfa6ab34-82dd48c83a254964b7e7b87de10052fa";
+    private String accessToken = "token-a0f4946dd9fc454ebd69a5717ca797b5-f95e0b7eac7040dfa0cc9b3eddc67690";
+
+    private MaterialClient materialClient = new MaterialClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
+
+    @Test
+    public void testUploadImage() throws Exception {
+        String imageUrl = "https://prestatic.zaohaowu.com/jjewelry/web/resources/trade/product/20250910/f595db4dacaa44fb81b9df18b4be21bb/resource/f5e492f55adf42d49231d7aef553efd8/bb1ddaae6fde658a689e2767bbcb930e/original/bb1ddaae6fde658a689e2767bbcb930e.jpg";
+        
+        // 下载图片并转换为字节数组
+        byte[] imageBytes = downloadImageFromUrl(imageUrl);
+        
+        UploadMaterialInfoRequest request = new UploadMaterialInfoRequest();
+        request.setName("测试1");
+        request.setType(MaterialType.IMAGE);
+        request.setMaterialContent(imageBytes);
+        
+        BaseResponse<MaterialDetail> response = materialClient.execute(request, this.accessToken);
+        System.out.println(JSON.toJSONString(response));
+    }
+
+    /**
+     * 从 URL 下载图片并转换为字节数组
+     */
+    private byte[] downloadImageFromUrl(String imageUrl) throws IOException {
+        URL url = new URL(imageUrl);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setConnectTimeout(10000);
+        conn.setReadTimeout(10000);
+        
+        int responseCode = conn.getResponseCode();
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            throw new IOException("下载图片失败，HTTP状态码: " + responseCode);
+        }
+        
+        try (InputStream inputStream = conn.getInputStream();
+             ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            
+            return outputStream.toByteArray();
+        } finally {
+            conn.disconnect();
+        }
+    }
 
     /**
      * {
