@@ -1,0 +1,18 @@
+@startuml
+skin rose
+title 运营后台设置库存（单条原子更新）
+actor 运营人员 as Admin
+participant "运营后台" as Backoffice
+participant "库存服务" as StockSvc
+
+Admin -> Backoffice: 设置可售库存( skuId, channel, newAvailable )
+Backoffice -> StockSvc: 调整库存请求( requestId, skuId, channel, newAvailable )
+activate StockSvc
+note right of StockSvc
+核心DB操作(同事务):
+- UPDATE trade_pd_stock SET sq = lq + oq + newAvailable
+- INSERT trade_pd_stock_log(order_action=OrderActionEnum.ADJUST)
+end note
+StockSvc --> Backoffice: 调整成功
+deactivate StockSvc
+@enduml

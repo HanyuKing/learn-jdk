@@ -1,0 +1,38 @@
+@startuml
+'https://plantuml.com/class-diagram
+skin rose
+
+interface StockWriteService(库存写服务) {
+    void updateStock(StockUpdateDto stockDto);
+}
+
+interface StockReadService(库存读服务) {
+    void queryStock(StockQueryDto stockQueryDto);
+}
+
+class StockUpdateDto {
+    String orderId; // 订单ID
+    List<String> skuIdList; // skuId列表
+    int stock;
+    OrderAction orderAction; // 订单操作动作
+    Date orderActionTime; // 订单操作时间
+    String operator;
+    String remark; // 备注
+}
+
+class StockQueryDto {
+    List<String> skuIdList;
+}
+
+enum OrderAction {
+    INCREASE("增加库存"),
+    DECREASE("减少库存"),
+
+    LOCK("锁库存"),
+    UNLOCK("解锁库存"),
+
+    DEDUCT("扣减库存"),
+    RELEASE("释放库存");
+}
+
+@enduml

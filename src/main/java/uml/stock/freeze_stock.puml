@@ -1,0 +1,37 @@
+@startuml
+skin rose
+title 下单冻结库存（防超卖、锁、幂等）
+actor C端用户 as C
+participant "订单服务" as OrderSvc
+participant "库存服务" as StockSvc
+participant "库存DB" as DB
+participant "Redis" as Redis
+
+C -> OrderSvc: 下单( skuId, qty, orderId )
+OrderSvc -> StockSvc: 冻结库存请求( orderId, skuId, channel, qty, requestId )
+activate StockSvc
+
+StockSvc -> Redis: SETNX lock:stock:skuId (ttl=5s)
+alt 获取锁成功
+  StockSvc -> DB: SELECT * FROM trade_pd_stock WHERE sku_id=? AND channel=? FOR UPDATE
+  StockSvc -> DB: 检查幂等( trade_pd_stock_log WHERE order_id+order_action )
+  alt 已处理
+    StockSvc -> Redis: DEL lock:stock:skuId
+    StockSvc --> OrderSvc: 幂等成功(已冻结)
+  else 未处理
+    StockSvc -> DB: 校验 sq - lq >= qty
+    alt 库存不足
+      StockSvc -> Redis: DEL lock:stock:skuId
+      StockSvc --> OrderSvc: 库存不足
+    else 库存充足
+      StockSvc -> DB: UPDATE trade_pd_stock SET lq=lq+? WHERE sku_id=? AND channel=?
+      StockSvc -> DB: INSERT trade_pd_stock_log(order_id, order_biz_code, order_action=FREEZE, change_qty, sq/lq/oq, requestId)
+      StockSvc -> Redis: DEL lock:stock:skuId
+      StockSvc --> OrderSvc: 冻结成功
+    end
+  end
+else 获取锁失败
+  StockSvc --> OrderSvc: 系统繁忙，请重试
+end
+deactivate StockSvc
+@enduml
