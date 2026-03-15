@@ -1,0 +1,127 @@
+@startuml
+hide circle
+hide methods
+hide stereotypes
+skinparam linetype ortho
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+title Jewelry Draw Activity Logical ER Diagram
+
+entity "jewelry_topic\n话题表" as jewelry_topic {
+  * unique_topic_id : varchar(255) <<PK>> 唯一话题ID
+  --
+  start_time : datetime 活动开始时间
+  end_time : datetime 活动结束时间
+  create_time : datetime
+  modified_time : datetime
+  closed : tinyint(1)
+}
+
+entity "jewelry_collaboration_activity\n联名活动" as jewelry_collaboration_activity {
+  * id : bigint <<PK>> 主键
+  --
+  unique_topic_id : varchar(255) <<IDX>> 唯一话题ID
+  activity_id : varchar(128) <<UK>> 活动ID
+  start_time : datetime 活动开始时间
+  end_time : datetime 活动结束时间
+  daily_shard_limit : int 每日分享次数上限
+  daily_create_content_limit : int 每日创作次数上限
+  daily_buy_limit : int 每日购买次数上限
+  product_list : text 活动联名商品列表
+  user_total : int 活动参与总人数
+  create_time : datetime
+  modified_time : datetime
+  closed : tinyint(1)
+}
+
+entity "jewelry_collaboration_activity_task\n联名活动任务" as jewelry_collaboration_activity_task {
+  * id : bigint <<PK>> 主键
+  --
+  activity_id : varchar(128) <<IDX>> 活动ID
+  task_id : varchar(128) <<UK>> 任务ID
+  biz_id : varchar(128) 业务ID
+  biz_type : varchar(16) CREATE_CONTENT/SHARE/BUY/CANCEL_BUY
+  user_id : varchar(32) <<IDX>> 用户ID
+  biz_date : date 业务日期(yyyy-mm-dd)
+  popup : int 是否弹窗(0/1)
+  status : varchar(16) INIT/SUCCESS/FAIL
+  create_time : datetime
+  modified_time : datetime
+  closed : tinyint(1)
+}
+
+entity "jewelry_lottery_award\n活动奖励" as jewelry_lottery_award {
+  * id : bigint <<PK>> 主键
+  --
+  activity_id : varchar(128) <<IDX>> 活动ID
+  award_id : varchar(128) <<IDX>> 奖励ID
+  award_name : varchar(255) 奖励名称
+  award_img_url : varchar(255) 奖励图片URL
+  award_type : varchar(32) WANT/PRODUCT
+  total_stock : int 总库存
+  stock : int 当前可用库存
+  create_time : datetime
+  modified_time : datetime
+  closed : tinyint(1)
+}
+
+entity "jewelry_lottery_rule\n抽奖规则" as jewelry_lottery_rule {
+  * id : bigint <<PK>> 主键
+  --
+  activity_id : varchar(128) <<UK(partial)>> 活动ID
+  rule_type : varchar(32) <<UK(partial)>> TIME/WEIGHT/PITY/UID/LIMIT
+  rule_version : int 规则版本
+  rule_json : json 规则内容(简化配置)
+  create_time : datetime
+  modified_time : datetime
+  closed : tinyint(1)
+}
+
+entity "jewelry_lottery_activity_balance\n抽奖余额" as jewelry_lottery_activity_balance {
+  * id : bigint <<PK>> 主键
+  --
+  activity_id : varchar(128) <<UK(partial)>> 活动ID
+  user_id : varchar(32) <<UK(partial)>> 用户ID
+  lottery_remaining : int 剩余抽奖次数
+  miss_streak : int 连续未中次数
+  total_lottery : int 总抽奖次数
+  total_wins : int 总中奖次数
+  last_lottery_time : datetime 最后抽奖时间
+  last_win_time : datetime 最后中奖时间
+  last_non_fallback_win_time : datetime 最后非兜底中奖时间
+  create_time : datetime
+  modified_time : datetime
+  closed : tinyint(1)
+}
+
+entity "jewelry_lottery_activity_balance_log\n抽奖余额流水" as jewelry_lottery_activity_balance_log {
+  * id : bigint <<PK>> 主键
+  --
+  activity_id : varchar(128) <<IDX>> 活动ID
+  biz_id : varchar(128) <<UK>> 业务ID
+  biz_type : varchar(16) TASK/DARW
+  user_id : varchar(32) <<IDX>> 用户ID
+  use : int 变更(+/-)
+  create_time : datetime
+  modified_time : datetime
+  closed : tinyint(1)
+}
+
+entity "jewelry_lottery_activity_lottery_record\n抽奖记录" as jewelry_lottery_activity_lottery_record {
+  * id : bigint <<PK>> 主键
+  --
+  draw_id : varchar(128) <<UK>> 抽奖ID
+  activity_id : varchar(128) <<IDX>> 活动ID
+  user_id : varchar(32) <<IDX>> 用户ID
+  award_id : varchar(128) 奖品ID
+  stage_no : int 阶段序号
+  weight_snapshot : int 抽奖时权重
+  status : varchar(16) INIT/SUCCESS/FAIL
+  fail_reason : varchar(64) 失败原因
+  create_time : datetime
+  modified_time : datetime
+  closed : tinyint(1)
+}
+
+@enduml
