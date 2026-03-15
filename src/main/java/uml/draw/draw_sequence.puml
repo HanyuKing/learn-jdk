@@ -1,0 +1,64 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+  participant U as User
+  participant FE as FrontEnd
+  participant API as LotteryAPI
+  participant Rule as RuleEngine
+  participant R as Redis
+  participant DB as MySQL
+
+  U->>FE: 点击抽奖
+  FE->>API: POST /api/lottery/draw (activityId, draw_id)
+
+  API->>R: SETNX draw:req:{draw_id} ttl (幂等锁)
+  alt 幂等命中
+    API->>DB: SELECT * FROM draw_record WHERE draw_id=?
+    API->>FE: 返回已处理结果
+  else 幂等未命中
+    API->>DB: SELECT activity WHERE activity_id=? AND closed=0
+    API->>Rule: 校验活动时间窗口
+    alt 活动无效
+      API->>FE: 返回 ACTIVITY_OFFLINE
+    else 活动有效
+      API->>DB: SELECT rules WHERE activity_id=? AND closed=0
+      API->>R: GET user_state(remaining, miss_streak, uid_win_flags)
+      API->>Rule: 计算阶段(phase_no)与阶段配额
+      API->>Rule: 计算奖品可用量(含阶段追差)
+      API->>Rule: 组装权重池(剔除不可用奖品)
+
+      API->>Rule: 评估 UID 首次必中资格
+      alt UID 首次必中
+        API->>Rule: 设定候选奖品 = 指定奖品
+      else 非 UID 中奖
+        API->>Rule: 评估保底条件 miss_streak >= x
+        alt 保底命中
+          API->>Rule: 候选奖品 = 非兜底且可用(优先小奖后中奖)
+        else 常规抽取
+          API->>Rule: 候选奖品 = 权重池抽样结果
+        end
+      end
+
+      API->>R: Lua 原子脚本(校验可用量 + 扣减库存)
+      alt 库存不足或不可用
+        API->>Rule: 回退兜底奖品
+      else 扣减成功
+        API->>DB: BEGIN
+        API->>DB: INSERT draw_record (INIT)
+        API->>DB: UPDATE balance SET remaining=remaining-1, miss_streak=..., total_lottery=...
+        API->>DB: INSERT balance_log (use=-1)
+        API->>DB: UPDATE draw_record (SUCCESS)
+        API->>DB: COMMIT
+        opt DB 失败补偿
+          API->>R: Lua 回滚库存
+          API->>DB: UPDATE draw_record (FAIL)
+        end
+      end
+
+      API->>R: 更新 user_state(remaining, miss_streak, uid_win_flags)
+      API->>FE: 返回抽奖结果
+    end
+  end
+@enduml
