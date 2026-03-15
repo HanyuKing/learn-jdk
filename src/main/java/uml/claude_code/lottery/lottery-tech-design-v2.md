@@ -26,15 +26,15 @@
 
 | 等级 | 奖品 | 数量 | 权重 | 概率 |
 |------|------|------|------|------|
-| MAJOR | 单依纯演唱会门票×2 | 2 | 2 | 0.02% |
-| MAJOR | 游乐场门票×2 | 2 | 2 | 0.02% |
-| MAJOR | 超大公仔（一对） | 3 | 3 | 0.02% |
-| MIDDLE | 毛绒挂件 | 40 | 40 | 0.31% |
-| MIDDLE | 早安机 | 10 | 10 | 0.08% |
-| MIDDLE | 毛绒背包 | 25 | 25 | 0.19% |
-| MIDDLE | 保温杯 | 25 | 25 | 0.19% |
-| MINOR | 亚克力相框挂件 | 1000 | 1000 | 7.69% |
-| FALLBACK | 想要票×1 | 不限 | 11893 | 91.48% |
+| A（大奖） | 单依纯演唱会门票×2 | 2 | 2 | 0.02% |
+| A（大奖） | 游乐场门票×2 | 2 | 2 | 0.02% |
+| A（大奖） | 超大公仔（一对） | 3 | 3 | 0.02% |
+| B（中等奖） | 毛绒挂件 | 40 | 40 | 0.31% |
+| B（中等奖） | 早安机 | 10 | 10 | 0.08% |
+| B（中等奖） | 毛绒背包 | 25 | 25 | 0.19% |
+| B（中等奖） | 保温杯 | 25 | 25 | 0.19% |
+| C（小奖） | 亚克力相框挂件 | 1000 | 1000 | 7.69% |
+| FALLBACK（兜底） | 想要票×1 | 不限 | 11893 | 91.48% |
 
 ### 1.2 四个核心目标
 
@@ -109,15 +109,16 @@
 #### jewelry_lottery_award — 奖品表
 
 ```sql
--- 核心字段说明（原表 + 建议补充字段）
 award_type  : WANT(兜底) / PRODUCT(实物)
+award_level : A(大奖) / B(中等奖) / C(小奖) / FALLBACK(兜底)
+              字母枚举便于扩展（如新增 D 等级），保底按 PITY rule 中 priority 顺序依次查找对应 level 的可用奖品
 total_stock : 活动总库存，活动开始后不修改
 stock       : 当前剩余库存，随每次发放扣减（全局上限兜底用）
-
--- 建议 ALTER 补充（不影响现有逻辑）
-award_level : MAJOR / MIDDLE / MINOR / FALLBACK （用于保底优先级判断）
-base_weight : 基准权重（冗余字段，加快权重池构建，可与 WEIGHT rule 保持一致）
 ```
+
+> **注意**：`award_level` 为新增字段（`DEFAULT 'FALLBACK'`）。
+> 执行 DDL 前需确认代码中无 `INSERT INTO jewelry_lottery_award VALUES (...)` 的不写列名写法，
+> 执行后需手动 UPDATE 存量数据的 `award_level` 值。
 
 #### jewelry_lottery_rule — 规则表（存所有配置）
 
@@ -168,8 +169,8 @@ base_weight : 基准权重（冗余字段，加快权重池构建，可与 WEIGH
 ```json
 {
   "threshold": 26,
-  "exclude_levels": ["MAJOR"],
-  "priority": ["MINOR", "MIDDLE"]
+  "exclude_levels": ["A"],
+  "priority": ["C", "B"]
 }
 ```
 
@@ -366,7 +367,7 @@ Award decideDraw(String userId, String actId, PityConfig pity, List<Award> award
 
     // 2. 保底检查（最终保证，非即时）
     if (missStreak >= pity.threshold) {
-        for (String level : pity.priority) {   // ["MINOR", "MIDDLE"]
+        for (String level : pity.priority) {   // ["C", "B"]  即小奖优先，中等奖次之
             Award candidate = findAvailableByLevel(awards, level);
             if (candidate != null) {
                 return candidate;  // 保底触发
@@ -451,7 +452,7 @@ sequenceDiagram
     alt 在UID名单内 且 未命中过 且 available>0
         LS->>LS: 命中演唱会门票（强制）
     else missStreak >= threshold
-        LS->>LS: 按 MINOR→MIDDLE 优先级找可用奖品
+        LS->>LS: 按 C(小奖)→B(中等奖) 优先级找可用奖品
         alt 找到可用奖品
             LS->>LS: 保底触发，命中该奖品
         else 无可用奖品
@@ -551,7 +552,7 @@ sequenceDiagram
     LS->>RC: GET lottery:miss:{actId}:{userId}
     RC-->>LS: 26（>= threshold=26）
 
-    LS->>LS: 进入保底流程：查找 MINOR 奖品可用量
+    LS->>LS: 进入保底流程：查找 C(小奖) 可用量
 
     alt 小奖 available > 0
         LS->>RC: EVAL deduct_stock.lua（小奖）[cumulativeAllowed]
@@ -559,8 +560,8 @@ sequenceDiagram
         LS->>RC: EVAL update_miss.lua [miss_key] [1]
         RC-->>LS: miss_streak = 0
         LS-->>U: 亚克力相框挂件（保底命中）
-    else 小奖不可用，查找 MIDDLE
-        LS->>LS: 尝试 MIDDLE 奖品...
+    else C(小奖)不可用，查找 B(中等奖)
+        LS->>LS: 尝试 B 奖品...
     else 所有非兜底奖不可用（保底延后）
         LS->>LS: 走正常权重抽取 → FALLBACK
         LS->>RC: EVAL update_miss.lua [miss_key] [0]
@@ -657,9 +658,9 @@ flowchart TD
     G -- 在名单内且未命中过\n且 available>0 --> H[强制命中演唱会门票]
     G -- 否 --> I{miss_streak >= threshold?}
 
-    I -- 是 --> J{MINOR 可用量>0?}
+    I -- 是 --> J{C(小奖) 可用量>0?}
     J -- 是 --> K[保底命中小奖]
-    J -- 否 --> L{MIDDLE 可用量>0?}
+    J -- 否 --> L{B(中等奖) 可用量>0?}
     L -- 是 --> M[保底命中中等奖]
     L -- 否 --> N[保底延后\n走正常抽取]
     I -- 否 --> N
@@ -843,7 +844,7 @@ Response 200：
     "awardId": "award_acrylic",
     "awardName": "亚克力相框挂件",
     "awardImgUrl": "https://cdn.example.com/awards/acrylic.png",
-    "awardLevel": "MINOR",
+    "awardLevel": "C",
     "isWin": true,
     "isPity": false,
     "remainingLottery": 2
@@ -914,7 +915,7 @@ Response:
         "drawId": "DRAW_20260416143000_u001_a3f8",
         "drawTime": "2026-04-16T14:30:00+08:00",
         "awardName": "亚克力相框挂件",
-        "awardLevel": "MINOR",
+        "awardLevel": "C",
         "isWin": true
       }
     ]
