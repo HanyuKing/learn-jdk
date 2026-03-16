@@ -1,112 +1,61 @@
 @startuml
-    actor U as 用户
-    participant FE as 前端
-    participant GW as API网关
-    participant LS as 抽奖服务
-    participant LC as 本地缓存
-    participant RC as Redis
-    participant DB as MySQL
-    participant MQ as 消息队列
+actor U as "用户"
+    participant FE as "前端"
+    participant GW as "API网关"
+    participant LS as "抽奖服务"
+    participant LC as "本地缓存"
+    participant RC as "Redis"
+    participant DB as "MySQL"
+    participant MQ as "消息队列"
 
     U->>FE: 点击抽奖
-    FE->>FE: 生成 drawId（UUID）
+    FE->>FE: 生成 drawId
     FE->>GW: POST /lottery/draw {activityId, drawId}
-
-    GW->>GW: JWT 鉴权
-    GW->>GW: 令牌桶限流（全局+用户维度）
+    GW->>GW: JWT鉴权 + 令牌桶限流
     GW->>LS: 转发请求
 
+    LS->>RC: GET idem:{drawId}
+    RC-->>LS: null（首次请求）
+    Note over LS: 非null直接返回缓存结果（幂等）
 
-    LS->>RC: GET lottery:idem:{drawId}
-    RC-->>LS: null（首次）
-    Note over LS: 若非null直接返回缓存结果（幂等）
-
-
-    LS->>LC: 读本地缓存 lottery:config
+    LS->>LC: 读本地配置缓存
     LC-->>LS: miss
-    LS->>RC: HGETALL lottery:rules:{actId}
-    RC-->>LS: TIME / WEIGHT / QUOTA / PITY / UID rule_json
-    LS->>LC: 写本地缓存（TTL 30s）
+    LS->>RC: HGETALL rules:{actId}
+    RC-->>LS: TIME / WEIGHT / QUOTA / PITY / UID
+    LS->>LC: 写本地缓存 TTL 30s
+    LS->>LS: 校验时间 + 计算 stage_no + cumulativeAllowed
 
-
-    LS->>LS: 校验活动时间 [start, end]
-    LS->>LS: 计算当前阶段 stage_no（1/2/3）
-    LS->>LS: 计算各奖品 cumulativeAllowed
-
-
-    LS->>RC: SET lottery:draw_lock:{actId}:{userId} 1 NX EX 10
+    LS->>RC: SET draw_lock:{actId}:{userId} NX EX 10
     RC-->>LS: OK
     Note over LS,RC: 获取锁失败返回 TOO_MANY_REQUESTS
 
-
-    LS->>DB: UPDATE balance SET remaining=remaining-1,<br/>total_lottery=total_lottery+1<br/>WHERE actId=? AND userId=? AND remaining>0
-    DB-->>LS: affected=1
+    LS->>DB: BEGIN TX balance-1 + balance_log(redis_applied=false) COMMIT
+    DB-->>LS: OK
     Note over LS,DB: affected=0 → 次数不足，释放锁返回错误
 
-    LS->>DB: INSERT balance_log (biz_id=drawId, use=-1)
-    DB-->>LS: OK（幂等：biz_id unique key）
+    LS->>RC: Pipeline GET miss + MGET stock/issued + GET uid_won
+    RC-->>LS: missStreak=N，各奖品可用量，uid_won状态
 
+    LS->>LS: 抽奖决策 UID白名单 / 保底 / 正常权重
 
-    LS->>RC: GET lottery:miss:{actId}:{userId}
-    RC-->>LS: missStreak = N
-
-
-    LS->>RC: MGET lottery:issued:{actId}:award_* lottery:stock:{actId}:award_*
-    RC-->>LS: 各奖品 issued + stock
-
-
-    LS->>LS: UID白名单检查（从 UID rule 读名单）
-    LS->>DB: SELECT 1 FROM draw_record<br/>WHERE userId=? AND awardId=award_concert AND status=SUCCESS
-    DB-->>LS: 未命中过
-
-    alt 在UID名单内 且 未命中过 且 available>0
-        LS->>LS: 命中演唱会门票（强制）
-    else missStreak >= threshold
-        LS->>LS: 按 MINOR→MIDDLE 优先级找可用奖品
-        alt 找到可用奖品
-            LS->>LS: 保底触发，命中该奖品
-        else 无可用奖品
-            LS->>LS: 保底延后，走正常权重抽取
-        end
-    else 正常流程
-        LS->>LS: 构建权重区间（排除available=0的奖品）
-        LS->>LS: random(1, totalWeight) → 命中 awardId
+    alt 命中实物奖
+        LS->>RC: EVAL deduct_stock.lua [cumulativeAllowed]
+        RC-->>LS: 1=成功 / -1=库存空 / -2=阶段满
+        Note over LS: 扣减失败降级FALLBACK
     end
 
-
-    alt 命中实物奖（非FALLBACK）
-        LS->>RC: EVAL deduct_stock.lua<br/>[stock_key, issued_key, rules_key]<br/>[cumulativeAllowed]
-        RC-->>LS: 1=成功 / -1=全局库存空 / -2=阶段配额满
-
-        alt 扣减失败
-            Note over LS: 降级为 FALLBACK（想要票×1）
-        end
-    end
-
-
-    LS->>DB: INSERT draw_record<br/>(drawId, actId, userId, awardId,<br/>stage_no, weight_snapshot, status=SUCCESS)
-    DB-->>LS: OK（drawId unique key 保幂等）
-
-
-    LS->>RC: EVAL update_miss.lua [miss_key] [isWin]
+    LS->>RC: EVAL update_miss.lua [isWin]
     RC-->>LS: 新的 miss_streak
 
+    LS->>DB: BEGIN TX INSERT draw_record + UPDATE balance_log(redis_applied=true) COMMIT
+    DB-->>LS: OK（draw_record落盘 + WAL checkpoint完成）
 
-    LS-->>DB: 异步 UPDATE balance SET miss_streak=? WHERE ...
-
-
-    LS->>RC: SET lottery:idem:{drawId} {awardId} EX 86400
+    LS->>RC: Pipeline SET idem:{drawId} EX 86400 + DEL draw_lock
     RC-->>LS: OK
-
-
-    LS->>MQ: PUBLISH AWARD_EVENT<br/>{drawId, userId, awardId, awardType}
-    MQ-->>LS: ACK
-
-
-    LS->>RC: DEL lottery:draw_lock:{actId}:{userId}
 
     LS-->>GW: {drawId, awardId, awardName, isWin, isPity, remaining}
     GW-->>FE: HTTP 200
-    FE->>U: 播放抽奖动画 + 展示结果
+    FE->>U: 展示抽奖结果
 
- @enduml
+    LS->>MQ: 异步 AWARD_EVENT {drawId, userId, awardId}
+@enduml
