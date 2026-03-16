@@ -406,7 +406,7 @@ Award decideDraw(String userId, String actId, PityConfig pity, List<Award> award
     LS->>RC: GET idem:{requestId}
     RC-->>LS: null（首次请求）
     Note over LS: 非null直接返回缓存结果（幂等）
-    LS->>LS: 生成 drawId（雪花ID）
+    LS->>LS: 生成 drawId（UUID）
 
     LS->>LC: 读本地配置缓存
     LC-->>LS: miss

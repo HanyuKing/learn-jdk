@@ -1,4 +1,7 @@
 @startuml
+skin rose
+autonumber
+autoactivate on
 actor U as "用户"
     participant FE as "前端"
     participant GW as "API网关"
@@ -9,14 +12,15 @@ actor U as "用户"
     participant MQ as "消息队列"
 
     U->>FE: 点击抽奖
-    FE->>FE: 生成 drawId
-    FE->>GW: POST /lottery/draw {activityId, drawId}
+    FE->>FE: 生成 requestId（UUID）
+    FE->>GW: POST /lottery/draw {activityId, requestId}
     GW->>GW: JWT鉴权 + 令牌桶限流
     GW->>LS: 转发请求
 
-    LS->>RC: GET idem:{drawId}
+    LS->>RC: GET idem:{requestId}
     RC-->>LS: null（首次请求）
     Note over LS: 非null直接返回缓存结果（幂等）
+    LS->>LS: 生成 drawId（UUID）
 
     LS->>LC: 读本地配置缓存
     LC-->>LS: miss
@@ -50,7 +54,7 @@ actor U as "用户"
     LS->>DB: BEGIN TX INSERT draw_record + UPDATE balance_log(redis_applied=true) COMMIT
     DB-->>LS: OK（draw_record落盘 + WAL checkpoint完成）
 
-    LS->>RC: Pipeline SET idem:{drawId} EX 86400 + DEL draw_lock
+    LS->>RC: Pipeline SET idem:{requestId} EX 600 + DEL draw_lock
     RC-->>LS: OK
 
     LS-->>GW: {drawId, awardId, awardName, isWin, isPity, remaining}
