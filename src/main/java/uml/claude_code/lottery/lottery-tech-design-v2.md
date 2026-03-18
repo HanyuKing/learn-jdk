@@ -1,6 +1,6 @@
 # 珠宝抽奖活动 — 技术设计文档
 
-> 版本：2.0 | 日期：2026-03-16
+> 版本：3.0 | 日期：2026-03-18
 
 ---
 
@@ -59,11 +59,14 @@
 | 是否新增表 | **不新增** | 现有 5 张表已足够 |
 | 可用量计算方式 | **累计法** | 与 per-stage+rollover 数学等价，但更简单、阶段修改无需迁移 |
 | 阶段配额存储 | **rule 表 QUOTA 类型** | rule_json 存比例配置，issued 从 draw_record COUNT |
-| UID 命中记录 | **查 draw_record** | 无需独立白名单表，draw_record 是权威数据源 |
+| UID 命中记录 | **Redis uid_won 缓存 + draw_record 兜底** | Pipeline 读 Redis 快检，Redis 缺失时从 draw_record 查询 |
 | 保底语义 | **最终 100%** | 即时 100% 会破坏阶段配额控制（目标2与目标3取舍） |
-| miss_streak 更新 | **始终 INCR（方案B）** | 无冻结状态，逻辑最简单，INCR 一条命令 |
-| 库存扣减 | **Redis Lua 原子脚本** | 保证高并发下不超发 |
-| 幂等保障 | **requestId + drawId 分离** | 客户端生成 requestId 防重，后端生成 drawId 作记录主键 |
+| miss_streak 更新 | **Redis Lua 实时更新，异步 MQ 回写 DB** | Lua 内原子更新保证实时准确，DB 回写用于崩溃恢复 |
+| 库存扣减 | **Redis Lua 合并脚本（combined_draw.lua）** | 库存扣减 + miss 更新在同一 Lua 内原子执行，1 次 round trip |
+| 幂等保障 | **SET NX 原子占位 + DB UNIQUE KEY 兜底** | SET NX 一步完成检查+占位，DB draw_id 唯一键作最终防线 |
+| 同步 DB 写次数 | **1 TX（2 写）** | 余额扣减 + draw_record 合并为单事务，统计字段异步 MQ 更新 |
+| balance_log 角色 | **仅记录 TASK 充值** | DRAW 类型不再写入，draw_record 即抽奖日志，避免冗余写入 |
+| 一致性模型 | **最终一致 + 不超发不多扣** | draw_record 为唯一权威源，Redis 可随时从 DB 重建 |
 
 ---
 
@@ -198,10 +201,14 @@ total_wins        : 累计中非兜底次数（统计用）
 #### jewelry_lottery_activity_balance_log — 余额流水
 
 ```
-biz_type : TASK（任务充值）/ DRAW（消耗）
+biz_type : TASK（任务充值）
 biz_id   : 业务唯一ID，UNIQUE KEY 保幂等
-use      : +N 充值 / -1 消耗
+use      : +N 充值
 ```
+
+> **注意**：DRAW（消耗）类型不再写入 balance_log。draw_record 本身即抽奖日志，
+> 余额扣减与 draw_record 在同一事务中完成，draw_record 的存在即证明余额已扣。
+> 避免冗余写入，减少同步 DB 操作。
 
 #### jewelry_lottery_activity_draw_record — 抽奖记录
 
@@ -209,9 +216,14 @@ use      : +N 充值 / -1 消耗
 draw_id         : 后端生成的全局唯一ID（UUID/雪花ID），UNIQUE KEY 保幂等
 stage_no        : 抽奖时所处阶段（1/2/3），用于审计和统计
 weight_snapshot : 抽奖时本奖品的有效权重（快照，便于追溯）
-status          : INIT → SUCCESS / FAIL
+is_pity         : 是否保底命中（0/1），用于监控保底触发率
+status          : SUCCESS / FAIL
 fail_reason     : STOCK_EMPTY / STAGE_QUOTA_EMPTY / SYSTEM_ERROR
 ```
+
+> draw_record 是整个系统的**唯一权威数据源**：
+> - Redis issued/stock/miss/uid_won 均可从 draw_record 重建
+> - draw_record(SUCCESS) 存在 = 这次抽奖完成 = checkpoint
 
 ---
 
@@ -241,59 +253,11 @@ ALTER TABLE jewelry_lottery_activity_draw_record
 | `lottery:uid_won:{actId}:{awardId}:{userId}` | String | UID 是否已命中指定奖品（1=已中） | 同上 |
 | `lottery:miss:{actId}:{userId}` | String | 用户连续未中次数（miss_streak） | 活动结束 +1d |
 | `lottery:draw_lock:{actId}:{userId}` | String | 用户级抽奖互斥锁 | 5s（超时自动释放） |
-| `lottery:idem:{requestId}` | String | 请求幂等缓存（值=drawId，防客户端重试重复处理） | 10min |
+| `lottery:idem:{requestId}` | String | SET NX 原子占位（值：PROCESSING→抽奖结果序列化） | PROCESSING=30s / 结果=10min |
 
 ---
 
-#### Lua 脚本 1：库存原子扣减
-
-```lua
--- deduct_stock.lua
--- KEYS[1] = lottery:stock:{actId}:{awardId}    全局库存
--- KEYS[2] = lottery:issued:{actId}:{awardId}   累计已发
--- ARGV[1] = cumulativeAllowed                  本阶段累计允许发放上限（由 Java 层计算传入）
--- 返回: 1=成功  -1=全局库存不足  -2=阶段配额已满
-
-local stock   = tonumber(redis.call('GET', KEYS[1]) or 0)
-local issued  = tonumber(redis.call('GET', KEYS[2]) or 0)
-local allowed = tonumber(ARGV[1])
-
-if stock <= 0 then
-    return -1  -- 全局库存耗尽
-end
-if issued >= allowed then
-    return -2  -- 当前阶段累计配额已满
-end
-
-redis.call('DECR',  KEYS[1])
-redis.call('INCR',  KEYS[2])
-return 1
-```
-
-> `cumulativeAllowed` 由 Java 层根据 QUOTA rule 和当前阶段计算后传入，
-> 避免在 Lua 中解析 JSON，保持脚本简单。
-
----
-
-#### Lua 脚本 2：miss_streak 更新
-
-```lua
--- update_miss.lua
--- KEYS[1] = lottery:miss:{actId}:{userId}
--- ARGV[1] = isWin  1=中实物奖  0=兜底
--- 返回：更新后的 miss_streak
-
-if tonumber(ARGV[1]) == 1 then
-    redis.call('SET', KEYS[1], 0)
-    return 0
-else
-    return tonumber(redis.call('INCR', KEYS[1]))
-end
-```
-
----
-
-#### Lua 脚本 3：合并版（库存扣减 + miss 更新原子执行）
+#### Lua 脚本：combined_draw.lua（库存扣减 + miss 更新原子执行）
 
 ```lua
 -- combined_draw.lua
@@ -336,26 +300,7 @@ end
 
 > 调用方只需判断返回值：`== 1` 表示中奖；`-1/-2` 表示库存失败需降级 FALLBACK；`0` 表示本就是兜底。
 > miss_streak 的写入在脚本内部一并完成，不需要额外 round trip。
-
----
-
-#### 方案对比：分离脚本（脚本1+2）vs 合并脚本（脚本3）
-
-| 对比项 | 方案 A：分离脚本（脚本 1 + 脚本 2） | 方案 B：合并脚本（脚本 3） |
-|--------|-----------------------------------|-----------------------------|
-| Redis round trip（写阶段） | 2 次 | 1 次 |
-| 单次 Lua 阻塞时长 | 较短（各脚本操作少） | 稍长（合并更多命令） |
-| 原子性范围 | 各脚本内部原子，两次调用之间有窗口 | stock 扣减 + miss 更新在同一 Lua 内原子执行 |
-| 库存扣减失败时的 miss 更新 | Java 层需判断返回值后再调脚本 2 | 脚本内自动处理，逻辑封闭 |
-| 业务逻辑耦合度 | 低（两者各自独立，可单独复用） | 高（两个操作绑定在一起） |
-| 调试 / 单测复杂度 | 低（分别测试） | 稍高（需覆盖 isProduct 两个分支） |
-| 适用场景 | 两个操作需独立演化，或复用于其他场景 | 性能敏感 + 逻辑稳定，减少 round trip |
-
-**推荐**：生产环境优先使用方案 B（脚本 3）。
-
-- 核心原因：stock 扣减的结果直接决定 miss_streak 应 SET 0 还是 INCR，两者有数据依赖，合并后消除了中间窗口（极小概率：脚本 1 成功但服务在调脚本 2 前宕机，导致 miss_streak 未重置），逻辑更封闭。
-- round trip 从 2 次降为 1 次，在高并发下减少了 Redis 连接占用。
-- 唯一代价是脚本稍大、耦合更强——在规则稳定的场景下可忽略。
+> `cumulativeAllowed` 由 Java 层根据 QUOTA rule 和当前阶段计算后传入，避免在 Lua 中解析 JSON。
 
 ---
 
@@ -433,12 +378,13 @@ Award weightedDraw(String userId, List<Award> awards) {
         pool.add(new WeightRange(cursor + 1, cursor + award.baseWeight, award));
         cursor += award.baseWeight;
     }
-    // 兜底占剩余权重（cursor~13000），始终保留
-    final int TOTAL_WEIGHT = 13000;
-    pool.add(new WeightRange(cursor + 1, TOTAL_WEIGHT, FALLBACK_AWARD));
+    // 兜底权重固定为 baseWeight（不吸收移除奖品的权重），总权重动态计算
+    int fallbackWeight = FALLBACK_AWARD.baseWeight;  // 11893，从 WEIGHT rule 读取
+    int totalWeight = cursor + fallbackWeight;
+    pool.add(new WeightRange(cursor + 1, totalWeight, FALLBACK_AWARD));
 
     // ── 2. 生成随机数，命中区间 ──────────────────────────────────────
-    int rand = ThreadLocalRandom.current().nextInt(1, TOTAL_WEIGHT + 1);
+    int rand = ThreadLocalRandom.current().nextInt(1, totalWeight + 1);
 
     for (WeightRange range : pool) {
         if (rand >= range.start && rand <= range.end) {
@@ -463,7 +409,8 @@ Award weightedDraw(String userId, List<Award> awards) {
 > | 108 ~ 1107 | 亚克力相框挂件 | 1000 |
 > | 1108 ~ 13000 | 想要票×1（兜底） | 11893 |
 >
-> 当部分奖品 available=0 时，对应区间从池中移除，后续奖品区间前移，兜底自动吸收空出的权重。
+> 当部分奖品 available=0 时，对应区间从池中移除，后续奖品区间前移，**总权重相应缩小**，
+> 剩余实物奖概率微升（有利于应发尽发），兜底权重始终为 baseWeight(11893) 不变。
 
 ### 5.4 保底决策
 
@@ -496,15 +443,14 @@ Award findAvailableByLevel(List<Award> awards, String level) {
 > **为什么用加权随机而非直接取第一个**：同等级内往往有多个奖品（如 B 级有 4 种），直接取第一个会造成某一奖品被保底优先消耗，与正常权重分配不一致。加权随机保持各奖品在保底场景下的相对概率，避免某类奖品被提前耗尽。
 
 ```java
-Award decideDraw(String userId, String actId, PityConfig pity, List<Award> awards) {
-
-    int missStreak = redisGetMissStreak(actId, userId);  // GET，不修改
+Award decideDraw(String userId, String actId, PityConfig pity, List<Award> awards,
+                 int missStreak, boolean uidAlreadyWon) {
 
     // 1. UID 白名单检查（演唱会门票）
     if (inUidWhitelist(userId, actId)) {
         Award concert = findAward("award_concert");
-        boolean alreadyWon = drawRecordMapper.existsSuccess(userId, actId, "award_concert");
-        if (!alreadyWon && available(concert) > 0) {
+        // uidAlreadyWon 来自 Pipeline 读取的 Redis uid_won 缓存
+        if (!uidAlreadyWon && available(concert) > 0) {
             return concert;  // 100% 命中
         }
     }
@@ -529,32 +475,35 @@ Award decideDraw(String userId, String actId, PityConfig pity, List<Award> award
 
 将 5.1～5.4 各步骤串联，展示一次完整抽奖的 Java 侧执行顺序。
 
+> **设计原则**：同步路径只保留 1 次 DB 事务（2 写），统计字段异步 MQ 更新。
+> draw_record(SUCCESS) 是唯一权威数据源，Redis 是可随时从 draw_record 重建的缓存。
+
 ```java
 DrawResult executeDraw(String actId, String userId, String requestId) {
 
-    // ── 1. 幂等检查（客户端重试防重）────────────────────────────────
-    String cached = redis.get("lottery:idem:" + requestId);
-    if (cached != null) return deserialize(cached);  // 直接返回原结果
+    // ── 1. 幂等占位（SET NX 一步完成检查+占位）──────────────────────
+    boolean claimed = redis.set("lottery:idem:" + requestId,
+                                "PROCESSING", "NX", "EX", 30);
+    if (!claimed) return Result.processing();  // code=1006, 请求处理中
 
     String drawId = generateDrawId();  // 后端生成唯一ID
 
-    // ── 2. 获取用户级分布式锁 ────────────────────────────────────────
+    // ── 2. 获取用户级分布式锁（防同一用户不同 requestId 并发）────────
     boolean locked = redis.set("lottery:draw_lock:" + actId + ":" + userId,
-                               "1", "NX", "EX", 10);
-    if (!locked) throw new TooManyRequestsException();
+                               "1", "NX", "EX", 5);
+    if (!locked) {
+        redis.del("lottery:idem:" + requestId);  // 释放占位
+        throw new TooManyRequestsException();
+    }
 
     try {
-        // ── 3. DB 扣余额 + WAL 落盘（同一事务）─────────────────────────
-        // affected=0 → remaining 不足，抛异常，释放锁返回 INSUFFICIENT
-        deductAndLog(actId, userId, drawId);
-
-        // ── 4. 读规则（本地缓存 30s → Redis HGETALL → DB 兜底）────────
+        // ── 3. 读规则（本地缓存 30s → Redis HGETALL → DB 兜底）────────
         ActivityRules rules = loadRules(actId);                    // TIME/WEIGHT/QUOTA/PITY/UID
         int stage            = getCurrentStage(rules);             // 5.1
         Map<String, Integer> allowed = calcAllCumulativeAllowed(   // 5.2，所有奖品
                                            rules.quota, stage);
 
-        // ── 5. Pipeline 批量读 Redis 状态 ────────────────────────────
+        // ── 4. Pipeline 批量读 Redis 状态（1 次 round trip）──────────
         //    miss_streak + 各奖品 stock/issued + uid_won（一次 round trip）
         RedisPipelineResult state = redis.pipeline(
             GET("lottery:miss:"     + actId + ":" + userId),
@@ -563,56 +512,78 @@ DrawResult executeDraw(String actId, String userId, String requestId) {
             GET("lottery:uid_won:"  + actId + ":award_concert:" + userId)
         );
 
-        // ── 6. 计算各奖品可用量，构建可用奖品视图 ────────────────────
+        // ── 5. 计算各奖品可用量，构建可用奖品视图 ────────────────────
         List<Award> available = buildAvailableAwards(awards, state, allowed);  // 5.2
 
-        // ── 7. 抽奖决策（纯 Java，不写 Redis）────────────────────────
+        // ── 6. 抽奖决策（纯 Java 计算，零 IO）──────────────────────
         //    优先级：UID白名单 → 保底 → 正常权重
+        boolean uidAlreadyWon = "1".equals(state.uidWon);
         Award selected = decideDraw(userId, actId, rules.pity,
-                                    available, state.missStreak);  // 5.3 + 5.4
+                                    available, state.missStreak,
+                                    uidAlreadyWon);               // 5.3 + 5.4
         boolean isProduct = selected.isProduct();
 
-        // ── 8. Redis Lua 原子执行：扣库存 + 更新 miss（一次 round trip）
-        int luaResult;
-        if (isProduct) {
-            luaResult = redis.eval(COMBINED_DRAW_LUA,
-                "lottery:stock:"  + actId + ":" + selected.awardId,   // KEYS[1]
-                "lottery:issued:" + actId + ":" + selected.awardId,   // KEYS[2]
-                "lottery:miss:"   + actId + ":" + userId,             // KEYS[3]
-                allowed.get(selected.awardId),                         // ARGV[1]
-                1);                                                    // ARGV[2] isProduct
-        } else {
-            luaResult = redis.eval(COMBINED_DRAW_LUA,
-                "", "",                                                // KEYS[1][2] 不使用
-                "lottery:miss:" + actId + ":" + userId,               // KEYS[3]
-                0, 0);                                                 // ARGV[1][2]
-        }
+        // ── 7. Redis Lua 原子执行：扣库存 + 更新 miss（1 次 round trip）
+        int luaResult = redis.eval(COMBINED_DRAW_LUA,
+            keys(stockKey(actId, selected.awardId),
+                 issuedKey(actId, selected.awardId),
+                 missKey(actId, userId)),
+            args(isProduct ? allowed.get(selected.awardId) : 0,
+                 isProduct ? 1 : 0));
 
-        // ── 9. 处理 Lua 返回值 ───────────────────────────────────────
+        // ── 8. 确定最终结果 ─────────────────────────────────────────
         //   1=中奖  0=兜底  -1=全局库存空  -2=阶段配额满
         boolean isWin    = (luaResult == 1);
         Award finalAward = isWin ? selected : FALLBACK_AWARD;
+        boolean isPity   = (state.missStreak >= rules.pity.threshold) && isWin;
 
-        // ── 10. 写 draw_record + WAL checkpoint（同一事务）─────────────
-        saveDrawRecordAndCheckpoint(drawId, actId, userId,
-                                    finalAward, stage, isWin);
+        // ── 9. 唯一 DB 事务：扣余额 + 写 draw_record（2 写 / 1 TX）──
+        drawAndDeduct(actId, userId, drawId, finalAward, stage, isPity);
 
-        // ── 11. Pipeline 收尾：写幂等缓存，释放锁 ────────────────────
-        redis.pipeline(
-            SET("lottery:idem:" + requestId, drawId, "EX", 600),
-            DEL("lottery:draw_lock:" + actId + ":" + userId)
-        );
+        // ── 10. Pipeline 收尾：覆盖幂等缓存 + 释放锁 + uid_won 标记 ──
+        DrawResult result = new DrawResult(drawId, finalAward, isWin, isPity);
+        Pipeline p = redis.pipeline();
+        p.set("lottery:idem:" + requestId, serialize(result), "EX", 600);
+        p.del("lottery:draw_lock:" + actId + ":" + userId);
+        if (isWin && "award_concert".equals(finalAward.awardId)) {
+            p.set("lottery:uid_won:" + actId + ":award_concert:" + userId,
+                  "1", "EX", activityTtl);
+        }
+        p.sync();
 
-        // ── 12. 异步发奖（MQ）────────────────────────────────────────
-        mq.send(new AwardEvent(drawId, userId, finalAward.awardId));
+        // ── 11. 异步发奖 + 统计更新（MQ）──────────────────────────
+        mq.send(new DrawEvent(drawId, actId, userId, finalAward,
+                              isWin, isPity, state.missStreak));
 
-        boolean isPity = (state.missStreak >= rules.pity.threshold) && isWin;
-        return new DrawResult(drawId, finalAward, isWin, isPity);
+        return result;
 
+    } catch (InsufficientLotteryException e) {
+        redis.del("lottery:idem:" + requestId);
+        redis.del("lottery:draw_lock:" + actId + ":" + userId);
+        throw e;  // 余额不足，释放占位和锁
     } catch (Exception e) {
-        redis.del("lottery:draw_lock:" + actId + ":" + userId);  // 兜底释放锁
+        redis.del("lottery:idem:" + requestId);
+        redis.del("lottery:draw_lock:" + actId + ":" + userId);
         throw e;
     }
+}
+
+// 唯一 DB 事务
+@Transactional
+void drawAndDeduct(String actId, String userId, String drawId,
+                   Award award, int stage, boolean isPity) {
+    // 扣余额（乐观锁，affected=0 说明余额不足）
+    int affected = balanceMapper.deduct(actId, userId);
+    //  UPDATE balance SET remaining=remaining-1
+    //  WHERE activity_id=? AND user_id=? AND remaining > 0
+    if (affected == 0) throw new InsufficientLotteryException();
+
+    // 写抽奖记录（直接 SUCCESS，draw_id UNIQUE KEY 天然幂等）
+    drawRecordMapper.insert(DrawRecord.builder()
+        .drawId(drawId).activityId(actId).userId(userId)
+        .awardId(award.awardId).stageNo(stage)
+        .weightSnapshot(award.baseWeight)
+        .isPity(isPity).status("SUCCESS").build());
 }
 ```
 
@@ -620,14 +591,41 @@ DrawResult executeDraw(String actId, String userId, String requestId) {
 
 | 步骤 | 操作 | 说明 |
 |------|------|------|
-| 3 | DB 事务（余额-1 + WAL） | 必须在 Redis 操作前落盘，作为 redo log |
-| 5 | Pipeline 批量读 Redis | 将 miss/stock/issued/uid_won 合并为 1 次 round trip |
-| 7 | 纯 Java 决策 | 不写任何状态，仅读取 step5 的结果 |
-| 8 | Lua 原子写 Redis | 扣库存 + 更新 miss 合并为 1 次 round trip（方案B） |
-| 10 | DB 事务（draw_record + WAL checkpoint） | 确认 Redis 已执行，checkpoint 完成 |
-| 11 | Pipeline 收尾 | 幂等缓存 + 释放锁合并为 1 次 round trip |
+| 1 | SET NX idem | 幂等占位，一步完成检查+占位 |
+| 2 | SET NX draw_lock | 用户级互斥，防同一用户并发 |
+| 4 | Pipeline 批量读 Redis | miss/stock/issued/uid_won 合并为 1 次 round trip |
+| 6 | 纯 Java 决策 | 不写任何状态，仅读取 step4 的结果 |
+| 7 | Lua 原子写 Redis | 扣库存 + 更新 miss 合并为 1 次 round trip |
+| 9 | **唯一 DB 事务** | 余额-1 + draw_record INSERT，2 写 / 1 TX |
+| 10 | Pipeline 收尾 | 幂等覆盖 + 释放锁 + uid_won，1 次 round trip |
 
-> 整个链路 Redis 写操作只有 **step8（1次Lua）** 和 **step11（1次Pipeline）**，共 2 次 round trip。
+> 同步路径：**3 次 Redis round trip + 1 次 DB 事务**。
+> 相比 v2（2 次 DB 事务 + 3 次 Redis RT），减少 1 次 DB 事务和 3 次 DB 写操作。
+
+**MQ 消费者异步处理：**
+
+```java
+void onDrawEvent(DrawEvent event) {
+    // 1. 更新统计字段（不影响主链路）
+    balanceMapper.updateStats(event.actId, event.userId,
+        event.isWin, event.newMissStreak());
+    //  UPDATE balance SET miss_streak=?,
+    //         total_lottery=total_lottery+1,
+    //         total_wins=total_wins+?,
+    //         last_lottery_time=NOW()
+
+    // 2. 异步扣减 DB 库存（运营展示用）
+    if (event.isWin) {
+        awardMapper.deductStock(event.awardId);
+        //  UPDATE award SET stock=stock-1 WHERE award_id=? AND stock>0
+    }
+
+    // 3. 实物奖发放
+    if (event.isWin) {
+        awardService.deliver(event.drawId, event.userId, event.awardId);
+    }
+}
+```
 
 ---
 
@@ -651,10 +649,14 @@ DrawResult executeDraw(String actId, String userId, String requestId) {
     GW->>GW: JWT鉴权 + 令牌桶限流
     GW->>LS: 转发请求
 
-    LS->>RC: GET idem:{requestId}
-    RC-->>LS: null（首次请求）
-    Note over LS: 非null直接返回缓存结果（幂等）
+    LS->>RC: SET NX idem:{requestId} PROCESSING EX 30
+    RC-->>LS: OK（首次请求占位成功）
+    Note over LS: 占位失败直接返回 code=1006 处理中
     LS->>LS: 生成 drawId（UUID）
+
+    LS->>RC: SET draw_lock:{actId}:{userId} NX EX 5
+    RC-->>LS: OK
+    Note over LS,RC: 获取锁失败释放占位返回 TOO_MANY_REQUESTS
 
     LS->>LC: 读本地配置缓存
     LC-->>LS: miss
@@ -663,39 +665,28 @@ DrawResult executeDraw(String actId, String userId, String requestId) {
     LS->>LC: 写本地缓存 TTL 30s
     LS->>LS: 校验时间 + 计算 stage_no + cumulativeAllowed
 
-    LS->>RC: SET draw_lock:{actId}:{userId} NX EX 10
-    RC-->>LS: OK
-    Note over LS,RC: 获取锁失败返回 TOO_MANY_REQUESTS
-
-    LS->>DB: BEGIN TX balance-1 + balance_log(redis_applied=false) COMMIT
-    DB-->>LS: OK
-    Note over LS,DB: affected=0 → 次数不足，释放锁返回错误
-
     LS->>RC: Pipeline GET miss + MGET stock/issued + GET uid_won
     RC-->>LS: missStreak=N，各奖品可用量，uid_won状态
 
     LS->>LS: 抽奖决策 UID白名单 / 保底 / 正常权重
 
-    alt 命中实物奖
-        LS->>RC: EVAL deduct_stock.lua [cumulativeAllowed]
-        RC-->>LS: 1=成功 / -1=库存空 / -2=阶段满
-        Note over LS: 扣减失败降级FALLBACK
-    end
+    LS->>RC: EVAL combined_draw.lua [cumulativeAllowed, isProduct]
+    RC-->>LS: 1=中奖 / 0=兜底 / -1=库存空 / -2=阶段满
+    Note over LS: -1/-2 降级FALLBACK，miss_streak 已在 Lua 内更新
 
-    LS->>RC: EVAL update_miss.lua [isWin]
-    RC-->>LS: 新的 miss_streak
+    LS->>DB: BEGIN TX { balance-1 + INSERT draw_record(SUCCESS) } COMMIT
+    DB-->>LS: OK
+    Note over LS,DB: affected=0 → 次数不足，释放锁和占位返回错误
 
-    LS->>DB: BEGIN TX INSERT draw_record + UPDATE balance_log(redis_applied=true) COMMIT
-    DB-->>LS: OK（draw_record落盘 + WAL checkpoint完成）
-
-    LS->>RC: Pipeline SET idem:{requestId} EX 600 + DEL draw_lock
+    LS->>RC: Pipeline SET idem=结果 EX 600 + DEL draw_lock + SET uid_won(如需)
     RC-->>LS: OK
 
     LS-->>GW: {drawId, awardId, awardName, isWin, isPity, remaining}
     GW-->>FE: HTTP 200
     FE->>U: 展示抽奖结果
 
-    LS->>MQ: 异步 AWARD_EVENT {drawId, userId, awardId}
+    LS->>MQ: 异步 DRAW_EVENT {drawId, userId, awardId, isWin, isPity}
+    Note over MQ: 消费者异步更新 balance 统计字段 + DB stock-1 + 发奖
 ```
 
 ---
@@ -732,29 +723,30 @@ DrawResult executeDraw(String actId, String userId, String requestId) {
     participant DB as "MySQL"
 
     U->>LS: 第26次抽奖
-    LS->>RC: GET miss:{actId}:{userId}
-    RC-->>LS: 25（未达阈值）
+    LS->>RC: Pipeline GET miss + MGET stock/issued
+    RC-->>LS: miss_streak=25（未达阈值）
     LS->>LS: 正常权重抽取命中FALLBACK
-    LS->>RC: EVAL update_miss.lua [isWin=0]
-    RC-->>LS: miss_streak=26（INCR后达到阈值）
+    LS->>RC: EVAL combined_draw.lua [isProduct=0]
+    RC-->>LS: 0（兜底，miss_streak=26）
+    LS->>DB: TX { balance-1 + draw_record(FALLBACK, SUCCESS) }
     LS-->>U: 想要票x1
 
     U->>LS: 第27次抽奖
-    LS->>RC: GET miss:{actId}:{userId}
-    RC-->>LS: 26（>=threshold）
+    LS->>RC: Pipeline GET miss + MGET stock/issued
+    RC-->>LS: miss_streak=26（>=threshold）
 
     alt C(小奖) available > 0
-        LS->>RC: EVAL deduct_stock.lua（小奖）
-        RC-->>LS: 1（成功）
-        LS->>RC: EVAL update_miss.lua [isWin=1]
-        RC-->>LS: miss_streak=0
+        LS->>LS: 保底决策选中小奖
+        LS->>RC: EVAL combined_draw.lua [isProduct=1]
+        RC-->>LS: 1（成功，miss_streak=0）
+        LS->>DB: TX { balance-1 + draw_record(小奖, SUCCESS, isPity=1) }
         LS-->>U: 亚克力相框挂件（保底命中）
     else C不可用查找B(中等奖)
         LS->>LS: 尝试B级奖品
     else 所有非兜底奖不可用（保底延后）
         LS->>LS: 走正常权重抽取FALLBACK
-        LS->>RC: EVAL update_miss.lua [isWin=0]
-        RC-->>LS: miss_streak=27（继续累加）
+        LS->>RC: EVAL combined_draw.lua [isProduct=0]
+        RC-->>LS: 0（兜底，miss_streak=27 继续累加）
         LS-->>U: 想要票x1（保底延后，下次阶段释放后触发）
     end
 ```
@@ -843,13 +835,11 @@ DrawResult executeDraw(String actId, String userId, String requestId) {
 flowchart TD
     A([用户发起抽奖]) --> B{活动时间校验}
     B -- 不在时间内 --> ERR1[返回: 活动未开始/已结束]
-    B -- 通过 --> C{幂等检查\ndrawId 是否已处理}
-    C -- 已处理 --> RET0[直接返回原结果]
-    C -- 首次 --> D[获取用户分布式锁]
-    D -- 获取失败 --> ERR2[返回: 请求过于频繁]
-    D -- 获取成功 --> E{扣减用户抽奖次数\n乐观锁 remaining-1}
-    E -- remaining=0 --> ERR3[释放锁, 返回: 次数不足]
-    E -- 成功 --> F[计算当前阶段 stage_no\n及各奖品 cumulativeAllowed]
+    B -- 通过 --> C{SET NX idem 幂等占位}
+    C -- 占位失败 --> RET0[返回: 请求处理中 1006]
+    C -- 占位成功 --> D[获取用户分布式锁]
+    D -- 获取失败 --> ERR2[释放占位, 返回: 请求过于频繁]
+    D -- 获取成功 --> F[加载规则 + 计算阶段\nPipeline 读 Redis 状态]
 
     F --> G{UID 白名单检查}
     G -- 在名单内且未命中过\n且 available>0 --> H[强制命中演唱会门票]
@@ -863,27 +853,25 @@ flowchart TD
     I -- 否 --> N
 
     N --> O[构建权重区间\n排除 available=0 的奖品]
-    O --> P[random(1~totalWeight)\n命中 awardId]
+    O --> P[random 1~totalWeight\n命中 awardId]
 
     H --> Q{命中实物奖?}
     K --> Q
     M --> Q
     P --> Q
 
-    Q -- 是 --> R[Redis Lua 原子扣库存]
+    Q -- 是 --> R[combined_draw.lua\n扣库存 + miss_streak=0]
     R -- 成功 --> S[isWin=true]
-    R -- -1 全局库存空\n-2 阶段配额满 --> T[降级 FALLBACK\nisWin=false]
-    Q -- FALLBACK --> T
+    R -- -1 全局库存空\n-2 阶段配额满 --> T[降级 FALLBACK\nmiss_streak++]
+    Q -- FALLBACK --> T2[combined_draw.lua\nmiss_streak++]
 
-    S --> U[update_miss.lua\nmiss_streak=0]
-    T --> V[update_miss.lua\nmiss_streak++]
-
-    U --> W[写 draw_record\nstatus=SUCCESS]
-    V --> W
-    W --> X[写幂等缓存 idem]
-    X --> Y[发 MQ 异步发奖]
-    Y --> Z[释放分布式锁]
-    Z --> END([返回抽奖结果])
+    S --> W{DB 事务\nbalance-1 + draw_record}
+    T --> W
+    T2 --> W
+    W -- affected=0 余额不足 --> ERR3[释放锁和占位\n返回: 次数不足]
+    W -- 成功 --> X[Pipeline: SET idem=结果\nDEL lock + SET uid_won]
+    X --> Y[MQ 异步: 统计更新 + 发奖]
+    Y --> END([返回抽奖结果])
 ```
 
 ---
@@ -893,18 +881,22 @@ flowchart TD
 ### 8.1 并发控制层次
 
 ```
+层次0：SET NX idem 幂等占位
+  - 同一 requestId 只有一个请求能通过
+  - 一步完成检查+占位，无窗口
+
 层次1：API 网关限流
   - 全局 QPS 限制（令牌桶，e.g. 2000 QPS）
   - 单用户 QPS 限制（e.g. 每秒 1 次）
   - 活动维度限流（防刷接口）
 
 层次2：用户级分布式锁
-  - SET lottery:draw_lock:{actId}:{userId} 1 NX EX 10
+  - SET lottery:draw_lock:{actId}:{userId} 1 NX EX 5
   - 同一用户同一时刻只能有一次抽奖在处理
-  - 防止前端重复点击或网络重传导致的并发
+  - 防止前端重复点击生成不同 requestId 导致的并发
 
 层次3：库存原子扣减（Redis Lua）
-  - 全局库存 + 阶段配额在同一 Lua 脚本内原子检查+扣减
+  - 全局库存 + 阶段配额 + miss_streak 在同一 Lua 脚本内原子执行
   - 不可能超发
 
 层次4：数据库乐观锁
@@ -917,21 +909,25 @@ flowchart TD
 
 | 数据 | 缓存位置 | 更新时机 |
 |------|---------|---------|
-| 活动配置（TIME/WEIGHT/PITY/UID rule） | Redis + 本地 30s | 运营修改规则后主动失效 |
+| 活动配置（TIME/WEIGHT/PITY/UID rule） | Redis + 本地 30s | 运营修改规则后主动失效（Redis Pub/Sub 通知各实例） |
 | 奖品列表 | Redis | 同上 |
 | 奖品全局库存 `stock` | Redis（原子扣减主链路） | 每次发放 DECR |
 | 奖品累计已发 `issued` | Redis（INCR） | 每次发放 INCR |
-| 用户 `miss_streak` | Redis（INCR/SET） | 每次抽奖后 |
+| 用户 `miss_streak` | Redis（Lua 内 INCR/SET） | 每次抽奖后 Lua 原子更新 |
+| 用户 `uid_won` | Redis（Pipeline SET） | 中奖后 Pipeline 写入 |
 | 用户余额 `remaining` | **不缓存** | DB 乐观锁直接扣，量级不高 |
 
 ### 8.3 写 DB 异步化
 
 ```
-抽奖主链路（同步）：
-  扣减余额(DB) → Redis 库存扣减 → 写 draw_record(DB) → 返回结果
+抽奖主链路（同步，1 TX / 2 写）：
+  Redis Lua 扣库存 → DB 事务 { balance-1 + draw_record INSERT } → 返回结果
 
-异步（MQ/后台线程）：
-  更新 balance.miss_streak → 发奖通知 → DB 与 Redis 库存核对
+异步（MQ 消费）：
+  balance 统计字段更新（miss_streak/total_lottery/total_wins）
+  → DB stock-1（运营展示用）
+  → 实物奖发放 → 发奖通知
+  → Redis vs DB 库存周期对账
 ```
 
 ---
@@ -961,102 +957,53 @@ MQ：至少3节点集群，消息持久化
 
 #### 设计原则
 
-Redis Lua 的原子性只保证**并发隔离**（执行期间其他命令不插入），不保证**崩溃安全**：
+> **draw_record(SUCCESS) 是唯一权威数据源，Redis 是可随时从 draw_record 重建的缓存。**
 
-```
-redis.call('DECR',  stock_key)   -- 执行完
-redis.call('INCR',  issued_key)  -- 执行完
--- ← Redis 在此宕机
-redis.call('SET',   other_key)   -- 未执行
+Redis Lua 的原子性只保证**并发隔离**（执行期间其他命令不插入），不保证**崩溃安全**。
+因此不在 Redis 上建立一致性，而是以 DB draw_record 为锚点，Redis 偏差通过重建修正。
 
-AOF 记录单条命令模式：前两条已持久化，第三条丢失 → 部分执行
-AOF 记录整个脚本模式：恢复后脚本重跑 → DECR 执行两次 → 多扣
-```
-
-因此 **Redis 是可重建的缓存，不是一致性的保障者**。一致性由 DB 侧的 WAL 保证。
+一致性保障等级：
+- **不超发**：Redis Lua 原子检查 stock/issued，Lua 内不可能超发
+- **不多扣余额**：DB 乐观锁 `remaining > 0`，affected=0 拦截
+- **最终一致**：Redis 偏差通过周期对账 + 事件驱动重建修正，窗口 ≤ 60s
 
 ---
 
-#### WAL：balance_log 作为 redo log
-
-借鉴 MySQL redo log 思想：**先写日志（DB），再操作缓存（Redis）**。
-
-balance_log 写在 DB 事务里，天然持久化，作为每次抽奖操作的意图记录：
-
-```java
-@Transactional
-void deductAndLog(String actId, String userId, String drawId,
-                  String awardId, int stage) {
-    int affected = balanceMapper.deductOne(actId, userId);
-    if (affected == 0) throw new InsufficientLotteryException();
-    // redis_applied=false：Redis 操作意图已记录，尚未确认执行
-    balanceLogMapper.insert(actId, drawId, "DRAW", userId, -1,
-        String.format("{\"award_id\":\"%s\",\"stage\":%d,\"redis_applied\":false}",
-                      awardId, stage));
-}
-```
-
-操作顺序：
+#### 崩溃场景分析
 
 ```
-Step 1: DB 事务（balance-1 + balance_log redis_applied=false）← WAL 落盘
-Step 2: Redis Lua 扣库存
-Step 3: balance_log 标记 redis_applied=true              ← checkpoint
+Step 1:  SET NX idem (PROCESSING)
+           ↓                          ← 崩溃点 A
+Step 7:  Redis Lua (stock-1, issued+1, miss 更新)
+           ↓                          ← 崩溃点 B（最危险窗口）
+Step 9:  DB TX (balance-1 + draw_record)
+           ↓                          ← 崩溃点 C
+Step 10: Pipeline (idem=结果, DEL lock, SET uid_won)
 ```
 
-`redis_applied=false` = redo log 未 checkpoint；`true` = 已刷盘完成。
+| 崩溃点 | DB 状态 | Redis 状态 | 用户影响 | 恢复方式 |
+|--------|---------|-----------|---------|---------|
+| A：SET NX 之后、Lua 之前 | 未变化 | idem=PROCESSING | 无 | idem 30s 过期 → 客户端重试 → SET NX 成功 → 正常执行 |
+| B：Lua 之后、DB TX 之前 | 未变化（余额未扣） | stock-1, issued+1, miss 变化 | 无（余额没扣，用户不亏） | 周期对账发现 Redis issued > draw_record COUNT → 重建修正（≤60s） |
+| C：DB TX 之后、idem 覆盖之前 | 全部正确 | idem=PROCESSING | 客户端收到 1006 | 重试 → SET NX 失败 → 返回 processing → idem 被覆盖或 30s 过期后重试成功 |
+
+> **崩溃点 B 详解**：这是最关键的窗口。Redis 库存被多扣了 1 个（stock-1），但 DB 没有对应的 draw_record。
+> 后果：≤60s 内某奖品 available 少 1 个，可能导致某用户本该中奖变兜底。
+> 不会超发（draw_record 是发奖依据，不存在就不发奖），不会多扣余额（DB TX 未执行）。
+> 周期对账自动修正，无需人工干预。
 
 ---
 
-#### 崩溃恢复（redo log 重放）
+#### Redis 重建（覆盖一切 Redis 偏差）
 
-扫描超时的 PENDING 记录（纯 DB 内查询，无跨系统比较竞态）：
-
-```sql
-SELECT biz_id, ext_info
-FROM jewelry_lottery_activity_balance_log
-WHERE biz_type = 'DRAW'
-  AND JSON_EXTRACT(ext_info, '$.redis_applied') = false
-  AND create_time < NOW() - INTERVAL 30 SECOND;
-```
-
-对每条 PENDING 记录，用 **SET 覆盖写**重建 Redis（幂等，不用 INCR/DECR）：
-
-```java
-// 从 draw_record COUNT 推算准确值，SET 覆盖确保幂等
-long issued = drawRecordMapper.countSuccess(actId, awardId);
-redis.set("lottery:stock:"  + actId + ":" + awardId, totalStock - issued);
-redis.set("lottery:issued:" + actId + ":" + awardId, issued);
-
-// miss_streak 从 DB balance 读取（draw_record 事务写入保障其准确性）
-int missStreak = balanceMapper.getMissStreak(actId, userId);
-redis.set("lottery:miss:" + actId + ":" + userId, missStreak);
-
-balanceLogMapper.markApplied(drawId);
-```
-
-> **WAL 的覆盖边界**：WAL 只感知 `redis_applied=false` 的情况（Redis 操作未执行）。
-> 若 Redis 操作已执行且 DB 完成 checkpoint（`redis_applied=true`），随后 Redis 崩溃丢失数据，
-> WAL 不会触发恢复。这是 WAL 的盲区，需通过下述"Redis 重启强制重建"机制补充覆盖。
-
----
-
-#### Redis 重启强制重建（覆盖 WAL 盲区）
-
-**触发时机**：应用层监听 Redis 连接恢复事件（Sentinel `+switch-master` / Cluster failover / 客户端重连回调）。
-
-**为什么不能信任恢复后的 Redis 数据**：AOF `everysec` 模式最多丢失 1 秒数据；RDB 模式丢失更多。恢复后的 Redis 状态是"过去某一时刻的快照"，与 DB 必然存在偏差。
+**触发时机**：
+1. Redis 重连/故障转移（Sentinel `+switch-master` / Cluster failover）
+2. 周期对账发现偏差（每分钟）
+3. 运营手动触发
 
 **重建流程**：
 
 ```java
-// 监听 Redis 重连事件（Lettuce / Jedis 均支持）
-redisClient.addListener(event -> {
-    if (event.type() == RECONNECTED || event.type() == FAILOVER) {
-        rebuildRedisFromDB(actId);
-    }
-});
-
 void rebuildRedisFromDB(String actId) {
     // 1. issued / stock：以 draw_record 为权威源，SET 覆盖写（幂等）
     for (Award award : activeAwards(actId)) {
@@ -1066,13 +1013,10 @@ void rebuildRedisFromDB(String actId) {
                   award.totalStock - issued);
     }
 
-    // 2. miss_streak：从 DB balance 批量写回（不必全量，懒加载亦可）
-    //    懒加载：GET miss key 为 null 时，从 DB 读取并 SET，再继续业务
-    //    此处为主动全量重建
-    for (UserBalance balance : balanceMapper.listByActivity(actId)) {
-        redis.set("lottery:miss:" + actId + ":" + balance.userId,
-                  balance.missStreak);
-    }
+    // 2. miss_streak：懒加载重建
+    //    GET miss key 返回 null 时，从 DB balance 读取并 SET
+    //    正在抽奖的用户自动修复，无需预先全量加载
+    //    （全量重建用户量大时耗时长，懒加载更实用）
 
     // 3. uid_won：从 draw_record 重建（只重建有中奖记录的用户）
     List<DrawRecord> concertWins = drawRecordMapper.listSuccessByAward(actId, "award_concert");
@@ -1082,25 +1026,23 @@ void rebuildRedisFromDB(String actId) {
 }
 ```
 
-> `miss_streak` 的懒加载重建：生产中用户量大，全量重建耗时长。可以只在 GET miss key 返回 null 时从 DB 读取并 SET，对正在抽奖的用户自动修复，无需预先全量加载。
+> `miss_streak` 懒加载：生产中用户量大，全量重建耗时长。改为 GET miss key 返回 null 时从 DB 读取并 SET。
+> 由于 miss_streak 异步 MQ 回写 DB，崩溃时 DB 值可能比 Redis 少 1。
+> 这意味着用户保底可能延迟 1 次触发，下次抽奖自然修正，可接受。
 
 ---
 
 #### 对账策略
 
-实时跨 Redis+DB 比较不可靠（Redis 实时变化，无全局快照），采用以下分层策略：
-
 | 时机 | 手段 | 覆盖的故障场景 |
 |------|------|--------------|
-| 实时 | 扫 balance_log PENDING（redis_applied=false） | Redis 操作未执行（WAL 主覆盖范围） |
-| Redis 重连/故障转移 | 强制从 draw_record 重建 stock/issued/miss | Redis 崩溃恢复后数据丢失（WAL 盲区） |
-| 活动进行中 | issued vs draw_record COUNT 周期采样（每分钟） | 检测静默数据偏差，兜底发现重建遗漏 |
+| Redis 重连/故障转移 | 强制从 draw_record 重建 stock/issued/uid_won | Redis 崩溃丢数据 |
+| 活动进行中 | issued vs draw_record COUNT 周期采样（每分钟） | 崩溃点 B 导致的静默偏差 |
 | 活动结束后 | draw_record COUNT vs total_stock | 无在途操作，精确核算最终发放量 |
 
 **周期采样对账（兜底）**：
 
 ```java
-// 每分钟执行，发现偏差立即触发重建并告警
 @Scheduled(fixedRate = 60_000)
 void sampleReconcile() {
     for (Award award : activeAwards()) {
@@ -1115,14 +1057,12 @@ void sampleReconcile() {
 }
 ```
 
-> 采样对账的作用是"兜底发现"而非实时修复，容忍秒级偏差窗口。偏差告警触发后，自动调用 `rebuildRedisFromDB` 用 SET 覆盖写修复（幂等），并发抽奖期间的短暂偏差在重建后自动消除。
-
-
+---
 
 #### 发奖一致性
 
 ```
-draw_record INSERT（同步）→ MQ 发 AWARD_EVENT
+draw_record INSERT（同步）→ MQ 发 DRAW_EVENT
 发奖服务幂等消费（drawId 唯一键）
 MQ 失败 → 重试 3 次 → 死信队列 → 告警人工补发
 
@@ -1135,32 +1075,40 @@ MQ 失败 → 重试 3 次 → 死信队列 → 告警人工补发
 
 | 场景 | 保障手段 |
 |------|---------|
-| 客户端重复提交同一 requestId | Redis idem 缓存（TTL 10min） |
-| 余额扣减重复 | DB unique key(biz_id) on balance_log |
-| Redis 崩溃恢复重放 | SET 覆盖写，天然幂等 |
+| 客户端重复提交同一 requestId | SET NX idem 原子占位（PROCESSING → 结果覆盖） |
+| 同一用户并发提交不同 requestId | 用户级分布式锁（draw_lock）串行化 |
+| Redis 崩溃恢复重建 | SET 覆盖写，天然幂等 |
+| DB 层面重复写入 | draw_record.draw_id UNIQUE KEY |
 | 重复发奖 | 发奖服务幂等 INSERT（drawId 唯一键） |
 | MQ 重复消费 | 消费者幂等（drawId 去重） |
 
 ### 9.4 数据库事务边界
 
-```java
-// 扣余额 + 写流水 在同一事务
-@Transactional
-void deductBalance(String actId, String userId, String drawId) {
-    int affected = balanceMapper.deductOne(actId, userId);
-    if (affected == 0) throw new InsufficientLotteryException();
-    balanceLogMapper.insert(actId, drawId, "DRAW", userId, -1);
-}
+整个抽奖主链路**只有 1 个 DB 事务**，包含 2 次写操作：
 
-// 写 draw_record + miss_streak 回写 + WAL checkpoint 在同一事务
+```java
 @Transactional
-void saveDrawRecordAndCheckpoint(String drawId, DrawRecord record,
-                                  String actId, String userId, int newMissStreak) {
-    drawRecordMapper.insert(record);                          // unique key(draw_id) 自动幂等
-    balanceMapper.updateMissStreak(actId, userId, newMissStreak);  // miss_streak 同步写入 DB
-    balanceLogMapper.markApplied(drawId);                    // WAL checkpoint
+void drawAndDeduct(String actId, String userId, String drawId,
+                   Award award, int stage, boolean isPity) {
+    // 1. 扣余额（乐观锁，affected=0 说明余额不足）
+    int affected = balanceMapper.deduct(actId, userId);
+    //  UPDATE balance SET remaining=remaining-1
+    //  WHERE activity_id=? AND user_id=? AND remaining > 0
+    if (affected == 0) throw new InsufficientLotteryException();
+
+    // 2. 写抽奖记录（直接 SUCCESS，draw_id UNIQUE KEY 天然幂等）
+    drawRecordMapper.insert(DrawRecord.builder()
+        .drawId(drawId).activityId(actId).userId(userId)
+        .awardId(award.awardId).stageNo(stage)
+        .weightSnapshot(award.baseWeight)
+        .isPity(isPity).status("SUCCESS").build());
 }
 ```
+
+> **为什么余额扣减放在 Redis Lua 之后而非之前**：
+> - Lua 之后扣余额：若 Lua 成功但 DB 事务失败（崩溃点 B），用户余额未扣、draw_record 未写，仅 Redis 多扣了一个库存 → 周期对账修正，用户无损失
+> - Lua 之前扣余额（v2 方案）：若余额已扣但 Lua 和 draw_record 都没完成 → 用户余额被扣但没有抽奖结果 → 需要孤儿检测+退款，逻辑复杂
+> - 结论：Lua 后扣余额的崩溃恢复更简单——只需修正 Redis，不涉及余额退还
 
 ---
 
@@ -1170,31 +1118,27 @@ void saveDrawRecordAndCheckpoint(String drawId, DrawRecord record,
 
 | Redis Key | 对应 DB 字段 | 写入时机 | 一致性级别 |
 |-----------|-------------|---------|-----------|
-| `lottery:stock:{actId}:{awardId}` | `award.stock` | 异步：MQ AWARD_EVENT 消费时 | 最终一致（秒级延迟） |
+| `lottery:stock:{actId}:{awardId}` | `award.stock` | 异步：MQ DRAW_EVENT 消费时 | 最终一致（秒级延迟） |
 | `lottery:issued:{actId}:{awardId}` | 无直接字段 | 不回写 DB；恢复时从 draw_record COUNT 重建 | 强一致（恢复时以 draw_record 为权威源） |
-| `lottery:miss:{actId}:{userId}` | `activity_balance.miss_streak` | 同步：与 draw_record 在同一事务写入 | 强一致 |
-| `lottery:uid_won:{actId}:{awardId}:{userId}` | 无直接字段 | 不回写 DB；恢复时从 draw_record 查询重建 | 强一致（恢复时以 draw_record 为权威源） |
+| `lottery:miss:{actId}:{userId}` | `activity_balance.miss_streak` | 异步：MQ DRAW_EVENT 消费时 | 最终一致（秒级延迟，崩溃时 ±1 偏差可接受） |
+| `lottery:uid_won:{actId}:{awardId}:{userId}` | 无直接字段 | 同步：Pipeline 收尾时 SET | 恢复时从 draw_record 查询重建 |
 
 ---
 
-#### miss_streak：同步写，强一致
-
-Lua 脚本（combined_draw.lua）返回 miss_streak 新值后，在 **draw_record 事务中同步更新** DB：
+#### miss_streak：异步回写，Redis 为主
 
 ```
-Step 8: Redis Lua → 返回 newMissStreak
-Step 10（同一事务）:
-    INSERT draw_record
-    UPDATE activity_balance SET miss_streak = newMissStreak
-    UPDATE balance_log SET redis_applied = true
+正常流程：Redis Lua 内原子更新（INCR 或 SET 0）
+         ↓ MQ DRAW_EVENT 消费时
+         ↓ UPDATE balance SET miss_streak=? WHERE activity_id=? AND user_id=?
+         延迟：秒级
+崩溃恢复：GET miss key = null → 从 DB balance.miss_streak 读取并 SET（懒加载）
 ```
 
-选择同步写而非异步的原因：
-- `miss_streak` 是保底判断的输入，必须准确；异步更新在 Redis 崩溃时需从 draw_record 逐条推算连续未中次数，逻辑复杂
-- 每次抽奖只更新一行，写入开销极小，不影响主链路延迟
-- DB 成为 `miss_streak` 的 recovery source，崩溃恢复直接 `GET balance.miss_streak → SET redis`
-
-> **崩溃场景分析**：若崩溃发生在 Redis Lua 之后、draw_record 事务之前（最窄窗口），draw_record 不存在，WAL 恢复视为"本次抽奖未完成"，从 DB 读取旧 miss_streak 写回 Redis（最多偏差 1 次，下次抽奖自然修正）。
+选择异步回写而非同步的原因：
+- miss_streak 每次抽奖都要更新，同步写 DB 会增加主链路延迟
+- Redis Lua 内原子更新保证高并发下的准确性
+- 崩溃时 DB 值可能比 Redis 少 1（最近一次异步还未完成），影响 = 保底延迟 1 次触发，下次自然修正
 
 ---
 
@@ -1208,15 +1152,13 @@ Step 10（同一事务）:
           以 draw_record 为单一权威源，SET 覆盖写天然幂等
 ```
 
-不单独建 DB 字段的原因：draw_record 本身就是最准确的 issued 数据，避免冗余存储和双写一致性问题。
-
 ---
 
 #### stock：异步回写，最终一致
 
 ```
 正常流程：Redis DECR stock（实时）
-          ↓ draw_record 落盘后 MQ 发 AWARD_EVENT
+          ↓ draw_record 落盘后 MQ 发 DRAW_EVENT
           ↓ 发奖服务消费：UPDATE award SET stock=stock-1 WHERE award_id=? AND stock>0
           延迟：秒级
 幂等保障：ship_order INSERT(drawId UNIQUE KEY) 冲突拦截重复消费，不重复扣 stock
@@ -1229,12 +1171,11 @@ Step 10（同一事务）:
 
 ---
 
-#### uid_won：不回写，从 draw_record 重建
+#### uid_won：同步写 Redis，从 draw_record 重建
 
 ```
-正常流程：用户首次中演唱会门票 → SET lottery:uid_won:{actId}:{awardId}:{userId} 1 EX ttl
-崩溃恢复：EXISTS = drawRecordMapper.existsSuccess(userId, actId, "award_concert")
-          若记录存在 → SET uid_won=1
+正常流程：用户首次中演唱会门票 → Pipeline 收尾时 SET lottery:uid_won:{actId}:{awardId}:{userId} 1 EX ttl
+崩溃恢复：从 draw_record 查询成功记录 → SET uid_won=1
 ```
 
 `draw_record` 是唯一权威源，uid_won 只是快速查询缓存。
@@ -1287,6 +1228,7 @@ Response 200：
 | 1003 | 抽奖次数不足 |
 | 1004 | 请求过于频繁（用户并发锁） |
 | 1005 | drawId 重复（返回原结果） |
+| 1006 | 请求处理中（idem 占位冲突，客户端稍后重试） |
 | 5000 | 系统异常 |
 
 ---
@@ -1367,13 +1309,17 @@ Response:
 |------|---------|---------|
 | 抽奖 QPS | 网关 metrics | > 1500/s 告警 |
 | 库存扣减失败率（-1/-2） | Redis Lua 返回值统计 | > 5% 告警 |
-| 保底触发率 | draw_record 统计 | > 15% 触发成本评估 |
+| 保底触发率 | draw_record is_pity 统计 | > 15% 触发成本评估 |
 | Redis 延迟 | Redis slowlog | > 50ms 告警 |
-| 幂等命中率（重复 requestId） | idem 缓存命中统计 | > 1% 排查客户端重试策略 |
+| 幂等占位冲突率（1006） | idem SET NX 失败统计 | > 1% 排查客户端重试策略 |
 | DB 主从延迟 | show slave status | > 1s 告警 |
 | MQ 积压 | 消费者 lag | > 1000 告警 |
 | DB 与 Redis 库存差异 | 对账任务 | 差异 > 0 立即告警 |
+| 各阶段发放进度 vs 配额 | issued / cumulativeAllowed | 进度 < 50% 且阶段过半告警 |
+| 保底延后次数 | miss_streak >= threshold 但走了 FALLBACK | > 0 关注库存是否不足 |
 
 ---
 
-*文档基于产品设计对话最终确认版本，覆盖应发尽发（累计法）、保底最终保障、不新增数据表等核心设计决策。*
+*文档 v3 基于 v2 优化：废弃 balance_log WAL 方案，改为 draw_record 唯一权威源 + Redis 可重建模型；
+同步 DB 写从 5 次/2-3TX 优化为 2 次/1TX；幂等 GET+SET 改为单次 SET NX 原子占位；
+权重池改为动态总权重；统一 Lua 脚本和锁超时参数。*
