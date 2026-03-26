@@ -17,10 +17,14 @@ actor U as "用户"
     GW->>GW: JWT鉴权 + 令牌桶限流
     GW->>LS: 转发请求
 
-    LS->>RC: GET idem:{requestId}
-    RC-->>LS: null（首次请求）
-    Note over LS: 非null直接返回缓存结果（幂等）
+    LS->>RC: SET NX idem:{requestId} PROCESSING EX 30
+    RC-->>LS: OK（首次请求占位成功）
+    Note over LS: 占位失败直接返回 code=1006 处理中
     LS->>LS: 生成 drawId（UUID）
+
+    LS->>RC: SET draw_lock:{actId}:{userId} NX EX 5
+    RC-->>LS: OK
+    Note over LS,RC: 获取锁失败释放占位返回 TOO_MANY_REQUESTS
 
     LS->>LC: 读本地配置缓存
     LC-->>LS: miss
@@ -29,37 +33,26 @@ actor U as "用户"
     LS->>LC: 写本地缓存 TTL 30s
     LS->>LS: 校验时间 + 计算 stage_no + cumulativeAllowed
 
-    LS->>RC: SET draw_lock:{actId}:{userId} NX EX 10
-    RC-->>LS: OK
-    Note over LS,RC: 获取锁失败返回 TOO_MANY_REQUESTS
-
-    LS->>DB: BEGIN TX balance-1 + balance_log(redis_applied=false) COMMIT
-    DB-->>LS: OK
-    Note over LS,DB: affected=0 → 次数不足，释放锁返回错误
-
     LS->>RC: Pipeline GET miss + MGET stock/issued + GET uid_won
     RC-->>LS: missStreak=N，各奖品可用量，uid_won状态
 
     LS->>LS: 抽奖决策 UID白名单 / 保底 / 正常权重
 
-    alt 命中实物奖
-        LS->>RC: EVAL deduct_stock.lua [cumulativeAllowed]
-        RC-->>LS: 1=成功 / -1=库存空 / -2=阶段满
-        Note over LS: 扣减失败降级FALLBACK
-    end
+    LS->>RC: EVAL combined_draw.lua [cumulativeAllowed, isProduct]
+    RC-->>LS: 1=中奖 / 0=兜底 / -1=库存空 / -2=阶段满
+    Note over LS: -1/-2 降级FALLBACK，miss_streak 已在 Lua 内更新
 
-    LS->>RC: EVAL update_miss.lua [isWin]
-    RC-->>LS: 新的 miss_streak
+    LS->>DB: BEGIN TX { balance-1 + INSERT draw_record(SUCCESS) } COMMIT
+    DB-->>LS: OK
+    Note over LS,DB: affected=0 → 次数不足，释放锁和占位返回错误
 
-    LS->>DB: BEGIN TX INSERT draw_record + UPDATE balance_log(redis_applied=true) COMMIT
-    DB-->>LS: OK（draw_record落盘 + WAL checkpoint完成）
-
-    LS->>RC: Pipeline SET idem:{requestId} EX 600 + DEL draw_lock
+    LS->>RC: Pipeline SET idem=结果 EX 600 + DEL draw_lock + SET uid_won(如需)
     RC-->>LS: OK
 
     LS-->>GW: {drawId, awardId, awardName, isWin, isPity, remaining}
     GW-->>FE: HTTP 200
     FE->>U: 展示抽奖结果
 
-    LS->>MQ: 异步 AWARD_EVENT {drawId, userId, awardId}
+    LS->>MQ: 异步 DRAW_EVENT {drawId, userId, awardId, isWin, isPity}
+    Note over MQ: 消费者异步更新 balance 统计字段 + DB stock-1 + 发奖
 @enduml
