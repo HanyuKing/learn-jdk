@@ -1,23 +1,24 @@
-DROP TABLE IF EXISTS `jewelry_lottery_award`;
-CREATE TABLE `jewelry_lottery_award` (
+DROP TABLE IF EXISTS `jewelry_lottery_activity_award`;
+CREATE TABLE `jewelry_lottery_activity_award` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
   `activity_id` varchar(128) NOT NULL COMMENT '活动ID',
   `award_id` varchar(128) NOT NULL COMMENT '奖励ID',
   `award_name` varchar(255) NOT NULL COMMENT '奖励名称',
   `award_img_url` varchar(255) NOT NULL COMMENT '奖励图片URL',
-  `award_type` varchar(32) NOT NULL COMMENT 'WANT/PRODUCT',
-  `total_stock` int NOT NULL DEFAULT '0' COMMENT '总库存',
-  `stock` int NOT NULL DEFAULT '0' COMMENT '当前可用库存',
+  `award_type` varchar(32) NOT NULL COMMENT '奖品类型: WANT(兜底)/PRODUCT(实物)',
+  `award_level` varchar(16) NOT NULL DEFAULT 'FALLBACK' COMMENT '奖品等级: A(大奖)/B(中等奖)/C(小奖)/FALLBACK(兜底)，字母可扩展',
+  `total_stock` int NOT NULL DEFAULT '0' COMMENT '总库存（活动开始后不修改）',
+  `stock` int NOT NULL DEFAULT '0' COMMENT '当前可用库存（随发放扣减，全局上限兜底用）',
+  `weight` int NOT NULL DEFAULT 0 COMMENT '抽奖权重',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `closed` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `idx_activity_id` (`activity_id`),
-  KEY `idx_award_id` (`award_id`)
+  UNIQUE KEY `udx_activity_award` (`activity_id`,`award_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='活动奖励';
 
-DROP TABLE IF EXISTS `jewelry_lottery_rule`;
-CREATE TABLE `jewelry_lottery_rule` (
+DROP TABLE IF EXISTS `jewelry_lottery_activity_rule`;
+CREATE TABLE `jewelry_lottery_activity_rule` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
   `activity_id` varchar(128) NOT NULL COMMENT '活动ID',
   `rule_type` varchar(32) NOT NULL COMMENT 'TIME/WEIGHT/PITY/UID/LIMIT',
@@ -46,8 +47,7 @@ CREATE TABLE `jewelry_lottery_activity_balance` (
   `modified_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `closed` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `udx_activity_user` (`activity_id`,`user_id`),
-  KEY `idx_user_id` (`user_id`)
+  UNIQUE KEY `udx_activity_user` (`activity_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='抽奖余额';
 
 DROP TABLE IF EXISTS `jewelry_lottery_activity_balance_log`;
@@ -62,7 +62,7 @@ CREATE TABLE `jewelry_lottery_activity_balance_log` (
   `modified_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `closed` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq_biz_id` (`biz_id`),
+  UNIQUE KEY `udx_biztype` (`biz_id`, `biz_type`),
   KEY `idx_activity_user` (`activity_id`,`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='抽奖余额流水';
 
@@ -75,13 +75,29 @@ CREATE TABLE `jewelry_lottery_activity_draw_record` (
   `award_id` varchar(128) NOT NULL COMMENT '奖品ID',
   `stage_no` int NOT NULL COMMENT '阶段序号',
   `weight_snapshot` int NOT NULL DEFAULT '0' COMMENT '抽奖时权重',
-  `status` varchar(16) NOT NULL COMMENT 'INIT/SUCCESS/FAIL',
+  `status` varchar(16) NOT NULL COMMENT 'PROCESSING/SUCCESS/FAIL',
   `fail_reason` varchar(64) DEFAULT NULL COMMENT '失败原因',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modified_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `retry_count` int NOT NULL DEFAULT '0' COMMENT '重试次数',
+  `closed` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `udx_draw_id` (`draw_id`),
+  KEY `idx_activity_user_id` (`activity_id`,`user_id`),
+  KEY `idx_modified_status` (`modified_time`,`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='抽奖记录';
+
+DROP TABLE IF EXISTS `jewelry_lottery_activity_award_fulfill_log`;
+CREATE TABLE `jewelry_lottery_activity_award_fulfill_log` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `draw_id` varchar(128) NOT NULL COMMENT '抽奖ID（幂等键）',
+  `activity_id` varchar(128) NOT NULL COMMENT '活动ID',
+  `award_id` varchar(128) NOT NULL COMMENT '奖品ID',
+  `user_id` varchar(32) NOT NULL COMMENT '用户ID',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `closed` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `udx_draw_id` (`draw_id`),
-  KEY `idx_activity_id` (`activity_id`),
-  KEY `idx_user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='抽奖记录';
+  KEY `idx_award_id` (`award_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='奖品履约日志';

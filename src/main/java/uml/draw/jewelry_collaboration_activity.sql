@@ -1,12 +1,3 @@
-CREATE TABLE `jewelry_topic` (
-  `unique_topic_id` varchar(255) NOT NULL COMMENT '唯一话题ID',
-  `start_time` datetime NOT NULL COMMENT '活动开始时间',
-  `end_time` datetime NOT NULL COMMENT '活动结束时间',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `modified_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `closed` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`unique_topic_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='话题表';
 
 DROP TABLE IF EXISTS `jewelry_collaboration_activity`;
 CREATE TABLE `jewelry_collaboration_activity` (
@@ -44,6 +35,7 @@ CREATE TABLE `jewelry_collaboration_activity_task` (
   `closed` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `udx_task_id` (`task_id`),
-  KEY `idx_lottery_activity_user` (`activity_id`,`user_id`, `biz_date`),
-  KEY `idx_user_biz_type` (`user_id`,`biz_type`)
+  UNIQUE KEY `udx_bizid_type` (`biz_id`,`biz_type`),
+  KEY `idx_activity_user_date` (`activity_id`,`user_id`, `biz_date`),
+  KEY `idx_createtime_status` (`create_time`,`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='联名活动任务';
