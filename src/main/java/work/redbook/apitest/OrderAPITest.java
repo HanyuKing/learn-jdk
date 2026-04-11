@@ -41,7 +41,7 @@ public class OrderAPITest {
     private String version = "2.0";
     private String appSecre = "7f86dcecb3237a5502ae51eff5a232bb";
     String code = "code-d92e34bac40f46818092a0d13e28be72-0dc69dfa92844c2897f08f95d9e00d06";
-    private String accessToken = "token-a0f4946dd9fc454ebd69a5717ca797b5-f95e0b7eac7040dfa0cc9b3eddc67690";
+    private String accessToken = "token-68645d3e35a045bbaaf0cdf4d8a2b1cf-5cf61e19e2ce46a7a2023c77a1938529";
 
     private MaterialClient materialClient = new MaterialClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
 
@@ -164,7 +164,7 @@ public class OrderAPITest {
         OrderClient orderClient = new OrderClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
 
         GetOrderDetailRequest request = new GetOrderDetailRequest();
-        request.setOrderId("P782011893460274131");
+        request.setOrderId("P790600755242471711");
 
         BaseResponse<GetOrderDetailResponse> baseResponse = orderClient.execute(request, this.accessToken);
 
@@ -175,12 +175,15 @@ public class OrderAPITest {
     public void testGetOrderList() throws IOException {
         OrderClient orderClient = new OrderClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
 
-        GetOrderListRequest request = new GetOrderListRequest();
-        request.setTimeType(1);
-        request.setStartTime(1766459000L);
-        request.setEndTime(1766542693L);
+        GetOrderListRequest sdkRequest = new GetOrderListRequest();
+        sdkRequest.setTimeType(1);
+        sdkRequest.setStartTime(1775048400L);
+        sdkRequest.setEndTime(1775052000L);
+        sdkRequest.setPageNo(1);
+        sdkRequest.setPageSize(10);
+        sdkRequest.setOrderStatus(4);
 
-        BaseResponse<GetOrderListResponse> baseResponse = orderClient.execute(request, this.accessToken);
+        BaseResponse<GetOrderListResponse> baseResponse = orderClient.execute(sdkRequest, this.accessToken);
 
         System.out.println(JSON.toJSONString(baseResponse));
     }
