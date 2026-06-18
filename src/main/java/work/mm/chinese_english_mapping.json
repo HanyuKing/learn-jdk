@@ -821,9 +821,10 @@
   },
   "promotion_text_mapping": {
     "想要%s折折扣价": {
-      "en_display": "Wishlist Discount Price (%s折)",
-      "en_code": "wishlist_discount_price_zhe",
-      "field_kind": "list"
+      "en_display": "Wishlist Discount Price (%s%% Off)",
+      "en_code": "wishlist_discount_price_off",
+      "field_kind": "list",
+      "note": "%s 由后端换算后再注入：offPercent = (10 - zhe) * 10。例：9折 → 10"
     },
     "想要折扣": {
       "en_display": "Wishlist Discount",
@@ -878,7 +879,8 @@
     "折优惠": {
       "en_display": "% Off",
       "en_code": "percent_off_suffix",
-      "field_kind": "list"
+      "field_kind": "list",
+      "note": "前面拼接的数字应是 off 百分比（已换算），不是中文「折」数"
     },
     "校园特惠": {
       "en_display": "Student Deal",
@@ -961,7 +963,7 @@
       "field_kind": "tag"
     },
     "官方立减%s元": {
-      "en_display": "Official $%s off",
+      "en_display": "Official $%s Off",
       "en_code": "official_discount_save",
       "field_kind": "desc"
     },
@@ -992,23 +994,24 @@
     },
     "作者自购满10件享9折": {
       "en_display": "Creator self-purchase 10+ items: 10% Off",
-      "en_code": "creator_self_10_items_10pct",
+      "en_code": "creator_self_10_items_10off",
       "field_kind": "tier"
     },
     "作者自购满30件享88折": {
       "en_display": "Creator self-purchase 30+ items: 12% Off",
-      "en_code": "creator_self_30_items_12pct",
+      "en_code": "creator_self_30_items_12off",
       "field_kind": "tier"
     },
     "作者自购满50件享85折": {
       "en_display": "Creator self-purchase 50+ items: 15% Off",
-      "en_code": "creator_self_50_items_15pct",
+      "en_code": "creator_self_50_items_15off",
       "field_kind": "tier"
     },
     "作者自购满X件享Y折": {
       "en_display": "Creator self-purchase X+ items: Y% Off (template)",
       "en_code": "creator_self_template",
-      "field_kind": "tier"
+      "field_kind": "tier",
+      "note": "Y 已换算为 off 百分比 = (10 - zhe) * 10。例：9折→10, 88折→12, 85折→15"
     },
     "抽奖奖励领取": {
       "en_display": "Lucky Draw Reward",

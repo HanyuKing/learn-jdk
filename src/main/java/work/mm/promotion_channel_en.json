@@ -1,0 +1,126 @@
+[
+  {
+    "promotionChannel": 1,
+    "productList": "Wishlist Discount Price (%s%% Off)",
+    "productDetailType": "Wishlist Discount",
+    "productDetail": "Save $%s in the Wishlist event",
+    "needFormatProductDetail": 1,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-1.webp",
+    "productDelivery": "Wishlist Discount"
+  },
+  {
+    "promotionChannel": 2,
+    "productList": "enableActivityAuthorQuota != null && enableActivityAuthorQuota == 1 && needFree != null && needFree ? 'Creator Exclusive (Free Sample Quota)' : (enableActivityAuthorQuota != null && enableActivityAuthorQuota == 1 && needFree != null && !needFree ? 'Creator Exclusive (Get ' + ((10 - discountRate) * 10) + '% Off)' : 'Creator Exclusive')",
+    "productDetailType": "Creator Exclusive",
+    "productDetail": "enableActivityAuthorQuota != null && enableActivityAuthorQuota == 1 && needFree != null && needFree ? (accountLevelDisplayName + ' Exclusive Benefit — first ' + quotaLimit + ' items') : (enableActivityAuthorQuota != null && enableActivityAuthorQuota == 1 && needFree != null && !needFree ? (accountLevelDisplayName + ' Exclusive Benefit — from item ' + (quotaLimit + 1) + ' onward') : 'Creator-Exclusive Benefit')",
+    "needFormatProductDetail": 0,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-2.webp",
+    "productDelivery": "Creator Exclusive"
+  },
+  {
+    "promotionChannel": 3,
+    "productList": "Student Deal",
+    "productDetailType": "Student Deal",
+    "productDetail": "Exclusive for verified students and teachers",
+    "needFormatProductDetail": 0,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-3.webp",
+    "productDelivery": "Student Deal"
+  },
+  {
+    "promotionChannel": 4,
+    "productList": "Special Price",
+    "productDetailType": "Special Price",
+    "productDetail": "Limited-Time Offer",
+    "needFormatProductDetail": 0,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/pic_nothing.png",
+    "productDelivery": "Limited-Time Offer"
+  },
+  {
+    "promotionChannel": 5,
+    "productList": "Education Discount",
+    "productDetailType": "Education Discount",
+    "productDetail": "Save with student or teacher verification",
+    "needFormatProductDetail": 0,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-5.webp",
+    "productDelivery": "Education Discount"
+  },
+  {
+    "promotionChannel": 6,
+    "productList": "Event Exclusive",
+    "productDetailType": "Event Exclusive",
+    "productDetail": "Event Exclusive Coupon",
+    "needFormatProductDetail": 0,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-6-2.webp",
+    "productDelivery": "Event Exclusive Coupon"
+  },
+  {
+    "promotionChannel": 7,
+    "productList": "Like-to-Win Deal",
+    "productDetailType": "Like-to-Win Deal",
+    "productDetail": "Collect likes for rewards",
+    "needFormatProductDetail": 0,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-7.webp",
+    "productDelivery": "Like-to-Win Deal"
+  },
+  {
+    "promotionChannel": 8,
+    "productList": "First-Order Price",
+    "productDetailType": "First-Order Price",
+    "productDetail": "Save $%s on your first order",
+    "needFormatProductDetail": 1,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-8.webp",
+    "productDelivery": "First-Order Discount"
+  },
+  {
+    "promotionChannel": 9,
+    "productList": "Official Discount",
+    "productDetailType": "Price After Coupon",
+    "productDetail": "Official $%s Off",
+    "needFormatProductDetail": 1,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-9.webp",
+    "productDelivery": "Official Discount"
+  },
+  {
+    "promotionChannel": 10,
+    "productList": "Dewu Exclusive",
+    "productDetailType": "Dewu Exclusive",
+    "productDetail": "Dewu Exclusive Coupon",
+    "needFormatProductDetail": 1,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-10.webp",
+    "productDelivery": "Dewu Coupon"
+  },
+  {
+    "promotionChannel": 11,
+    "productList": "Wishlist Reward Claim",
+    "productDetailType": "Wishlist Reward Claim",
+    "productDetail": "Claim $%s Wishlist reward",
+    "needFormatProductDetail": 1,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-1.webp",
+    "productDelivery": "Wishlist Reward Claim"
+  },
+  {
+    "promotionChannel": 12,
+    "productList": "",
+    "productDetailType": "",
+    "productDetail": "",
+    "productDetails": [
+      "Creator self-purchase 10+ items: 10% Off",
+      "Creator self-purchase 30+ items: 12% Off",
+      "Creator self-purchase 50+ items: 15% Off"
+    ],
+    "productDetailQuantity": "Creator self-purchase X+ items: Y% Off",
+    "needFormatProductDetail": 0,
+    "productTag": "",
+    "productDelivery": "",
+    "productDeliveryQuantity": "Creator self-purchase X+ items: Y% Off"
+  },
+  {
+    "promotionChannel": 13,
+    "productList": "Lucky Draw Reward",
+    "productDetailType": "Lucky Draw Reward",
+    "productDetail": "Claim $%s Lucky Draw reward",
+    "needFormatProductDetail": 1,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-13.png",
+    "productDelivery": "Lucky Draw Reward"
+  }
+]
