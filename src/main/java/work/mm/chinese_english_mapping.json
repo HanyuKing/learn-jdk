@@ -1,0 +1,1024 @@
+{
+  "attribute_name_mapping": {
+    "UV打印": {
+      "en_display": "UV Printing",
+      "en_code": "uv_printing"
+    },
+    "主石形状": {
+      "en_display": "Main Stone Shape",
+      "en_code": "main_stone_shape"
+    },
+    "主石材质": {
+      "en_display": "Main Stone Material",
+      "en_code": "main_stone_material"
+    },
+    "二次工艺": {
+      "en_display": "Secondary Process",
+      "en_code": "secondary_process"
+    },
+    "印刷部位": {
+      "en_display": "Print Area",
+      "en_code": "print_area"
+    },
+    "厚度": {
+      "en_display": "Thickness",
+      "en_code": "thickness"
+    },
+    "吊坠材质": {
+      "en_display": "Pendant Material",
+      "en_code": "pendant_material"
+    },
+    "图案": {
+      "en_display": "Pattern",
+      "en_code": "pattern"
+    },
+    "图案元素": {
+      "en_display": "Pattern Element",
+      "en_code": "pattern_element"
+    },
+    "圆球水杯盖颜色": {
+      "en_display": "Sphere Cup Lid Color",
+      "en_code": "sphere_cup_lid_color"
+    },
+    "填充": {
+      "en_display": "Filling",
+      "en_code": "filling"
+    },
+    "外观规格": {
+      "en_display": "Appearance Specification",
+      "en_code": "appearance_specification"
+    },
+    "外观颜色": {
+      "en_display": "Appearance Color",
+      "en_code": "appearance_color"
+    },
+    "定制要求": {
+      "en_display": "Customization Requirements",
+      "en_code": "customization_requirements"
+    },
+    "定制部位": {
+      "en_display": "Customization Area",
+      "en_code": "customization_area"
+    },
+    "容量": {
+      "en_display": "Capacity",
+      "en_code": "capacity"
+    },
+    "尺寸": {
+      "en_display": "Size",
+      "en_code": "size"
+    },
+    "底部": {
+      "en_display": "Bottom",
+      "en_code": "bottom"
+    },
+    "延长链": {
+      "en_display": "Extension Chain",
+      "en_code": "extension_chain"
+    },
+    "形状": {
+      "en_display": "Shape",
+      "en_code": "shape"
+    },
+    "总重量": {
+      "en_display": "Total Weight",
+      "en_code": "total_weight"
+    },
+    "成型工艺": {
+      "en_display": "Forming Process",
+      "en_code": "forming_process"
+    },
+    "手寸": {
+      "en_display": "Ring Size",
+      "en_code": "ring_size"
+    },
+    "数量": {
+      "en_display": "Quantity",
+      "en_code": "quantity"
+    },
+    "材质": {
+      "en_display": "Material",
+      "en_code": "material"
+    },
+    "款式": {
+      "en_display": "Style",
+      "en_code": "style"
+    },
+    "色板选项": {
+      "en_display": "Color Swatch Option",
+      "en_code": "color_swatch_option"
+    },
+    "色纸包边": {
+      "en_display": "Color Paper Edge",
+      "en_code": "color_paper_edge"
+    },
+    "表面处理": {
+      "en_display": "Surface Treatment",
+      "en_code": "surface_treatment"
+    },
+    "表面工艺": {
+      "en_display": "Surface Process",
+      "en_code": "surface_process"
+    },
+    "覆膜款式": {
+      "en_display": "Lamination Style",
+      "en_code": "lamination_style"
+    },
+    "规格": {
+      "en_display": "Specification",
+      "en_code": "specification"
+    },
+    "配件款式": {
+      "en_display": "Accessory Style",
+      "en_code": "accessory_style"
+    },
+    "链条材质": {
+      "en_display": "Chain Material",
+      "en_code": "chain_material"
+    },
+    "链长尺寸": {
+      "en_display": "Chain Length",
+      "en_code": "chain_length"
+    },
+    "颜色": {
+      "en_display": "Color",
+      "en_code": "color"
+    },
+    "颜色yxf-test": {
+      "en_display": "Color YXF Test",
+      "en_code": "color_yxf_test"
+    },
+    "组套": {
+      "en_display": "Bundle Set",
+      "en_code": "bundle_set"
+    },
+    "外观test": {
+      "en_display": "Appearance Test",
+      "en_code": "appearance_test"
+    },
+    "发货时效": {
+      "en_display": "Dispatch Time",
+      "en_code": "dispatch_time"
+    }
+  },
+  "option_value_mapping": {
+    "10cm以上": {
+      "en_display": "Above 10cm",
+      "en_code": "above_10cm"
+    },
+    "10cm以下": {
+      "en_display": "Below 10cm",
+      "en_code": "below_10cm"
+    },
+    "18K金": {
+      "en_display": "18K Gold",
+      "en_code": "18k_gold"
+    },
+    "20cm及以下": {
+      "en_display": "20cm and Below",
+      "en_code": "20cm_and_below"
+    },
+    "21cm(含)-50cm(含)": {
+      "en_display": "21cm-50cm (inclusive)",
+      "en_code": "21cm_50cm_inclusive"
+    },
+    "30cm以上": {
+      "en_display": "Above 30cm",
+      "en_code": "above_30cm"
+    },
+    "316不锈钢": {
+      "en_display": "316 Stainless Steel",
+      "en_code": "316_stainless_steel"
+    },
+    "3D 全彩打印": {
+      "en_display": "3D Full-Color Printing",
+      "en_code": "3d_full_color_printing"
+    },
+    "3D彩色打印直出": {
+      "en_display": "3D Color Print Direct Output",
+      "en_code": "3d_color_print_direct"
+    },
+    "3D打印+手工涂装": {
+      "en_display": "3D Print + Hand Painting",
+      "en_code": "3d_print_hand_painting"
+    },
+    "3D硬金": {
+      "en_display": "3D Hard Gold",
+      "en_code": "3d_hard_gold"
+    },
+    "4cm以下": {
+      "en_display": "Below 4cm",
+      "en_code": "below_4cm"
+    },
+    "51cm(含)-80cm(含)": {
+      "en_display": "51cm-80cm (inclusive)",
+      "en_code": "51cm_80cm_inclusive"
+    },
+    "6cm以下": {
+      "en_display": "Below 6cm",
+      "en_code": "below_6cm"
+    },
+    "81cm(含)-50cm(含)": {
+      "en_display": "81cm-50cm (inclusive)",
+      "en_code": "81cm_50cm_inclusive"
+    },
+    "81cm及以上": {
+      "en_display": "81cm and Above",
+      "en_code": "81cm_and_above"
+    },
+    "925银": {
+      "en_display": "925 Silver",
+      "en_code": "925_silver"
+    },
+    "CNC雕刻": {
+      "en_display": "CNC Engraving",
+      "en_code": "cnc_engraving"
+    },
+    "IMD双层工艺": {
+      "en_display": "IMD Double-Layer Process",
+      "en_code": "imd_double_layer"
+    },
+    "UV 打印": {
+      "en_display": "UV Printing",
+      "en_code": "uv_printing"
+    },
+    "UV打印": {
+      "en_display": "UV Printing",
+      "en_code": "uv_printing"
+    },
+    "cnc雕刻": {
+      "en_display": "CNC Engraving",
+      "en_code": "cnc_engraving"
+    },
+    "uv打印": {
+      "en_display": "UV Printing",
+      "en_code": "uv_printing"
+    },
+    "不锈钢": {
+      "en_display": "Stainless Steel",
+      "en_code": "stainless_steel"
+    },
+    "亚克力": {
+      "en_display": "Acrylic",
+      "en_code": "acrylic"
+    },
+    "仿珍珠": {
+      "en_display": "Imitation Pearl",
+      "en_code": "imitation_pearl"
+    },
+    "做旧": {
+      "en_display": "Antique Finish",
+      "en_code": "antique_finish"
+    },
+    "全彩打印": {
+      "en_display": "Full-Color Printing",
+      "en_code": "full_color_printing"
+    },
+    "其他": {
+      "en_display": "Other",
+      "en_code": "other"
+    },
+    "其他人造宝石": {
+      "en_display": "Other Synthetic Gemstone",
+      "en_code": "other_synthetic_gemstone"
+    },
+    "其他天然宝石": {
+      "en_display": "Other Natural Gemstone",
+      "en_code": "other_natural_gemstone"
+    },
+    "冰箱贴底": {
+      "en_display": "Fridge Magnet Base",
+      "en_code": "fridge_magnet_base"
+    },
+    "几何形状": {
+      "en_display": "Geometric Shape",
+      "en_code": "geometric_shape"
+    },
+    "切半面": {
+      "en_display": "Half-Cut Face",
+      "en_code": "half_cut_face"
+    },
+    "刺绣": {
+      "en_display": "Embroidery",
+      "en_code": "embroidery"
+    },
+    "加厚高透亚克力": {
+      "en_display": "Thick High-Transparency Acrylic",
+      "en_code": "thick_high_transparency_acrylic"
+    },
+    "动物昆虫": {
+      "en_display": "Animals & Insects",
+      "en_code": "animals_insects"
+    },
+    "动画动漫": {
+      "en_display": "Animation & Anime",
+      "en_code": "animation_anime"
+    },
+    "华为 Nova 12": {
+      "en_display": "Huawei Nova 12",
+      "en_code": "huawei_nova_12"
+    },
+    "华为 Nova 13": {
+      "en_display": "Huawei Nova 13",
+      "en_code": "huawei_nova_13"
+    },
+    "华为 Nova13": {
+      "en_display": "Huawei Nova 13",
+      "en_code": "huawei_nova_13"
+    },
+    "华为 Pura 70": {
+      "en_display": "Huawei Pura 70",
+      "en_code": "huawei_pura_70"
+    },
+    "华为 Pura 70 Pro": {
+      "en_display": "Huawei Pura 70 Pro",
+      "en_code": "huawei_pura_70_pro"
+    },
+    "华为 Pura 70 Ultra": {
+      "en_display": "Huawei Pura 70 Ultra",
+      "en_code": "huawei_pura_70_ultra"
+    },
+    "华为Nova 12": {
+      "en_display": "Huawei Nova 12",
+      "en_code": "huawei_nova_12"
+    },
+    "华为Nova13": {
+      "en_display": "Huawei Nova 13",
+      "en_code": "huawei_nova_13"
+    },
+    "华为Pura 70": {
+      "en_display": "Huawei Pura 70",
+      "en_code": "huawei_pura_70"
+    },
+    "华为Pura 70 Pro": {
+      "en_display": "Huawei Pura 70 Pro",
+      "en_code": "huawei_pura_70_pro"
+    },
+    "华为Pura 70 Ultra": {
+      "en_display": "Huawei Pura 70 Ultra",
+      "en_code": "huawei_pura_70_ultra"
+    },
+    "单色3D打印": {
+      "en_display": "Single-Color 3D Printing",
+      "en_code": "single_color_3d_printing"
+    },
+    "印花": {
+      "en_display": "Print / Pattern Print",
+      "en_code": "print_pattern"
+    },
+    "吧唧底": {
+      "en_display": "Badge Base",
+      "en_code": "badge_base"
+    },
+    "圆形": {
+      "en_display": "Round",
+      "en_code": "round"
+    },
+    "基本处理": {
+      "en_display": "Basic Treatment",
+      "en_code": "basic_treatment"
+    },
+    "塑料": {
+      "en_display": "Plastic",
+      "en_code": "plastic"
+    },
+    "奖品": {
+      "en_display": "Prize",
+      "en_code": "prize"
+    },
+    "套装": {
+      "en_display": "Set / Bundle",
+      "en_code": "set_bundle"
+    },
+    "完整（不切面）": {
+      "en_display": "Complete (Uncut)",
+      "en_code": "complete_uncut"
+    },
+    "尼龙": {
+      "en_display": "Nylon",
+      "en_code": "nylon"
+    },
+    "布艺": {
+      "en_display": "Fabric Art",
+      "en_code": "fabric_art"
+    },
+    "布面": {
+      "en_display": "Fabric Surface",
+      "en_code": "fabric_surface"
+    },
+    "彩色3D打印": {
+      "en_display": "Color 3D Printing",
+      "en_code": "color_3d_printing"
+    },
+    "心形": {
+      "en_display": "Heart Shape",
+      "en_code": "heart_shape"
+    },
+    "手工涂装": {
+      "en_display": "Hand Painting",
+      "en_code": "hand_painting"
+    },
+    "拉砂": {
+      "en_display": "Brushed Finish",
+      "en_code": "brushed_finish"
+    },
+    "方形": {
+      "en_display": "Square",
+      "en_code": "square"
+    },
+    "无": {
+      "en_display": "None",
+      "en_code": "none"
+    },
+    "日月星辰": {
+      "en_display": "Sun, Moon & Stars",
+      "en_code": "sun_moon_stars"
+    },
+    "木质": {
+      "en_display": "Wood",
+      "en_code": "wood"
+    },
+    "树脂": {
+      "en_display": "Resin",
+      "en_code": "resin"
+    },
+    "棉花": {
+      "en_display": "Cotton Filling",
+      "en_code": "cotton_filling"
+    },
+    "棉": {
+      "en_display": "Cotton",
+      "en_code": "cotton"
+    },
+    "植物花卉": {
+      "en_display": "Plants & Flowers",
+      "en_code": "plants_flowers"
+    },
+    "橡胶": {
+      "en_display": "Rubber",
+      "en_code": "rubber"
+    },
+    "毛绒": {
+      "en_display": "Plush",
+      "en_code": "plush"
+    },
+    "水果蔬菜": {
+      "en_display": "Fruits & Vegetables",
+      "en_code": "fruits_vegetables"
+    },
+    "水滴": {
+      "en_display": "Teardrop",
+      "en_code": "teardrop"
+    },
+    "法兰绒印花": {
+      "en_display": "Flannel Print",
+      "en_code": "flannel_print"
+    },
+    "活口可调节": {
+      "en_display": "Adjustable Open Ring",
+      "en_code": "adjustable_open_ring"
+    },
+    "测试3": {
+      "en_display": "Test 3",
+      "en_code": "test_3"
+    },
+    "海洋生物": {
+      "en_display": "Marine Life",
+      "en_code": "marine_life"
+    },
+    "海绵": {
+      "en_display": "Sponge",
+      "en_code": "sponge"
+    },
+    "涂装": {
+      "en_display": "Coating / Painting",
+      "en_code": "coating_painting"
+    },
+    "滴胶亚克力": {
+      "en_display": "Epoxy Acrylic",
+      "en_code": "epoxy_acrylic"
+    },
+    "热转印": {
+      "en_display": "Heat Transfer Printing",
+      "en_code": "heat_transfer_printing"
+    },
+    "玉石": {
+      "en_display": "Jade",
+      "en_code": "jade"
+    },
+    "玫瑰金": {
+      "en_display": "Rose Gold",
+      "en_code": "rose_gold"
+    },
+    "玻璃": {
+      "en_display": "Glass",
+      "en_code": "glass"
+    },
+    "珍珠": {
+      "en_display": "Pearl",
+      "en_code": "pearl"
+    },
+    "珐琅": {
+      "en_display": "Enamel",
+      "en_code": "enamel"
+    },
+    "生肖星座": {
+      "en_display": "Zodiac & Constellation",
+      "en_code": "zodiac_constellation"
+    },
+    "电绣": {
+      "en_display": "Machine Embroidery",
+      "en_code": "machine_embroidery"
+    },
+    "电镀": {
+      "en_display": "Electroplating",
+      "en_code": "electroplating"
+    },
+    "白色": {
+      "en_display": "White",
+      "en_code": "white"
+    },
+    "白金": {
+      "en_display": "Platinum / White Gold",
+      "en_code": "platinum"
+    },
+    "矩形": {
+      "en_display": "Rectangle",
+      "en_code": "rectangle"
+    },
+    "硅胶": {
+      "en_display": "Silicone",
+      "en_code": "silicone"
+    },
+    "粉色": {
+      "en_display": "Pink",
+      "en_code": "pink"
+    },
+    "红色": {
+      "en_display": "Red",
+      "en_code": "red"
+    },
+    "纯棉": {
+      "en_display": "Pure Cotton",
+      "en_code": "pure_cotton"
+    },
+    "纯金": {
+      "en_display": "Pure Gold",
+      "en_code": "pure_gold"
+    },
+    "纯银": {
+      "en_display": "Pure Silver",
+      "en_code": "pure_silver"
+    },
+    "纺羊绒": {
+      "en_display": "Cashmere Blend",
+      "en_code": "cashmere_blend"
+    },
+    "组合套装": {
+      "en_display": "Combo Set",
+      "en_code": "combo_set"
+    },
+    "绿色": {
+      "en_display": "Green",
+      "en_code": "green"
+    },
+    "美度10号": {
+      "en_display": "US Size 10",
+      "en_code": "us_ring_size_10"
+    },
+    "美度11号": {
+      "en_display": "US Size 11",
+      "en_code": "us_ring_size_11"
+    },
+    "美度12号": {
+      "en_display": "US Size 12",
+      "en_code": "us_ring_size_12"
+    },
+    "美度13号": {
+      "en_display": "US Size 13",
+      "en_code": "us_ring_size_13"
+    },
+    "美度14号": {
+      "en_display": "US Size 14",
+      "en_code": "us_ring_size_14"
+    },
+    "美度15号": {
+      "en_display": "US Size 15",
+      "en_code": "us_ring_size_15"
+    },
+    "美度16号": {
+      "en_display": "US Size 16",
+      "en_code": "us_ring_size_16"
+    },
+    "美度17号": {
+      "en_display": "US Size 17",
+      "en_code": "us_ring_size_17"
+    },
+    "美度5号": {
+      "en_display": "US Size 5",
+      "en_code": "us_ring_size_5"
+    },
+    "美度6号": {
+      "en_display": "US Size 6",
+      "en_code": "us_ring_size_6"
+    },
+    "美度7号": {
+      "en_display": "US Size 7",
+      "en_code": "us_ring_size_7"
+    },
+    "美度8号": {
+      "en_display": "US Size 8",
+      "en_code": "us_ring_size_8"
+    },
+    "美度9号": {
+      "en_display": "US Size 9",
+      "en_code": "us_ring_size_9"
+    },
+    "美码6号": {
+      "en_display": "US Size 6",
+      "en_code": "us_ring_size_6"
+    },
+    "美码7号": {
+      "en_display": "US Size 7",
+      "en_code": "us_ring_size_7"
+    },
+    "美码8号": {
+      "en_display": "US Size 8",
+      "en_code": "us_ring_size_8"
+    },
+    "美码9号": {
+      "en_display": "US Size 9",
+      "en_code": "us_ring_size_9"
+    },
+    "莫桑钻": {
+      "en_display": "Moissanite",
+      "en_code": "moissanite"
+    },
+    "菲林转印工艺": {
+      "en_display": "Film Transfer Process",
+      "en_code": "film_transfer_process"
+    },
+    "蓝色": {
+      "en_display": "Blue",
+      "en_code": "blue"
+    },
+    "补邮费链接": {
+      "en_display": "Postage Fee Link",
+      "en_code": "postage_fee_link"
+    },
+    "贝壳": {
+      "en_display": "Shell",
+      "en_code": "shell"
+    },
+    "金属": {
+      "en_display": "Metal",
+      "en_code": "metal"
+    },
+    "金色": {
+      "en_display": "Gold",
+      "en_code": "gold"
+    },
+    "钛": {
+      "en_display": "Titanium",
+      "en_code": "titanium"
+    },
+    "钛钢": {
+      "en_display": "Titanium Steel",
+      "en_code": "titanium_steel"
+    },
+    "钻石": {
+      "en_display": "Diamond",
+      "en_code": "diamond"
+    },
+    "铜合金": {
+      "en_display": "Copper Alloy",
+      "en_code": "copper_alloy"
+    },
+    "铝合金": {
+      "en_display": "Aluminum Alloy",
+      "en_code": "aluminum_alloy"
+    },
+    "银合金": {
+      "en_display": "Silver Alloy",
+      "en_code": "silver_alloy"
+    },
+    "银色": {
+      "en_display": "Silver",
+      "en_code": "silver"
+    },
+    "锆石": {
+      "en_display": "Cubic Zirconia",
+      "en_code": "cubic_zirconia"
+    },
+    "锌合金": {
+      "en_display": "Zinc Alloy",
+      "en_code": "zinc_alloy"
+    },
+    "镀K金": {
+      "en_display": "Gold Plated",
+      "en_code": "gold_plated"
+    },
+    "镀铂/铑/钯": {
+      "en_display": "Platinum/Rhodium/Palladium Plated",
+      "en_code": "platinum_rhodium_palladium_plated"
+    },
+    "镀银": {
+      "en_display": "Silver Plated",
+      "en_code": "silver_plated"
+    },
+    "阳极氧化": {
+      "en_display": "Anodizing",
+      "en_code": "anodizing"
+    },
+    "陶瓷": {
+      "en_display": "Ceramic",
+      "en_code": "ceramic"
+    },
+    "随形": {
+      "en_display": "Freeform",
+      "en_code": "freeform"
+    },
+    "非金属": {
+      "en_display": "Non-Metal",
+      "en_code": "non_metal"
+    },
+    "食品零食": {
+      "en_display": "Food & Snacks",
+      "en_code": "food_snacks"
+    },
+    "高透PC": {
+      "en_display": "High-Transparency PC",
+      "en_code": "high_transparency_pc"
+    },
+    "黑色": {
+      "en_display": "Black",
+      "en_code": "black"
+    },
+    "商品预计7天内发货": {
+      "en_display": "Ships within 7 days",
+      "en_code": "ships_within_7_days"
+    },
+    "预计7天内发货": {
+      "en_display": "Ships within 7 days",
+      "en_code": "ships_within_7_days"
+    },
+    "商品预计10天内发货": {
+      "en_display": "Ships within 10 days",
+      "en_code": "ships_within_10_days"
+    },
+    "预计10天内发货": {
+      "en_display": "Ships within 10 days",
+      "en_code": "ships_within_10_days"
+    },
+    "商品预计12天内发货": {
+      "en_display": "Ships within 12 days",
+      "en_code": "ships_within_12_days"
+    },
+    "预计12天内发货": {
+      "en_display": "Ships within 12 days",
+      "en_code": "ships_within_12_days"
+    },
+    "商品预计20天内发货": {
+      "en_display": "Ships within 20 days",
+      "en_code": "ships_within_20_days"
+    },
+    "预计20天内发货": {
+      "en_display": "Ships within 20 days",
+      "en_code": "ships_within_20_days"
+    },
+    "商品预计30天内发货": {
+      "en_display": "Ships within 30 days",
+      "en_code": "ships_within_30_days"
+    },
+    "预计30天内发货": {
+      "en_display": "Ships within 30 days",
+      "en_code": "ships_within_30_days"
+    },
+    "商品预计90天内发货": {
+      "en_display": "Ships within 90 days",
+      "en_code": "ships_within_90_days"
+    },
+    "预计90天内发货": {
+      "en_display": "Ships within 90 days",
+      "en_code": "ships_within_90_days"
+    },
+    "商品预计180天内发货": {
+      "en_display": "Ships within 180 days",
+      "en_code": "ships_within_180_days"
+    },
+    "预计180天内发货": {
+      "en_display": "Ships within 180 days",
+      "en_code": "ships_within_180_days"
+    },
+    "众筹成功后70天内发货": {
+      "en_display": "Ships within 70 days after crowdfunding success",
+      "en_code": "ships_within_70_days_after_crowdfunding"
+    },
+    "广州市发货": {
+      "en_display": "Ships from Guangzhou",
+      "en_code": "ships_from_guangzhou"
+    }
+  },
+  "promotion_text_mapping": {
+    "想要%s折折扣价": {
+      "en_display": "Wishlist Discount Price (%s折)",
+      "en_code": "wishlist_discount_price_zhe",
+      "field_kind": "list"
+    },
+    "想要折扣": {
+      "en_display": "Wishlist Discount",
+      "en_code": "wishlist_discount",
+      "field_kind": "tag"
+    },
+    "参与想要活动立减%s元": {
+      "en_display": "Save $%s in the Wishlist event",
+      "en_code": "wishlist_event_save",
+      "field_kind": "desc"
+    },
+    "作者专享（免费打样额度）": {
+      "en_display": "Creator Exclusive (Free Sample Quota)",
+      "en_code": "creator_exclusive_free_sample",
+      "field_kind": "list"
+    },
+    "作者专享": {
+      "en_display": "Creator Exclusive",
+      "en_code": "creator_exclusive",
+      "field_kind": "tag"
+    },
+    "作者专属福利": {
+      "en_display": "Creator-Exclusive Benefit",
+      "en_code": "creator_exclusive_benefit",
+      "field_kind": "desc"
+    },
+    "专享福利-同活动下前": {
+      "en_display": "Exclusive Benefit — first",
+      "en_code": "exclusive_benefit_first_n",
+      "field_kind": "desc"
+    },
+    "专享福利-同活动下第": {
+      "en_display": "Exclusive Benefit — from item",
+      "en_code": "exclusive_benefit_from_n",
+      "field_kind": "desc"
+    },
+    "件": {
+      "en_display": "items",
+      "en_code": "items_unit",
+      "field_kind": "desc"
+    },
+    "件起": {
+      "en_display": "items onward",
+      "en_code": "items_onward",
+      "field_kind": "desc"
+    },
+    "可享": {
+      "en_display": "Get",
+      "en_code": "get_prefix",
+      "field_kind": "list"
+    },
+    "折优惠": {
+      "en_display": "% Off",
+      "en_code": "percent_off_suffix",
+      "field_kind": "list"
+    },
+    "校园特惠": {
+      "en_display": "Student Deal",
+      "en_code": "student_deal",
+      "field_kind": "tag"
+    },
+    "学生/教师认证用户专享": {
+      "en_display": "Exclusive for verified students and teachers",
+      "en_code": "verified_student_teacher_exclusive",
+      "field_kind": "desc"
+    },
+    "特惠价": {
+      "en_display": "Special Price",
+      "en_code": "special_price",
+      "field_kind": "tag"
+    },
+    "限时特惠": {
+      "en_display": "Limited-Time Offer",
+      "en_code": "limited_time_offer",
+      "field_kind": "desc"
+    },
+    "教育优惠": {
+      "en_display": "Education Discount",
+      "en_code": "education_discount",
+      "field_kind": "tag"
+    },
+    "凭学生/教师身份立减": {
+      "en_display": "Save with student or teacher verification",
+      "en_code": "save_with_student_teacher_id",
+      "field_kind": "desc"
+    },
+    "活动专享": {
+      "en_display": "Event Exclusive",
+      "en_code": "event_exclusive",
+      "field_kind": "tag"
+    },
+    "活动专享优惠券": {
+      "en_display": "Event Exclusive Coupon",
+      "en_code": "event_exclusive_coupon",
+      "field_kind": "desc"
+    },
+    "活动专享券": {
+      "en_display": "Event Exclusive Coupon",
+      "en_code": "event_exclusive_coupon",
+      "field_kind": "delivery"
+    },
+    "集赞特惠": {
+      "en_display": "Like-to-Win Deal",
+      "en_code": "like_to_win_deal",
+      "field_kind": "tag"
+    },
+    "集赞享福利": {
+      "en_display": "Collect likes for rewards",
+      "en_code": "collect_likes_for_rewards",
+      "field_kind": "desc"
+    },
+    "首单价": {
+      "en_display": "First-Order Price",
+      "en_code": "first_order_price",
+      "field_kind": "tag"
+    },
+    "首单立减%s元": {
+      "en_display": "Save $%s on your first order",
+      "en_code": "first_order_save",
+      "field_kind": "desc"
+    },
+    "首单立减": {
+      "en_display": "First-Order Discount",
+      "en_code": "first_order_discount",
+      "field_kind": "delivery"
+    },
+    "官方立减": {
+      "en_display": "Official Discount",
+      "en_code": "official_discount",
+      "field_kind": "tag"
+    },
+    "券后价": {
+      "en_display": "Price After Coupon",
+      "en_code": "price_after_coupon",
+      "field_kind": "tag"
+    },
+    "官方立减%s元": {
+      "en_display": "Official $%s off",
+      "en_code": "official_discount_save",
+      "field_kind": "desc"
+    },
+    "得物专享": {
+      "en_display": "Dewu Exclusive",
+      "en_code": "dewu_exclusive",
+      "field_kind": "tag"
+    },
+    "得物专属优惠券": {
+      "en_display": "Dewu Exclusive Coupon",
+      "en_code": "dewu_exclusive_coupon",
+      "field_kind": "desc"
+    },
+    "得物券": {
+      "en_display": "Dewu Coupon",
+      "en_code": "dewu_coupon",
+      "field_kind": "delivery"
+    },
+    "想要奖励领取": {
+      "en_display": "Wishlist Reward Claim",
+      "en_code": "wishlist_reward_claim",
+      "field_kind": "tag"
+    },
+    "想要奖励领取%s元": {
+      "en_display": "Claim $%s Wishlist reward",
+      "en_code": "wishlist_reward_claim_amount",
+      "field_kind": "desc"
+    },
+    "作者自购满10件享9折": {
+      "en_display": "Creator self-purchase 10+ items: 10% Off",
+      "en_code": "creator_self_10_items_10pct",
+      "field_kind": "tier"
+    },
+    "作者自购满30件享88折": {
+      "en_display": "Creator self-purchase 30+ items: 12% Off",
+      "en_code": "creator_self_30_items_12pct",
+      "field_kind": "tier"
+    },
+    "作者自购满50件享85折": {
+      "en_display": "Creator self-purchase 50+ items: 15% Off",
+      "en_code": "creator_self_50_items_15pct",
+      "field_kind": "tier"
+    },
+    "作者自购满X件享Y折": {
+      "en_display": "Creator self-purchase X+ items: Y% Off (template)",
+      "en_code": "creator_self_template",
+      "field_kind": "tier"
+    },
+    "抽奖奖励领取": {
+      "en_display": "Lucky Draw Reward",
+      "en_code": "lucky_draw_reward",
+      "field_kind": "tag"
+    },
+    "抽奖奖励领取%s元": {
+      "en_display": "Claim $%s Lucky Draw reward",
+      "en_code": "lucky_draw_reward_amount",
+      "field_kind": "desc"
+    }
+  }
+}

@@ -1,0 +1,121 @@
+# 小红书 API
+
+## Docs
+- 开发文档 [应用开发](https://xiaohongshu.apifox.cn/doc-2810909.md): 
+- 开发文档 [新手指南](https://xiaohongshu.apifox.cn/doc-2810914.md): 
+- 开发文档 [应用测试](https://xiaohongshu.apifox.cn/doc-2810920.md): 
+- 开发文档 [授权流程（自研）](https://xiaohongshu.apifox.cn/doc-2810923.md): 
+- 开发文档 [授权流程（软件服务商）](https://xiaohongshu.apifox.cn/doc-2810928.md): 
+- 开发文档 [签名算法](https://xiaohongshu.apifox.cn/doc-2810932.md): 
+- 开发文档 [系统参数说明](https://xiaohongshu.apifox.cn/doc-2810935.md): 
+- 开发文档 [应用消息推送](https://xiaohongshu.apifox.cn/doc-2810938.md): 
+- 开发文档 [SDK 使用说明](https://xiaohongshu.apifox.cn/doc-2810941.md): 
+- 开发文档 [发布服务](https://xiaohongshu.apifox.cn/doc-2810945.md): 
+- API 调用场景 [商品基础介绍](https://xiaohongshu.apifox.cn/doc-2810949.md): 
+- API 调用场景 [订单基础介绍](https://xiaohongshu.apifox.cn/doc-2810951.md): 
+- API 调用场景 [跨境订单介绍](https://xiaohongshu.apifox.cn/doc-2810957.md): 
+- API 调用场景 [订单接入方案](https://xiaohongshu.apifox.cn/doc-2810959.md): 
+- API 调用场景 [售后接入说明](https://xiaohongshu.apifox.cn/doc-2810962.md): 
+- 数据加解密 [数据加密对接方案](https://xiaohongshu.apifox.cn/doc-895670.md): 
+- 数据加解密 [加密算法介绍](https://xiaohongshu.apifox.cn/doc-895683.md): 
+- 电子面单 [新版小红书电子面单ISV对接改造](https://xiaohongshu.apifox.cn/doc-2811017.md): 
+- 电子面单 [电子面单对接说明（新）](https://xiaohongshu.apifox.cn/doc-2811019.md): 
+- 电子面单 [电子面单打印组件协议（新）](https://xiaohongshu.apifox.cn/doc-7768557.md): 
+- 电子面单 [小红书云打印系统物料使用说明书](https://xiaohongshu.apifox.cn/doc-7768561.md): 
+- 电子面单 [电子面单常见问题（新）](https://xiaohongshu.apifox.cn/doc-7768567.md): 
+- 电子面单 [打印组件使用常见问题](https://xiaohongshu.apifox.cn/doc-7768573.md): 
+- 规则中心 [小红书开放平台开发者协议](https://xiaohongshu.apifox.cn/doc-2811022.md): 
+- 规则中心 [数据安全承诺函](https://xiaohongshu.apifox.cn/doc-2811113.md): 
+- 规则中心 [服务市场上架审核标准](https://xiaohongshu.apifox.cn/doc-2811115.md): 
+- 规则中心 [开发者角色说明](https://xiaohongshu.apifox.cn/doc-2811119.md): 
+- 规则中心 [小红书服务市场服务协议（服务商版）](https://xiaohongshu.apifox.cn/doc-2811122.md): 
+- 规则中心 [小红书服务市场管理规范](https://xiaohongshu.apifox.cn/doc-2811123.md): 
+- 规则中心 [企业管理类目管理规则](https://xiaohongshu.apifox.cn/doc-2811125.md): 
+- 规则中心 [商品管理类目管理规则](https://xiaohongshu.apifox.cn/doc-2811127.md): 
+- 规则中心 [订单管理类目管理规则](https://xiaohongshu.apifox.cn/doc-2811128.md): 
+- 规则中心 [内容工具类目管理规则](https://xiaohongshu.apifox.cn/doc-2811130.md): 
+- 规则中心 [小红书服务市场保证金要求](https://xiaohongshu.apifox.cn/doc-2811131.md): 
+- 消息文档 [商品新建](https://xiaohongshu.apifox.cn/doc-2810862.md): 
+- 消息文档 [商品上下架](https://xiaohongshu.apifox.cn/doc-2810865.md): 
+- 消息文档 [商品审核驳回](https://xiaohongshu.apifox.cn/doc-2810867.md): 
+- 消息文档 [商品删除](https://xiaohongshu.apifox.cn/doc-2810868.md): 
+
+## API Docs
+- 公共 API [获取分类列表](https://xiaohongshu.apifox.cn/api-23906473.md): 返回错误码说明
+- 公共 API [批量获取发货时间规则](https://xiaohongshu.apifox.cn/api-55930165.md): 
+- 公共 API [获取地址信息（新）](https://xiaohongshu.apifox.cn/api-55930514.md): 
+- 公共 API [获取商家地址库](https://xiaohongshu.apifox.cn/api-55933597.md): 
+- 公共 API [由末级分类获取规格（新）](https://xiaohongshu.apifox.cn/api-24179911.md): 
+- 公共 API [由末级分类获取属性](https://xiaohongshu.apifox.cn/api-24182150.md): | 错误码 | 错误码描述 |           
+- 公共 API [由属性获取属性值](https://xiaohongshu.apifox.cn/api-24182626.md): |      | 错误码   | 错误码描述 |
+- 公共 API [获取快递公司信息](https://xiaohongshu.apifox.cn/api-24183020.md): |      | 错误码   | 错误码描述                           |
+- 公共 API [获取物流方案列表](https://xiaohongshu.apifox.cn/api-24184170.md): 
+- 公共 API [运费模版列表](https://xiaohongshu.apifox.cn/api-24186624.md): 
+- 公共 API [运费模版详情](https://xiaohongshu.apifox.cn/api-24188652.md): 
+- 公共 API [获取品牌信息](https://xiaohongshu.apifox.cn/api-24190169.md): 
+- 公共 API [获取物流模式列表](https://xiaohongshu.apifox.cn/api-24190981.md): 
+- 公共 API [获取地址信息](https://xiaohongshu.apifox.cn/api-24191440.md): 
+- 公共 API [获取老版本商家授权信息](https://xiaohongshu.apifox.cn/api-24191688.md): 
+- 公共 API [cc资质检查](https://xiaohongshu.apifox.cn/api-24192138.md): 
+- 公共 API [商品标题类目预测](https://xiaohongshu.apifox.cn/api-24193051.md): 
+- 公共 API [由末级分类获取规格（旧）](https://xiaohongshu.apifox.cn/api-24193659.md): |      | 错误码   | 错误码描述       |
+- 订单 API [带货达人侧详情查询](https://xiaohongshu.apifox.cn/api-55956179.md): 
+- 订单 API [查询月度结算单下载地址](https://xiaohongshu.apifox.cn/api-55956492.md): 
+- 订单 API [订单列表](https://xiaohongshu.apifox.cn/api-24196747.md): |      | 错误码   | 错误码描述   |
+- 订单 API [订单详情](https://xiaohongshu.apifox.cn/api-24201582.md): |      | 错误码   | 错误码描述               |
+- 订单 API [订单收件人信息](https://xiaohongshu.apifox.cn/api-24202364.md): |      | 错误码   | 错误码描述   |
+- 订单 API [修改订单备注](https://xiaohongshu.apifox.cn/api-24203035.md): |      | 错误码   | 错误码描述                           |
+- 订单 API [订单发货](https://xiaohongshu.apifox.cn/api-24204499.md): |      | 错误码   | 错误码描述                         |
+- 订单 API [修改快递单号](https://xiaohongshu.apifox.cn/api-24206581.md): |      | 错误码   | 错误码描述           |
+- 订单 API [订单物流轨迹](https://xiaohongshu.apifox.cn/api-24209468.md): |      | 错误码   | 错误码描述     |
+- 订单 API [海关申报信息](https://xiaohongshu.apifox.cn/api-24210088.md): |      | 错误码   | 错误码描述                       |
+- 订单 API [获取取消申请列表（即将下线）](https://xiaohongshu.apifox.cn/api-24217042.md): 
+- 订单 API [取消申请审核（即将下线）](https://xiaohongshu.apifox.cn/api-24218049.md): 
+- 订单 API [跨境清关支持口岸](https://xiaohongshu.apifox.cn/api-24218631.md): 
+- 订单 API [跨境重推支付单](https://xiaohongshu.apifox.cn/api-24220689.md): 
+- 订单 API [跨境商品备案信息同步](https://xiaohongshu.apifox.cn/api-24221615.md): 
+- 订单 API [跨境商品备案信息查询](https://xiaohongshu.apifox.cn/api-24223012.md): 
+- 订单 API [小包批次创建](https://xiaohongshu.apifox.cn/api-24223363.md): 
+- 订单 API [开票列表查询](https://xiaohongshu.apifox.cn/api-24227146.md): 
+- 订单 API [开票结果回传（正向蓝票开具）](https://xiaohongshu.apifox.cn/api-24237687.md): 
+- 订单 API [发票冲红（逆向冲红）](https://xiaohongshu.apifox.cn/api-24238211.md): 
+- 订单 API [批量解密](https://xiaohongshu.apifox.cn/api-24238435.md): 
+- 订单 API [批量脱敏](https://xiaohongshu.apifox.cn/api-24240167.md): 
+- 订单 API [批量获取索引串](https://xiaohongshu.apifox.cn/api-24240907.md): 
+- 售后 API [售后换货确认收货并发货](https://xiaohongshu.apifox.cn/api-56677362.md): 
+- 售后 API [获取售后列表](https://xiaohongshu.apifox.cn/api-24647726.md): 
+- 售后 API [售后详情](https://xiaohongshu.apifox.cn/api-24655015.md): 
+- 售后 API [售后审核（新）](https://xiaohongshu.apifox.cn/api-24657987.md): 
+- 售后 API [售后确认收货（新）](https://xiaohongshu.apifox.cn/api-24660851.md): 
+- 商品 API [商品列表基础版](https://xiaohongshu.apifox.cn/api-24682633.md): |      | 错误码   | 错误码描述 |
+- 商品 API [商品列表完整版（新）](https://xiaohongshu.apifox.cn/api-24685962.md): 
+- 商品 API [更新物流方案](https://xiaohongshu.apifox.cn/api-24695159.md): | 错误码 | 错误码描述 |                                  |
+- 商品 API [商品上下架](https://xiaohongshu.apifox.cn/api-24838962.md): |      | 错误码   | 错误码描述         |
+- 商品 API [创建ITEM](https://xiaohongshu.apifox.cn/api-24841892.md): 
+- 商品 API [更新TEM](https://xiaohongshu.apifox.cn/api-24846432.md): 
+- 商品 API [删除ITEM](https://xiaohongshu.apifox.cn/api-24848829.md): |      | 错误码   | 错误码描述   |
+- 商品 API [创建SKU](https://xiaohongshu.apifox.cn/api-24854921.md): 
+- 商品 API [更新SKU](https://xiaohongshu.apifox.cn/api-24860774.md): 
+- 商品 API [删除SKU](https://xiaohongshu.apifox.cn/api-24861029.md): |      | 错误码   | 错误码描述   |
+- 商品 API [查询Item列表](https://xiaohongshu.apifox.cn/api-24865354.md): 
+- 商品 API [获取ITEM详情](https://xiaohongshu.apifox.cn/api-24868781.md): 
+- 商品 API [修改价格](https://xiaohongshu.apifox.cn/api-24869044.md): 
+- 商品 API [修改商品主图、主图视频](https://xiaohongshu.apifox.cn/api-24869344.md): 
+- 商品 API [修改规格图](https://xiaohongshu.apifox.cn/api-24870010.md): 
+- 库存 API [获取商品库存](https://xiaohongshu.apifox.cn/api-24902181.md): | 错误码 | 错误码描述 |                         |
+- 库存 API [同步库存](https://xiaohongshu.apifox.cn/api-24912495.md): | 错误码 | 错误码描述 |                                                              |
+- 库存 API [增减库存](https://xiaohongshu.apifox.cn/api-24914250.md): |      | 错误码   | 错误码描述                                                   |
+- 素材中心 API [素材列表](https://xiaohongshu.apifox.cn/api-24923720.md): 
+- 素材中心 API [上传素材](https://xiaohongshu.apifox.cn/api-24925828.md): 
+- 素材中心 API [修改素材](https://xiaohongshu.apifox.cn/api-24926201.md): 
+- 素材中心 API [删除素材](https://xiaohongshu.apifox.cn/api-24926244.md): 
+- 物流 API [查询电子面单订购关系](https://xiaohongshu.apifox.cn/api-99755883.md): 
+- 物流 API [查询电子面单模板列表](https://xiaohongshu.apifox.cn/api-99757260.md): 
+- 物流 API [批量取号](https://xiaohongshu.apifox.cn/api-99759590.md): 
+- 物流 API [更新面单](https://xiaohongshu.apifox.cn/api-99767097.md): 
+- 物流 API [取消面单](https://xiaohongshu.apifox.cn/api-99767674.md): 
+- 物流 API [查询面单](https://xiaohongshu.apifox.cn/api-99768736.md): 
+
+## Schemas
+- [系统参数](https://xiaohongshu.apifox.cn/schema-9782950.md): 
+- [返回参数](https://xiaohongshu.apifox.cn/schema-9785678.md): 
