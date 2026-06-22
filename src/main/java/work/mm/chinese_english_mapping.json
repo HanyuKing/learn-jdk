@@ -819,6 +819,20 @@
       "en_code": "ships_from_guangzhou"
     }
   },
+  "error_message_mapping": {
+    "商品不存在": {
+      "en_display": "Product not found",
+      "en_code": "product_not_found",
+      "i18n_key": "errorCode.1003.productReadServiceImpl_0003",
+      "note": "Triggered by aigc/trade/product/query when productId does not exist (e.g. productId=W202605140050)"
+    },
+    "商品查询失败": {
+      "en_display": "Failed to query product",
+      "en_code": "product_query_failed",
+      "i18n_key": "errorCode.1003.productReadServiceImpl_0003 (alt)",
+      "note": "Alternative meaning if the original Chinese is '商品查询失败' rather than '商品不存在'"
+    }
+  },
   "promotion_text_mapping": {
     "想要%s折折扣价": {
       "en_display": "Wishlist Discount Price (%s%% Off)",
