@@ -1,0 +1,36 @@
+[{
+  "promotionChannel": 1,
+  "productList": "Want Perks (%s%% Off)",
+  "productDetailType": "Want Perks",
+  "productDetail": "Back It and Save $%s",
+  "needFormatProductDetail": 1,
+  "productTag": "https://static-i18n.hitems.ai/fe-static/bj/store/discount-tag/want-perks.webp",
+  "productDelivery": "Want Perks"
+}, {
+  "promotionChannel": 2,
+  "productList": "enableActivityAuthorQuota != null && enableActivityAuthorQuota == 1 && needFree != null && needFree ? 'Creator Exclusive (Free Sample Quota)' : (enableActivityAuthorQuota != null && enableActivityAuthorQuota == 1 && needFree != null && !needFree ? 'Creator Exclusive (Get ' + discountRate + '% Off)' : 'Creator Exclusive')",
+  "productDetailType": "Creator Exclusive",
+  "productDetail": "enableActivityAuthorQuota != null && enableActivityAuthorQuota == 1 && needFree != null && needFree ? (accountLevelDisplayName + ' Exclusive Benefit — first ' + quotaLimit + ' items') : (enableActivityAuthorQuota != null && enableActivityAuthorQuota == 1 && needFree != null && !needFree ? (accountLevelDisplayName + ' Exclusive Benefit — from item ' + (quotaLimit + 1) + ' onward') : 'Creator-Exclusive Benefit')",
+  "needFormatProductDetail": 0,
+  "productTag": "https://static-i18n.hitems.ai/fe-static/bj/store/discount-tag/creator-exclusive-price.webp",
+  "productDelivery": "Creator Exclusive"
+}, {
+  "promotionChannel": 4,
+  "productList": "Special Price",
+  "productDetailType": "Special Price",
+  "productDetail": "Limited-Time Offer",
+  "needFormatProductDetail": 0,
+  "productTag": "https://static-i18n.hitems.ai/fe-static/bj/pic_nothing.png",
+  "productDelivery": "Limited-Time Offer"
+}, {
+  "promotionChannel": 12,
+  "productList": "",
+  "productDetailType": "",
+  "productDetail": "",
+  "productDetails": ["Creator self-purchase 10+ items: 10% Off", "Creator self-purchase 30+ items: 12% Off", "Creator self-purchase 50+ items: 15% Off"],
+  "productDetailQuantity": "Creator self-purchase X+ items: Y% Off",
+  "needFormatProductDetail": 0,
+  "productTag": "",
+  "productDelivery": "",
+  "productDeliveryQuantity": "Creator self-purchase X+ items: Y% Off"
+}]

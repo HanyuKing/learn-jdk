@@ -1,0 +1,126 @@
+[
+  {
+    "promotionChannel": 1,
+    "productList": "想要%s折折扣价",
+    "productDetailType": "想要折扣",
+    "productDetail": "参与想要活动立减%s元",
+    "needFormatProductDetail": 1,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-1.webp",
+    "productDelivery": "想要折扣"
+  },
+  {
+    "promotionChannel": 2,
+    "productList": "enableActivityAuthorQuota != null && enableActivityAuthorQuota == 1 && needFree != null && needFree ? '作者专享（免费打样额度）' : (enableActivityAuthorQuota != null && enableActivityAuthorQuota == 1 && needFree != null && !needFree ? '作者专享（可享' + discountRate + '折优惠）' : '作者专享')",
+    "productDetailType": "作者专享",
+    "productDetail": "enableActivityAuthorQuota != null && enableActivityAuthorQuota == 1 && needFree != null && needFree ? (accountLevelDisplayName + '专享福利-同活动下前' + quotaLimit + '件') : (enableActivityAuthorQuota != null && enableActivityAuthorQuota == 1 && needFree != null && !needFree ? (accountLevelDisplayName + '专享福利-同活动下第' + (quotaLimit + 1) + '件起') : '作者专属福利')",
+    "needFormatProductDetail": 0,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-2.webp",
+    "productDelivery": "作者专享"
+  },
+  {
+    "promotionChannel": 3,
+    "productList": "校园特惠",
+    "productDetailType": "校园特惠",
+    "productDetail": "学生/教师认证用户专享",
+    "needFormatProductDetail": 0,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-3.webp",
+    "productDelivery": "校园特惠"
+  },
+  {
+    "promotionChannel": 4,
+    "productList": "特惠价",
+    "productDetailType": "特惠价",
+    "productDetail": "限时特惠",
+    "needFormatProductDetail": 0,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/pic_nothing.png",
+    "productDelivery": "限时特惠"
+  },
+  {
+    "promotionChannel": 5,
+    "productList": "教育优惠",
+    "productDetailType": "教育优惠",
+    "productDetail": "凭学生/教师身份立减",
+    "needFormatProductDetail": 0,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-5.webp",
+    "productDelivery": "教育优惠"
+  },
+  {
+    "promotionChannel": 6,
+    "productList": "活动专享",
+    "productDetailType": "活动专享",
+    "productDetail": "活动专享优惠券",
+    "needFormatProductDetail": 0,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-6-2.webp",
+    "productDelivery": "活动专享券"
+  },
+  {
+    "promotionChannel": 7,
+    "productList": "集赞特惠",
+    "productDetailType": "集赞特惠",
+    "productDetail": "集赞享福利",
+    "needFormatProductDetail": 0,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-7.webp",
+    "productDelivery": "集赞特惠"
+  },
+  {
+    "promotionChannel": 8,
+    "productList": "首单价",
+    "productDetailType": "首单价",
+    "productDetail": "首单立减%s元",
+    "needFormatProductDetail": 1,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-8.webp",
+    "productDelivery": "首单立减"
+  },
+  {
+    "promotionChannel": 9,
+    "productList": "官方立减",
+    "productDetailType": "券后价",
+    "productDetail": "官方立减%s元",
+    "needFormatProductDetail": 1,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-9.webp",
+    "productDelivery": "官方立减"
+  },
+  {
+    "promotionChannel": 10,
+    "productList": "得物专享",
+    "productDetailType": "得物专享",
+    "productDetail": "得物专属优惠券",
+    "needFormatProductDetail": 1,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-10.webp",
+    "productDelivery": "得物券"
+  },
+  {
+    "promotionChannel": 11,
+    "productList": "想要奖励领取",
+    "productDetailType": "想要奖励领取",
+    "productDetail": "想要奖励领取%s元",
+    "needFormatProductDetail": 1,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-1.webp",
+    "productDelivery": "想要奖励领取"
+  },
+  {
+    "promotionChannel": 12,
+    "productList": "",
+    "productDetailType": "",
+    "productDetail": "",
+    "productDetails": [
+      "作者自购满10件享9折",
+      "作者自购满30件享88折",
+      "作者自购满50件享85折"
+    ],
+    "productDetailQuantity": "作者自购满X件享Y折",
+    "needFormatProductDetail": 0,
+    "productTag": "",
+    "productDelivery": "",
+    "productDeliveryQuantity": "作者自购满X件享Y折"
+  },
+  {
+    "promotionChannel": 13,
+    "productList": "抽奖奖励领取",
+    "productDetailType": "抽奖奖励领取",
+    "productDetail": "抽奖奖励领取%s元",
+    "needFormatProductDetail": 1,
+    "productTag": "https://static.zaohaowu.com/fe-static/bj/store/discount-tag/discount-tag-13.png",
+    "productDelivery": "抽奖奖励领取"
+  }
+]

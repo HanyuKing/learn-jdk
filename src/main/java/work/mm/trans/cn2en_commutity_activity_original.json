@@ -1,0 +1,116 @@
+{
+  "listenEventTypes": "WANTIT",
+  "riskAlarmAtUserMap": {
+    "77b3d9c5": "zhangjiawei@mathmagical.com",
+    "5be5fe44": "yinxuefei@mathmagical.com",
+    "g19ag3ee": "xingpanning@mathmagical.com",
+    "84a59eg6": "dingxintong@mathmagical.com",
+    "8d29a9eg": "lijianfei@mathmagical.com",
+    "7bg7fc8c": "wangjulong@mathmagical.com",
+    "gaf2c1g9": "yaoyue"
+  },
+  "riskScoreThreshold": 1000,
+  "active": {
+    "currentContinuousDaysText": "已连续活跃 %d 天",
+    "dailyActiveRewardText": "今日「想要」",
+    "newUserFirstDayRewardText": "新人首日活跃奖励「想要」",
+    "newCycleText": "\uD83E\uDD29 新一周期的活跃奖励开始啦, 快来赢取更多⚡\uFE0F「想要」吧~",
+    "buttonText": "哇塞！去看看",
+    "completedButtonText": "(已下发)",
+    "waitingButtonText": "待解锁",
+    "unlockingButtonText": "(%d/%d)",
+    "activeRewardConfigMap": {
+      "3": {
+        "miniAppImage": "https://static.zaohaowu.com/fe-static/community/mp/incentive/active_award_illustration_3.png",
+        "webImage": "https://static.zaohaowu.com/fe-static/community/pc/incentive/active_award_illustration_3.png",
+        "popupRewardText": "太棒了！你已经连续活跃 3 天 \n额外奖励你 3 次{want_icon}想要",
+        "continuousActiveDaysText": "连续活跃3天",
+        "obtainsWantItTimesText": "额外得 3 次想要",
+        "viewRewardText": "奖励+3",
+        "mpViewRewardText": "额外想要次数 +3"
+      },
+      "5": {
+        "miniAppImage": "https://static.zaohaowu.com/fe-static/community/mp/incentive/active_award_illustration_5.png",
+        "webImage": "https://static.zaohaowu.com/fe-static/community/pc/incentive/active_award_illustration_5.png",
+        "popupRewardText": "太棒了！你已经连续活跃 5 天 \n额外奖励你 5 次{want_icon}想要",
+        "continuousActiveDaysText": "连续活跃5天",
+        "obtainsWantItTimesText": "再得 5 次想要",
+        "viewRewardText": "奖励+5",
+        "mpViewRewardText": "额外想要次数 +5"
+      },
+      "7": {
+        "miniAppImage": "https://static.zaohaowu.com/fe-static/community/mp/incentive/active_award_illustration_7.png",
+        "webImage": "https://static.zaohaowu.com/fe-static/community/pc/incentive/active_award_illustration_7.png",
+        "popupRewardText": "太棒了！你已经连续活跃 7 天 \n额外奖励你 7 次{want_icon}想要",
+        "continuousActiveDaysText": "连续活跃7天",
+        "obtainsWantItTimesText": "再得 7 次想要",
+        "viewRewardText": "奖励+7",
+        "mpViewRewardText": "额外想要次数 +7"
+      }
+    }
+  },
+  "common": {
+    "entryTipNo": 1000,
+    "entryTipText": "即刻获得更多{want_icon}想要 & 免费奖品池更新啦!",
+    "viewRewardText": "奖励+%s",
+    "mpViewRewardText": "奖励想要次数 +%s",
+    "taskImage": "https://static.zaohaowu.com/fe-static/app/detail/want_share_icon.png",
+    "shareWxQrCodeUploadToTos": true
+  },
+  "referral": {
+    "rewardTickets": 3,
+    "dailyLimit": 3,
+    "newUserTaskId": "0f74740440ed427db7fbeef84d698a55",
+    "appInviteeMaxDaysAfterRegister": 60
+  },
+  "purchase": {
+    "wantItDayLimit": 6,
+    "wantItSwitch": true,
+    "wantItWhiteList": [
+      "979e15e8a2a64920b7869ec077a3bea5"
+    ],
+    "unfreezeTime": 10800,
+    "rewardTickets": 5,
+    "rewardFreezeTime": 3,
+    "miniAppImage": "https://static.zaohaowu.com/static/other/buy-award-wechat.png",
+    "webImage": "https://static.zaohaowu.com/static/other/buy-award-web.png"
+  },
+  "userActivitySubName": "",
+  "guideBaseTime": "2025-12-29 03:45:00",
+  "newUserBaseTime": "2026-02-21 00:00:00",
+  "cnyConfig": {
+    "startTime": "2026-02-12 00:00:00",
+    "endTime": "2026-02-23 23:59:59",
+    "dailyActiveRewardArrivedMsg": "春节福利:每日活跃奖励已到账!{want_icon}想要+4",
+    "dailyActiveRewardArrivedMsgForNew": "春节福利:新用户注册奖励{want_icon}想要+5已到账!",
+    "dailyActiveWantItContent": "每日活跃奖励想要",
+    "newUserFirstDayRewardText": "新人首日活跃奖励想要",
+    "limitIncreasePrefix": "春节限时增发-",
+    "limitIncreaseAmount": 3,
+    "miniAppImage": "https://static.zaohaowu.com/static/other/spring-festival-wechat.png",
+    "webImage": "https://static.zaohaowu.com/static/other/spring-festival-web.png",
+    "rewardTickets": 10,
+    "title": "春节玩想要,福利加倍",
+    "rewardText": "感谢下单，春节限时额外赠送%s次{want_icon}想要!"
+  },
+  "oldUserAppFirstLoginPopup": {
+    "content": "欢迎老用户来APP！\n额外奖励你10次{want_icon}想要",
+    "buttonText": "马上投出",
+    "miniAppImage": "https://static.zaohaowu.com/jjewelry/web/resources/topic/20260413/b83924fbd8254d159f9c6c2a3b3a83a1/resource/f8ffa4fed4934b50be09dae4886aeddb/2f6aa72d4a301f8b53e3e73078acf990/webp/2f6aa72d4a301f8b53e3e73078acf990.webp",
+    "webImage": "https://static.zaohaowu.com/jjewelry/web/resources/topic/20260413/b83924fbd8254d159f9c6c2a3b3a83a1/resource/f8ffa4fed4934b50be09dae4886aeddb/2f6aa72d4a301f8b53e3e73078acf990/webp/2f6aa72d4a301f8b53e3e73078acf990.webp"
+  },
+  "appDownloadShortTip": {
+    "enabled": true,
+    "endTime": "2026-06-16 00:00:00",
+    "miniAppAuditStartTime": "09:30:00",
+    "miniAppAuditEndTime": "19:00:00",
+    "miniAppAuditContent": "造好物App上线啦！来体验全面升级的造物之旅",
+    "webLoginRewardContent": "\uD83C\uDF89终于等到和你见面！<span class=\"blue-box\">造好物 App</span> 正式上线，用当前账号登录 App 限时赠送 <span class=\"blue-box\">10 次</span> <span class=\"guide-tips-bar__bolt-wrap\"><span class=\"hitems-ticket\"></span></span> <span class=\"blue-box\">想要！</span>",
+    "webGuestRewardContent": "\uD83C\uDF89终于等到和你见面！<span class=\"blue-box\">造好物 App </span>正式上线，限时多送<span class=\"blue-box\">更多</span><span class=\"guide-tips-bar__bolt-wrap\"><span class=\"hitems-ticket\"></span></span><span class=\"blue-box\">想要</span>，免费好礼等你来领！",
+    "miniAppLoginRewardContent": "造好物App上线啦！用当前账号登录即送10次想要!",
+    "miniAppGuestRewardContent": "造好物App上线啦！现在下载，限时多送⚡️想要!",
+    "buttonText": "去下载",
+    "miniAppButtonJumpUrl": "/pagesCommon/guidanceAppDownload/index",
+    "webButtonJumpUrl": "-"
+  }
+}

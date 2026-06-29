@@ -1,0 +1,494 @@
+{
+  "common": {
+    "hideCopyInfo": true,
+    "logistics_time_color": "#121212",
+    "card_type": 2,
+    "text-to-image-model-id": "a53e40f2203d4425835d58dc8ba9b2c0",
+    "image-to-image-model-id": "aeae0990ce194a1c91870a02f6a1ee4e",
+    "image-to-image-model-id-2": "893c37a3b0a04b16964fa7329441839e",
+    "text-to-image-topic-id": "c92b5e6989ab47cc99e39ba7db7f08ab",
+    "newbie_model_product_map": {
+      "a53e40f2203d4425835d58dc8ba9b2c0": "X202512150002",
+      "aeae0990ce194a1c91870a02f6a1ee4e": "X202512150003",
+      "893c37a3b0a04b16964fa7329441839e": "X202601300002"
+    },
+    "officialMessageTemplates": {
+      "reachThreshold": "\uD83C\uDF89 恭喜您！您的作品已有超{conditionNum}位朋友想要购买，成功上架啦！作为作者专享权益，您可以用专属优惠带走自己的作品～赶紧前往商店下单吧！",
+      "wantProductLaunch": "你投出「想要」的产品上架啦！恭喜你获得",
+      "cannotProduceAuthor": "我们暂时无法生产您的设计产品。如果有疑问，您可前往小程序\"AI造好物\"的个人页，点击顶部客服入口进行咨询，获取具体说明及后续安排。感谢您的理解与支持！",
+      "cannotProduceUser": "我们的造物魔法无法将你想要的作品变为实物。不过别担心，我们已经退还了您的「想要」次数。我们会不断努力，期待在不久的将来为您带来惊喜!",
+      "productionComplete": "恭喜，你想要的作品现已由造好物制作完成，",
+      "postDeleted": "很遗憾，您之前「想要」的作品刚刚被作者删除了。不过别担心，我们已将您的「想要」次数全额退还！期待您发现更多喜欢的作品！",
+      "prizeProduct": "恭喜你！在{topicTitle}活动中获奖（稍后可去活动页查看完整获奖公示），造好物将免费为您把这个作品做成实物！赶紧前往商店下单收货吧!",
+      "prizeContactCs": "恭喜你！在{topicTitle}活动中获奖，请点击联系官方客服领取奖励！",
+      "prizeCannotProduce": "恭喜你！你的作品在{topicTitle}活动中获奖啦 \uD83C\uDF89（完整名单可前往活动页查看）,你的创意受到了用户与官方的高度认可，感谢你的精彩创作！遗憾的是，经过工艺评估，我们暂时无法将该作品投入生产。对此我们深感抱歉，并已为你准备了专属补偿方案。请点击本条消息与官方客服获取联系，获取具体说明及后续安排。感谢你的理解与支持!"
+    },
+    "cardDisplayCount": 3,
+    "shareUserExpireDays": 90,
+    "group_banners": [
+      {
+        "banner_id": "1",
+        "banner_image_url": "https://static.zaohaowu.com/fe-static/app/detail/want_banner5.png",
+        "link_url": "/wantPlayHow"
+      }
+    ],
+    "test_1": 122,
+    "xpn_test": "xpntest",
+    "artist_daidunbang_info": {
+      "user_id": "48cf1428fdc0467cb45e8a6100b2459e",
+      "product_id": "D202512160002"
+    },
+    "default_want_active_tab": "1",
+    "artist_illustration_list_daidunbang": [
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_1.png",
+        "height": 644
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_2.png",
+        "height": 852
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_3.png",
+        "height": 1884
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_4.png",
+        "height": 846
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_5.png",
+        "height": 784
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_6.png",
+        "height": 504
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_7.png",
+        "height": 534
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_8.png",
+        "height": 976
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_9.png",
+        "height": 1168
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_10.png",
+        "height": 1170
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_11.png",
+        "height": 1354
+      }
+    ],
+    "feed_banner_list": [],
+    "spring_festival_2026_settings": {
+      "activity_interval": {
+        "start_time": "2026-02-12 00:00:00",
+        "end_time": "2026-02-23 23:59:59"
+      },
+      "referralParams": {
+        "singleReward": 3,
+        "dailyLimit": 3,
+        "title": "分享拉新-得想要",
+        "badge": "单日最高+9",
+        "tooltip": "“造好物”任意页面的分享都作数：只要是通过你分享的链接/二维码 注册成功的新用户，都会算作有效拉新并奖励「想要」。\n成功邀请一位新朋友加入我们，你的「想要」次数立刻+3！每天前3位朋友的邀请奖励稳稳到手，动动手指，一天就能多出9次「想要」机会，期待你邀请新朋友来造好物跟你一起玩～",
+        "newDesc": "每拉1名新用户奖励<highlight>3次想要</highlight>，单日上限3位"
+      },
+      "purchaseParams": {
+        "singleReward": 10,
+        "title": "购买上架商品得想要",
+        "badge": "最高+60/日",
+        "tooltip": "下单后3小时内，赠送的「想要」处于冻结状态；待3小时后解冻，届时可正常使用投出。\n若商品申请了退货，则对应奖励的想要次数，也会被撤销。\n春节限时福利：每日前6单购买，都会赠予你10次“想要”！单日最高通过下单获赠60次想要。快来将商城好物们带回家吧～\n*不包含在内的下单行为：0.5美元免费领取 (作者本人单、活动奖励单)、定制商品购买。",
+        "newDesc": "<highlight color='#FF4D00'>\uD83E\uDDE8春节限时</highlight>-购买1件商品奖励<highlight>10次想要</highlight>"
+      },
+      "activeTip": "<highlight color='#FF4D00'>\uD83E\uDDE8春节限时: </highlight>",
+      "wantDetailTip": "春节期间：下单造好物商城现货，每单奖励10次想要； 下单后3小时内，奖励的想要次数冻结，此时想要次数无法投出；3小时后，奖励的想要次数解冻，可正常投出"
+    },
+    "referralParams": {
+      "singleReward": 3,
+      "dailyLimit": 3,
+      "title": "分享拉新，得想要",
+      "badge": "最高+9",
+      "tooltip": "“造好物”任意页面的分享都作数：只要是通过你分享的链接/二维码 注册成功的新用户，都会算作有效拉新并奖励「想要」。\n成功邀请一位新朋友加入我们，你的「想要」次数立刻+3！每天前3位朋友的邀请奖励稳稳到手，动动手指，一天就能多出9次「想要」机会，期待你邀请新朋友来造好物跟你一起玩～",
+      "desc": "邀请1名新用户得3次想要，当日最高得9次",
+      "newDesc": "邀请1名新用户得3次想要，当日最高得9次"
+    },
+    "purchaseParams": {
+      "singleReward": 5,
+      "title": "购买上架商品，得想要",
+      "badge": "最高+30",
+      "tooltip": "下单后3小时内，赠送的「想要」处于冻结状态；待3小时后解冻，届时可正常使用投出。\n若商品申请了退货，则对应奖励的想要次数，也会被撤销。\n每日前6单购买，都会赠予你5次“想要”！单日最高通过下单获赠30次想要。快来将商城好物们带回家吧～\n*不包含在内的下单行为：0.5美元免费领取 (作者本人单、活动奖励单)、定制商品购买。",
+      "desc": "购买1件商品得5次想要，当日最高得30次",
+      "newDesc": "购买1件商品得5次想要，当日最高得30次"
+    },
+    "wantDetailTip": "下单造好物商城现货，每单奖励5次想要；下单后3小时内，奖励的想要次数冻结，此时想要次数无法投出；3小时后，奖励的想要次数解冻，可正常投出",
+    "marketActivityConfig": [
+      "sallyActivity"
+    ],
+    "wantItAuthorBenefit": {
+      "benefitDesc": "本活动可享「本人上架商品，前 {quotaLimit} 件免费得(免邮费)；第 {quotaLimitPlus1} 件起，全部{discountText}得 」",
+      "progressDesc": "已使用 {quotaUsed} 件免费打样额度，剩余 {quotaRemaining} 件",
+      "quotaExhaustedProgressDesc": "免费打样额度已用完，后续上架商品享 {discountText} 优惠",
+      "tooltipContent": "<strong>普通作者权益：</strong>\n・\u2009同活动下前3件，免费得（0.5美元+免邮费）\n・\u2009同活动下第4件起，全部3折得（邮费9美元）\n\n<strong>好物设计师/艺术家权益：</strong>\n・\u2009同活动下前10件，免费得（0.5美元+免邮费）\n・\u2009同活动下第11件起，全部3折得（邮费9美元）\n\n好物设计师/签约艺术家还将获得：独特身份标签、商品开发特权、创建系列特权、创作工具权益、作品分发加权 等专属权益！"
+    },
+    "sallyActivity": {
+      "sallyActivityTooltip": "1. 北京时间 0 点刷新当日任务次数，单日最多可获 6 次抽奖机会。\n2. 购买联名商品后，抽奖次数将冻结 3 小时，解冻后可正常使用；若退货，对应次数将自动撤销。\n3. 非联名商品的订单，不计入购买任务。",
+      "sallyActivityTooltipIcon": "",
+      "postTagIcon": "https://static.zaohaowu.com/image-mcp-static/sally-logo_751c811d35d3f7f4d2d230cd4a739148.png",
+      "uniqueTopicId": "b70c7200c28d40d29b75211d40615bfd",
+      "hint": "请上传单人写实照片。建议选用正脸清晰、五官完整的照片，生成效果更佳～",
+      "excludeActions": [
+        "send-image",
+        "send-inpainting",
+        "send-video"
+      ],
+      "tasks": [
+        {
+          "type": "share",
+          "title": "分享活动",
+          "desc": "分享活动，获得抽奖机会",
+          "btnText": "去分享",
+          "numIcon": "https://static.zaohaowu.com/image-mcp-static/num-1_2f7d91cc514a7426a8f31113e72af455.png",
+          "btnBg": "https://static.zaohaowu.com/image-mcp-static/task-btn-orange.svg",
+          "isShare": true
+        },
+        {
+          "type": "publish",
+          "title": "发布作品",
+          "desc": "发布 1 个作品，获得 1 次抽奖机会",
+          "btnText": "去发布",
+          "numIcon": "https://static.zaohaowu.com/image-mcp-static/num-2_751afc68d7440ad7a8625d5575ccd9dc.png",
+          "btnBg": "https://static.zaohaowu.com/image-mcp-static/task-btn-blue.svg",
+          "isShare": false
+        },
+        {
+          "type": "purchase",
+          "title": "购买联名商品",
+          "desc": "购买 1 件联名商品，获得 1 次抽奖机会",
+          "btnText": "去购买",
+          "numIcon": "https://static.zaohaowu.com/image-mcp-static/num-3_202e4cdb872065e60c7010eb5772f1e1.png",
+          "btnBg": "https://static.zaohaowu.com/image-mcp-static/task-btn-pink.svg",
+          "isShare": false
+        }
+      ]
+    }
+  },
+  "pc": {
+    "logistics_time_color": "#121212",
+    "card_type": 1,
+    "cardDisplayCount": 3,
+    "test_1": 32,
+    "hell": true,
+    "feed_banner_list": [],
+    "spring_festival_2026_settings": {
+      "activity_interval": {
+        "start_time": "2026-02-12 00:00:00",
+        "end_time": "2026-02-23 23:59:59"
+      }
+    },
+    "artist_daidunbang_info": {
+      "user_id": "48cf1428fdc0467cb45e8a6100b2459e",
+      "product_id": "D202512160002"
+    },
+    "default_want_active_tab": "1",
+    "artist_illustration_list_daidunbang": [
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/pc/artist/daidunbang/illustration_1.png",
+        "height": 1102
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/pc/artist/daidunbang/illustration_2.png",
+        "height": 442
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/pc/artist/daidunbang/illustration_3.png",
+        "height": 810
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/pc/artist/daidunbang/illustration_4.png",
+        "height": 659
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/pc/artist/daidunbang/illustration_5.png",
+        "height": 265
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/pc/artist/daidunbang/illustration_6.png",
+        "height": 1716
+      }
+    ],
+    "marketActivityConfig": [
+      "sallyActivity"
+    ],
+    "sallyActivity": {
+      "postTagIcon": "https://static.zaohaowu.com/image-mcp-static/sally-logo_751c811d35d3f7f4d2d230cd4a739148.png",
+      "uniqueTopicId": "b70c7200c28d40d29b75211d40615bfd",
+      "excludeActions": [
+        "send-image",
+        "send-inpainting",
+        "send-video"
+      ]
+    }
+  },
+  "wx_program": {
+    "logistics_time_color": "#121212",
+    "card_type": 2,
+    "text-to-image-model-id": "a53e40f2203d4425835d58dc8ba9b2c0",
+    "image-to-image-model-id": "aeae0990ce194a1c91870a02f6a1ee4e",
+    "image-to-image-model-id-2": "893c37a3b0a04b16964fa7329441839e",
+    "text-to-image-topic-id": "c92b5e6989ab47cc99e39ba7db7f08ab",
+    "newbie_model_product_map": {
+      "a53e40f2203d4425835d58dc8ba9b2c0": "X202512150002",
+      "aeae0990ce194a1c91870a02f6a1ee4e": "X202512150003",
+      "893c37a3b0a04b16964fa7329441839e": "X202601300002"
+    },
+    "cardDisplayCount": 3,
+    "shareUserExpireDays": 90,
+    "test_1": 122,
+    "xpn_test": "xpntest",
+    "artist_daidunbang_info": {
+      "user_id": "48cf1428fdc0467cb45e8a6100b2459e",
+      "product_id": "D202512160002"
+    },
+    "default_want_active_tab": "1",
+    "artist_illustration_list_daidunbang": [
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_1.png",
+        "height": 644
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_2.png",
+        "height": 852
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_3.png",
+        "height": 1884
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_4.png",
+        "height": 846
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_5.png",
+        "height": 784
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_6.png",
+        "height": 504
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_7.png",
+        "height": 534
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_8.png",
+        "height": 976
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_9.png",
+        "height": 1168
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_10.png",
+        "height": 1170
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_11.png",
+        "height": 1354
+      }
+    ],
+    "feed_banner_list": [],
+    "spring_festival_2026_settings": {
+      "activity_interval": {
+        "start_time": "2026-02-12 00:00:00",
+        "end_time": "2026-02-23 23:59:59"
+      },
+      "referralParams": {
+        "singleReward": 3,
+        "dailyLimit": 3,
+        "title": "分享拉新-得想要",
+        "badge": "单日最高+9",
+        "tooltip": "“造好物”任意页面的分享都作数：只要是通过你分享的链接/二维码 注册成功的新用户，都会算作有效拉新并奖励「想要」。\n成功邀请一位新朋友加入我们，你的「想要」次数立刻+3！每天前3位朋友的邀请奖励稳稳到手，动动手指，一天就能多出9次「想要」机会，期待你邀请新朋友来造好物跟你一起玩～",
+        "newDesc": "每拉1名新用户奖励<highlight>3次想要</highlight>，单日上限3位"
+      },
+      "purchaseParams": {
+        "singleReward": 10,
+        "title": "购买上架商品得想要",
+        "badge": "最高+60/日",
+        "tooltip": "下单后3小时内，赠送的「想要」处于冻结状态；待3小时后解冻，届时可正常使用投出。\n若商品申请了退货，则对应奖励的想要次数，也会被撤销。\n春节限时福利：每日前6单购买，都会赠予你10次“想要”！单日最高通过下单获赠60次想要。快来将商城好物们带回家吧～\n*不包含在内的下单行为：0.5美元免费领取 (作者本人单、活动奖励单)、定制商品购买。",
+        "newDesc": "<highlight color='#FF4D00'>\uD83E\uDDE8春节限时</highlight>-购买1件商品奖励<highlight>10次想要</highlight>"
+      },
+      "activeTip": "<highlight color='#FF4D00'>\uD83E\uDDE8春节限时: </highlight>",
+      "wantDetailTip": "春节期间：下单造好物商城现货，每单奖励10次想要； 下单后3小时内，奖励的想要次数冻结，此时想要次数无法投出；3小时后，奖励的想要次数解冻，可正常投出"
+    },
+    "referralParams": {
+      "singleReward": 3,
+      "dailyLimit": 3,
+      "title": "分享拉新，得想要",
+      "badge": "最高+9",
+      "tooltip": "“造好物”任意页面的分享都作数：只要是通过你分享的链接/二维码 注册成功的新用户，都会算作有效拉新并奖励「想要」。\n成功邀请一位新朋友加入我们，你的「想要」次数立刻+3！每天前3位朋友的邀请奖励稳稳到手，动动手指，一天就能多出9次「想要」机会，期待你邀请新朋友来造好物跟你一起玩～",
+      "desc": "邀请1名新用户得3次想要，当日最高得9次",
+      "newDesc": "邀请1名新用户得3次想要，当日最高得9次"
+    },
+    "purchaseParams": {
+      "singleReward": 5,
+      "title": "购买上架商品，得想要",
+      "badge": "最高+30",
+      "tooltip": "下单后3小时内，赠送的「想要」处于冻结状态；待3小时后解冻，届时可正常使用投出。\n若商品申请了退货，则对应奖励的想要次数，也会被撤销。\n每日前6单购买，都会赠予你5次“想要”！单日最高通过下单获赠30次想要。快来将商城好物们带回家吧～\n*不包含在内的下单行为：0.5美元免费领取 (作者本人单、活动奖励单)、定制商品购买。",
+      "desc": "购买1件商品得5次想要，当日最高得30次",
+      "newDesc": "购买1件商品得5次想要，当日最高得30次"
+    },
+    "wantDetailTip": "下单造好物商城现货，每单奖励5次想要；下单后3小时内，奖励的想要次数冻结，此时想要次数无法投出；3小时后，奖励的想要次数解冻，可正常投出",
+    "marketActivityConfig": [
+      "sallyActivity"
+    ],
+    "sallyActivity": {
+      "sallyActivityTooltip": "1. 北京时间 0 点刷新当日任务次数，单日最多可获 6 次抽奖机会。\n2. 购买联名商品后，抽奖次数将冻结 3 小时，解冻后可正常使用；若退货，对应次数将自动撤销。\n3. 非联名商品的订单，不计入购买任务。",
+      "sallyActivityTooltipIcon": "",
+      "postTagIcon": "https://static.zaohaowu.com/image-mcp-static/sally-logo_751c811d35d3f7f4d2d230cd4a739148.png",
+      "uniqueTopicId": "b70c7200c28d40d29b75211d40615bfd",
+      "hint": "请上传单人写实照片。建议选用正脸清晰、五官完整的照片，生成效果更佳～",
+      "excludeActions": [
+        "send-image",
+        "send-video"
+      ],
+      "tasks": [
+        {
+          "type": "share",
+          "title": "分享活动",
+          "desc": "分享活动，获得抽奖机会",
+          "btnText": "去分享",
+          "numIcon": "https://static.zaohaowu.com/image-mcp-static/num-1_2f7d91cc514a7426a8f31113e72af455.png",
+          "btnBg": "https://static.zaohaowu.com/image-mcp-static/task-btn-orange.svg",
+          "isShare": true
+        },
+        {
+          "type": "publish",
+          "title": "发布作品",
+          "desc": "发布 1 个作品，获得 1 次抽奖机会",
+          "btnText": "去发布",
+          "numIcon": "https://static.zaohaowu.com/image-mcp-static/num-2_751afc68d7440ad7a8625d5575ccd9dc.png",
+          "btnBg": "https://static.zaohaowu.com/image-mcp-static/task-btn-blue.svg",
+          "isShare": false
+        },
+        {
+          "type": "purchase",
+          "title": "购买联名商品",
+          "desc": "购买 1 件联名商品，获得 1 次抽奖机会",
+          "btnText": "去购买",
+          "numIcon": "https://static.zaohaowu.com/image-mcp-static/num-3_202e4cdb872065e60c7010eb5772f1e1.png",
+          "btnBg": "https://static.zaohaowu.com/image-mcp-static/task-btn-pink.svg",
+          "isShare": false
+        }
+      ]
+    }
+  },
+  "ios": {},
+  "android": {
+    "device_performance": {
+      "version": 1,
+      "levels": {
+        "low": "低端",
+        "mid": "中端",
+        "high": "高端"
+      },
+      "alias_map": {
+        "小米": "xiaomi",
+        "红米": "redmi",
+        "华为": "huawei",
+        "荣耀": "honor",
+        "真我": "realme",
+        "一加": "oneplus",
+        "魅族": "meizu",
+        "三星": "samsung"
+      },
+      "prefix_map": {
+        "high": [
+          "xiaomi 12",
+          "xiaomi 13",
+          "xiaomi 14",
+          "xiaomi 15",
+          "redmi k60",
+          "redmi k70",
+          "redmi k80",
+          "redmi k90",
+          "huawei mate",
+          "huawei p",
+          "huawei nova11",
+          "huawei nova12",
+          "huawei nova13",
+          "honor magic",
+          "honor 90",
+          "honor 100",
+          "honor 200",
+          "oppo find",
+          "oneplus 11",
+          "oneplus 12",
+          "oneplus 13",
+          "realme gt5",
+          "realme gt6",
+          "realme gt7",
+          "vivo x90",
+          "vivo x100",
+          "vivo x200",
+          "iqoo 11",
+          "iqoo 12",
+          "iqoo 13"
+        ],
+        "mid": [
+          "xiaomi civi",
+          "redmi note 12",
+          "redmi note 13",
+          "redmi note 14",
+          "huawei nova",
+          "honor x40",
+          "honor x50",
+          "honor x60",
+          "honor 70",
+          "honor 80",
+          "oppo reno 8",
+          "oppo reno 9",
+          "oppo reno 10",
+          "oppo reno 11",
+          "realme v",
+          "realme q",
+          "vivo s15",
+          "vivo s16",
+          "vivo s17",
+          "vivo s18",
+          "vivo s19",
+          "iqoo z"
+        ],
+        "low": [
+          "redmi a",
+          "redmi 9",
+          "redmi 10",
+          "redmi 11",
+          "huawei changxiang",
+          "honor changwan",
+          "oppo a",
+          "oppo k",
+          "vivo y",
+          "vivo u",
+          "iqoo u",
+          "samsung a",
+          "realme c",
+          "meizu"
+        ]
+      },
+      "fallback_level": "mid",
+      "scenes": {
+        "detail_page_transition": {
+          "high": "slide_from_right",
+          "mid": "none",
+          "low": "none"
+        }
+      }
+    }
+  }
+}

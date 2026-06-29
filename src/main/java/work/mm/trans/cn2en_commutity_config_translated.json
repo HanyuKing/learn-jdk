@@ -1,0 +1,494 @@
+{
+  "common": {
+    "hideCopyInfo": true,
+    "logistics_time_color": "#121212",
+    "card_type": 2,
+    "text-to-image-model-id": "a53e40f2203d4425835d58dc8ba9b2c0",
+    "image-to-image-model-id": "aeae0990ce194a1c91870a02f6a1ee4e",
+    "image-to-image-model-id-2": "893c37a3b0a04b16964fa7329441839e",
+    "text-to-image-topic-id": "c92b5e6989ab47cc99e39ba7db7f08ab",
+    "newbie_model_product_map": {
+      "a53e40f2203d4425835d58dc8ba9b2c0": "X202512150002",
+      "aeae0990ce194a1c91870a02f6a1ee4e": "X202512150003",
+      "893c37a3b0a04b16964fa7329441839e": "X202601300002"
+    },
+    "officialMessageTemplates": {
+      "reachThreshold": "\uD83C\uDF89 Congratulations! More than {conditionNum} friends want to buy your work, and it has been successfully listed! As an exclusive creator benefit, you can purchase your own work with your special offer. Head to the shop and place your order now!",
+      "wantProductLaunch": "The product you voted Want for is now listed! Congratulations, you received",
+      "cannotProduceAuthor": "We are temporarily unable to produce your designed product. If you have any questions, you can go to the personal page of the mini program AI Zaohaowu, tap the customer service entry at the top, and ask for details and next steps. Thank you for your understanding and support!",
+      "cannotProduceUser": "Our creation magic cannot turn the work you want into a physical product. But don't worry, we have refunded your Want chances. We will keep working hard and hope to bring you surprises in the near future!",
+      "productionComplete": "Congratulations, the work you wanted has now been produced by Zaohaowu,",
+      "postDeleted": "We are sorry, the work you previously wanted was just deleted by its creator. But don't worry, we have fully refunded your Want chances! We look forward to you discovering more works you like!",
+      "prizeProduct": "Congratulations! You won a prize in the {topicTitle} event (you can view the full winners announcement on the event page later). Zaohaowu will turn this work into a physical product for you for free! Head to the shop and place your order now to receive it!",
+      "prizeContactCs": "Congratulations! You won a prize in the {topicTitle} event. Please tap to contact official customer service to claim your reward!",
+      "prizeCannotProduce": "Congratulations! Your work won a prize in the {topicTitle} event \uD83C\uDF89 (the full list is available on the event page). Your creativity has been highly recognized by users and the official team. Thank you for your wonderful creation! Unfortunately, after a process evaluation, we are temporarily unable to put this work into production. We sincerely apologize and have prepared an exclusive compensation plan for you. Please tap this message to contact official customer service for details and next steps. Thank you for your understanding and support!"
+    },
+    "cardDisplayCount": 3,
+    "shareUserExpireDays": 90,
+    "group_banners": [
+      {
+        "banner_id": "1",
+        "banner_image_url": "https://static.zaohaowu.com/fe-static/app/detail/want_banner5.png",
+        "link_url": "/wantPlayHow"
+      }
+    ],
+    "test_1": 122,
+    "xpn_test": "xpntest",
+    "artist_daidunbang_info": {
+      "user_id": "48cf1428fdc0467cb45e8a6100b2459e",
+      "product_id": "D202512160002"
+    },
+    "default_want_active_tab": "1",
+    "artist_illustration_list_daidunbang": [
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_1.png",
+        "height": 644
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_2.png",
+        "height": 852
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_3.png",
+        "height": 1884
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_4.png",
+        "height": 846
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_5.png",
+        "height": 784
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_6.png",
+        "height": 504
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_7.png",
+        "height": 534
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_8.png",
+        "height": 976
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_9.png",
+        "height": 1168
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_10.png",
+        "height": 1170
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_11.png",
+        "height": 1354
+      }
+    ],
+    "feed_banner_list": [],
+    "spring_festival_2026_settings": {
+      "activity_interval": {
+        "start_time": "2026-02-12 00:00:00",
+        "end_time": "2026-02-23 23:59:59"
+      },
+      "referralParams": {
+        "singleReward": 3,
+        "dailyLimit": 3,
+        "title": "Share and Invite New Users - Get Wants",
+        "badge": "Up to +9 per day",
+        "tooltip": "Shares from any Zaohaowu page count: any new user who successfully registers through your shared link/QR code will count as a valid invitation and earn you Wants.\nSuccessfully invite one new friend to join us and your Want chances will immediately +3! Rewards for the first 3 friends you invite each day are guaranteed. With just a few taps, you can get 9 more Want chances in one day. We look forward to you inviting new friends to Zaohaowu to play together~",
+        "newDesc": "Earn <highlight>3 Want chances</highlight> for each new user invited, up to 3 users per day"
+      },
+      "purchaseParams": {
+        "singleReward": 10,
+        "title": "Buy Listed Products to Get Wants",
+        "badge": "Up to +60/day",
+        "tooltip": "Within 3 hours after placing an order, the gifted Want chances are frozen; after 3 hours they will be unfrozen and can be used normally.\nIf the product is returned, the corresponding rewarded Want chances will also be revoked.\nSpring Festival limited-time benefit: for each of your first 6 purchases each day, you will receive 10 Wants! You can get up to 60 Wants per day from orders. Come bring home great products from the shop~\n*Excluded order types: $0.50 claim orders (creator's own orders, event reward orders) and custom product purchases.",
+        "newDesc": "<highlight color='#FF4D00'>\uD83E\uDDE8Spring Festival limited-time</highlight> - Buy 1 product to get <highlight>10 Want chances</highlight>"
+      },
+      "activeTip": "<highlight color='#FF4D00'>\uD83E\uDDE8Spring Festival limited-time: </highlight>",
+      "wantDetailTip": "During Spring Festival: order in-stock items from the Zaohaowu shop to receive 10 Want chances per order; within 3 hours after placing an order, rewarded Want chances are frozen and cannot be used; after 3 hours, rewarded Want chances are unfrozen and can be used normally"
+    },
+    "referralParams": {
+      "singleReward": 3,
+      "dailyLimit": 3,
+      "title": "Share and Invite New Users, Get Wants",
+      "badge": "Up to +9",
+      "tooltip": "Shares from any Zaohaowu page count: any new user who successfully registers through your shared link/QR code will count as a valid invitation and earn you Wants.\nSuccessfully invite one new friend to join us and your Want chances will immediately +3! Rewards for the first 3 friends you invite each day are guaranteed. With just a few taps, you can get 9 more Want chances in one day. We look forward to you inviting new friends to Zaohaowu to play together~",
+      "desc": "Invite 1 new user to get 3 Want chances, up to 9 per day",
+      "newDesc": "Invite 1 new user to get 3 Want chances, up to 9 per day"
+    },
+    "purchaseParams": {
+      "singleReward": 5,
+      "title": "Buy Listed Products, Get Wants",
+      "badge": "Up to +30",
+      "tooltip": "Within 3 hours after placing an order, the gifted Want chances are frozen; after 3 hours they will be unfrozen and can be used normally.\nIf the product is returned, the corresponding rewarded Want chances will also be revoked.\nFor each of your first 6 purchases each day, you will receive 5 Wants! You can get up to 30 Wants per day from orders. Come bring home great products from the shop~\n*Excluded order types: $0.50 claim orders (creator's own orders, event reward orders) and custom product purchases.",
+      "desc": "Buy 1 product to get 5 Want chances, up to 30 per day",
+      "newDesc": "Buy 1 product to get 5 Want chances, up to 30 per day"
+    },
+    "wantDetailTip": "Order in-stock items from the Zaohaowu shop to receive 5 Want chances per order; within 3 hours after placing an order, rewarded Want chances are frozen and cannot be used; after 3 hours, rewarded Want chances are unfrozen and can be used normally",
+    "marketActivityConfig": [
+      "sallyActivity"
+    ],
+    "wantItAuthorBenefit": {
+      "benefitDesc": "For this event, you can enjoy: for your own listed products, the first {quotaLimit} items are free (free shipping); starting from item {quotaLimitPlus1}, all items are available at {discountText}.",
+      "progressDesc": "{quotaUsed} free sample quota(s) used, {quotaRemaining} remaining",
+      "quotaExhaustedProgressDesc": "Free sample quota has been used up. Subsequent listed products enjoy a {discountText} discount",
+      "tooltipContent": "<strong>Regular creator benefits:</strong>\n\u30FB\u2009The first 3 items under the same event are available for $0.50 (free shipping)\n\u30FB\u2009Starting from the 4th item under the same event, all items are available at 30% of the original price ($9 shipping)\n\n<strong>Zaohaowu Designer/Artist benefits:</strong>\n\u30FB\u2009The first 10 items under the same event are available for $0.50 (free shipping)\n\u30FB\u2009Starting from the 11th item under the same event, all items are available at 30% of the original price ($9 shipping)\n\nZaohaowu Designers/signed artists will also receive exclusive benefits such as a unique identity label, product development privileges, collection creation privileges, creative tool benefits, and weighted work distribution!"
+    },
+    "sallyActivity": {
+      "sallyActivityTooltip": "1. Tasks refresh at 00:00 Beijing time. You can earn up to 6 draw chances per day.\n2. After purchasing a co-branded product, the draw chances will be frozen for 3 hours and can be used normally after they are unfrozen; if the order is returned, the corresponding chances will be automatically revoked.\n3. Orders for non-co-branded products do not count toward the purchase task.",
+      "sallyActivityTooltipIcon": "",
+      "postTagIcon": "https://static.zaohaowu.com/image-mcp-static/sally-logo_751c811d35d3f7f4d2d230cd4a739148.png",
+      "uniqueTopicId": "b70c7200c28d40d29b75211d40615bfd",
+      "hint": "Please upload a solo realistic photo. We recommend choosing a clear front-facing photo with complete facial features for better generated results~",
+      "excludeActions": [
+        "send-image",
+        "send-inpainting",
+        "send-video"
+      ],
+      "tasks": [
+        {
+          "type": "share",
+          "title": "Share Event",
+          "desc": "Share the event to get a draw chance",
+          "btnText": "Share",
+          "numIcon": "https://static.zaohaowu.com/image-mcp-static/num-1_2f7d91cc514a7426a8f31113e72af455.png",
+          "btnBg": "https://static.zaohaowu.com/image-mcp-static/task-btn-orange.svg",
+          "isShare": true
+        },
+        {
+          "type": "publish",
+          "title": "Publish Work",
+          "desc": "Publish 1 work to get 1 draw chance",
+          "btnText": "Publish",
+          "numIcon": "https://static.zaohaowu.com/image-mcp-static/num-2_751afc68d7440ad7a8625d5575ccd9dc.png",
+          "btnBg": "https://static.zaohaowu.com/image-mcp-static/task-btn-blue.svg",
+          "isShare": false
+        },
+        {
+          "type": "purchase",
+          "title": "Buy Co-Branded Product",
+          "desc": "Buy 1 co-branded product to get 1 draw chance",
+          "btnText": "Buy",
+          "numIcon": "https://static.zaohaowu.com/image-mcp-static/num-3_202e4cdb872065e60c7010eb5772f1e1.png",
+          "btnBg": "https://static.zaohaowu.com/image-mcp-static/task-btn-pink.svg",
+          "isShare": false
+        }
+      ]
+    }
+  },
+  "pc": {
+    "logistics_time_color": "#121212",
+    "card_type": 1,
+    "cardDisplayCount": 3,
+    "test_1": 32,
+    "hell": true,
+    "feed_banner_list": [],
+    "spring_festival_2026_settings": {
+      "activity_interval": {
+        "start_time": "2026-02-12 00:00:00",
+        "end_time": "2026-02-23 23:59:59"
+      }
+    },
+    "artist_daidunbang_info": {
+      "user_id": "48cf1428fdc0467cb45e8a6100b2459e",
+      "product_id": "D202512160002"
+    },
+    "default_want_active_tab": "1",
+    "artist_illustration_list_daidunbang": [
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/pc/artist/daidunbang/illustration_1.png",
+        "height": 1102
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/pc/artist/daidunbang/illustration_2.png",
+        "height": 442
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/pc/artist/daidunbang/illustration_3.png",
+        "height": 810
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/pc/artist/daidunbang/illustration_4.png",
+        "height": 659
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/pc/artist/daidunbang/illustration_5.png",
+        "height": 265
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/pc/artist/daidunbang/illustration_6.png",
+        "height": 1716
+      }
+    ],
+    "marketActivityConfig": [
+      "sallyActivity"
+    ],
+    "sallyActivity": {
+      "postTagIcon": "https://static.zaohaowu.com/image-mcp-static/sally-logo_751c811d35d3f7f4d2d230cd4a739148.png",
+      "uniqueTopicId": "b70c7200c28d40d29b75211d40615bfd",
+      "excludeActions": [
+        "send-image",
+        "send-inpainting",
+        "send-video"
+      ]
+    }
+  },
+  "wx_program": {
+    "logistics_time_color": "#121212",
+    "card_type": 2,
+    "text-to-image-model-id": "a53e40f2203d4425835d58dc8ba9b2c0",
+    "image-to-image-model-id": "aeae0990ce194a1c91870a02f6a1ee4e",
+    "image-to-image-model-id-2": "893c37a3b0a04b16964fa7329441839e",
+    "text-to-image-topic-id": "c92b5e6989ab47cc99e39ba7db7f08ab",
+    "newbie_model_product_map": {
+      "a53e40f2203d4425835d58dc8ba9b2c0": "X202512150002",
+      "aeae0990ce194a1c91870a02f6a1ee4e": "X202512150003",
+      "893c37a3b0a04b16964fa7329441839e": "X202601300002"
+    },
+    "cardDisplayCount": 3,
+    "shareUserExpireDays": 90,
+    "test_1": 122,
+    "xpn_test": "xpntest",
+    "artist_daidunbang_info": {
+      "user_id": "48cf1428fdc0467cb45e8a6100b2459e",
+      "product_id": "D202512160002"
+    },
+    "default_want_active_tab": "1",
+    "artist_illustration_list_daidunbang": [
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_1.png",
+        "height": 644
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_2.png",
+        "height": 852
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_3.png",
+        "height": 1884
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_4.png",
+        "height": 846
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_5.png",
+        "height": 784
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_6.png",
+        "height": 504
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_7.png",
+        "height": 534
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_8.png",
+        "height": 976
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_9.png",
+        "height": 1168
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_10.png",
+        "height": 1170
+      },
+      {
+        "image_url": "https://static.zaohaowu.com/static/community/mp/artist/daidunbang/illustration_11.png",
+        "height": 1354
+      }
+    ],
+    "feed_banner_list": [],
+    "spring_festival_2026_settings": {
+      "activity_interval": {
+        "start_time": "2026-02-12 00:00:00",
+        "end_time": "2026-02-23 23:59:59"
+      },
+      "referralParams": {
+        "singleReward": 3,
+        "dailyLimit": 3,
+        "title": "Share and Invite New Users - Get Wants",
+        "badge": "Up to +9 per day",
+        "tooltip": "Shares from any Zaohaowu page count: any new user who successfully registers through your shared link/QR code will count as a valid invitation and earn you Wants.\nSuccessfully invite one new friend to join us and your Want chances will immediately +3! Rewards for the first 3 friends you invite each day are guaranteed. With just a few taps, you can get 9 more Want chances in one day. We look forward to you inviting new friends to Zaohaowu to play together~",
+        "newDesc": "Earn <highlight>3 Want chances</highlight> for each new user invited, up to 3 users per day"
+      },
+      "purchaseParams": {
+        "singleReward": 10,
+        "title": "Buy Listed Products to Get Wants",
+        "badge": "Up to +60/day",
+        "tooltip": "Within 3 hours after placing an order, the gifted Want chances are frozen; after 3 hours they will be unfrozen and can be used normally.\nIf the product is returned, the corresponding rewarded Want chances will also be revoked.\nSpring Festival limited-time benefit: for each of your first 6 purchases each day, you will receive 10 Wants! You can get up to 60 Wants per day from orders. Come bring home great products from the shop~\n*Excluded order types: $0.50 claim orders (creator's own orders, event reward orders) and custom product purchases.",
+        "newDesc": "<highlight color='#FF4D00'>\uD83E\uDDE8Spring Festival limited-time</highlight> - Buy 1 product to get <highlight>10 Want chances</highlight>"
+      },
+      "activeTip": "<highlight color='#FF4D00'>\uD83E\uDDE8Spring Festival limited-time: </highlight>",
+      "wantDetailTip": "During Spring Festival: order in-stock items from the Zaohaowu shop to receive 10 Want chances per order; within 3 hours after placing an order, rewarded Want chances are frozen and cannot be used; after 3 hours, rewarded Want chances are unfrozen and can be used normally"
+    },
+    "referralParams": {
+      "singleReward": 3,
+      "dailyLimit": 3,
+      "title": "Share and Invite New Users, Get Wants",
+      "badge": "Up to +9",
+      "tooltip": "Shares from any Zaohaowu page count: any new user who successfully registers through your shared link/QR code will count as a valid invitation and earn you Wants.\nSuccessfully invite one new friend to join us and your Want chances will immediately +3! Rewards for the first 3 friends you invite each day are guaranteed. With just a few taps, you can get 9 more Want chances in one day. We look forward to you inviting new friends to Zaohaowu to play together~",
+      "desc": "Invite 1 new user to get 3 Want chances, up to 9 per day",
+      "newDesc": "Invite 1 new user to get 3 Want chances, up to 9 per day"
+    },
+    "purchaseParams": {
+      "singleReward": 5,
+      "title": "Buy Listed Products, Get Wants",
+      "badge": "Up to +30",
+      "tooltip": "Within 3 hours after placing an order, the gifted Want chances are frozen; after 3 hours they will be unfrozen and can be used normally.\nIf the product is returned, the corresponding rewarded Want chances will also be revoked.\nFor each of your first 6 purchases each day, you will receive 5 Wants! You can get up to 30 Wants per day from orders. Come bring home great products from the shop~\n*Excluded order types: $0.50 claim orders (creator's own orders, event reward orders) and custom product purchases.",
+      "desc": "Buy 1 product to get 5 Want chances, up to 30 per day",
+      "newDesc": "Buy 1 product to get 5 Want chances, up to 30 per day"
+    },
+    "wantDetailTip": "Order in-stock items from the Zaohaowu shop to receive 5 Want chances per order; within 3 hours after placing an order, rewarded Want chances are frozen and cannot be used; after 3 hours, rewarded Want chances are unfrozen and can be used normally",
+    "marketActivityConfig": [
+      "sallyActivity"
+    ],
+    "sallyActivity": {
+      "sallyActivityTooltip": "1. Tasks refresh at 00:00 Beijing time. You can earn up to 6 draw chances per day.\n2. After purchasing a co-branded product, the draw chances will be frozen for 3 hours and can be used normally after they are unfrozen; if the order is returned, the corresponding chances will be automatically revoked.\n3. Orders for non-co-branded products do not count toward the purchase task.",
+      "sallyActivityTooltipIcon": "",
+      "postTagIcon": "https://static.zaohaowu.com/image-mcp-static/sally-logo_751c811d35d3f7f4d2d230cd4a739148.png",
+      "uniqueTopicId": "b70c7200c28d40d29b75211d40615bfd",
+      "hint": "Please upload a solo realistic photo. We recommend choosing a clear front-facing photo with complete facial features for better generated results~",
+      "excludeActions": [
+        "send-image",
+        "send-video"
+      ],
+      "tasks": [
+        {
+          "type": "share",
+          "title": "Share Event",
+          "desc": "Share the event to get a draw chance",
+          "btnText": "Share",
+          "numIcon": "https://static.zaohaowu.com/image-mcp-static/num-1_2f7d91cc514a7426a8f31113e72af455.png",
+          "btnBg": "https://static.zaohaowu.com/image-mcp-static/task-btn-orange.svg",
+          "isShare": true
+        },
+        {
+          "type": "publish",
+          "title": "Publish Work",
+          "desc": "Publish 1 work to get 1 draw chance",
+          "btnText": "Publish",
+          "numIcon": "https://static.zaohaowu.com/image-mcp-static/num-2_751afc68d7440ad7a8625d5575ccd9dc.png",
+          "btnBg": "https://static.zaohaowu.com/image-mcp-static/task-btn-blue.svg",
+          "isShare": false
+        },
+        {
+          "type": "purchase",
+          "title": "Buy Co-Branded Product",
+          "desc": "Buy 1 co-branded product to get 1 draw chance",
+          "btnText": "Buy",
+          "numIcon": "https://static.zaohaowu.com/image-mcp-static/num-3_202e4cdb872065e60c7010eb5772f1e1.png",
+          "btnBg": "https://static.zaohaowu.com/image-mcp-static/task-btn-pink.svg",
+          "isShare": false
+        }
+      ]
+    }
+  },
+  "ios": {},
+  "android": {
+    "device_performance": {
+      "version": 1,
+      "levels": {
+        "low": "Low-end",
+        "mid": "Mid-range",
+        "high": "High-end"
+      },
+      "alias_map": {
+        "\u5C0F\u7C73": "xiaomi",
+        "\u7EA2\u7C73": "redmi",
+        "\u534E\u4E3A": "huawei",
+        "\u8363\u8000": "honor",
+        "\u771F\u6211": "realme",
+        "\u4E00\u52A0": "oneplus",
+        "\u9B45\u65CF": "meizu",
+        "\u4E09\u661F": "samsung"
+      },
+      "prefix_map": {
+        "high": [
+          "xiaomi 12",
+          "xiaomi 13",
+          "xiaomi 14",
+          "xiaomi 15",
+          "redmi k60",
+          "redmi k70",
+          "redmi k80",
+          "redmi k90",
+          "huawei mate",
+          "huawei p",
+          "huawei nova11",
+          "huawei nova12",
+          "huawei nova13",
+          "honor magic",
+          "honor 90",
+          "honor 100",
+          "honor 200",
+          "oppo find",
+          "oneplus 11",
+          "oneplus 12",
+          "oneplus 13",
+          "realme gt5",
+          "realme gt6",
+          "realme gt7",
+          "vivo x90",
+          "vivo x100",
+          "vivo x200",
+          "iqoo 11",
+          "iqoo 12",
+          "iqoo 13"
+        ],
+        "mid": [
+          "xiaomi civi",
+          "redmi note 12",
+          "redmi note 13",
+          "redmi note 14",
+          "huawei nova",
+          "honor x40",
+          "honor x50",
+          "honor x60",
+          "honor 70",
+          "honor 80",
+          "oppo reno 8",
+          "oppo reno 9",
+          "oppo reno 10",
+          "oppo reno 11",
+          "realme v",
+          "realme q",
+          "vivo s15",
+          "vivo s16",
+          "vivo s17",
+          "vivo s18",
+          "vivo s19",
+          "iqoo z"
+        ],
+        "low": [
+          "redmi a",
+          "redmi 9",
+          "redmi 10",
+          "redmi 11",
+          "huawei changxiang",
+          "honor changwan",
+          "oppo a",
+          "oppo k",
+          "vivo y",
+          "vivo u",
+          "iqoo u",
+          "samsung a",
+          "realme c",
+          "meizu"
+        ]
+      },
+      "fallback_level": "mid",
+      "scenes": {
+        "detail_page_transition": {
+          "high": "slide_from_right",
+          "mid": "none",
+          "low": "none"
+        }
+      }
+    }
+  }
+}
