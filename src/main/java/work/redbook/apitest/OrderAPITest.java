@@ -22,6 +22,7 @@ import com.xiaohongshu.fls.opensdk.entity.order.Requset.GetOrderReceiverInfoRequ
 import com.xiaohongshu.fls.opensdk.entity.order.Response.GetOrderDetailResponse;
 import com.xiaohongshu.fls.opensdk.entity.order.Response.GetOrderListResponse;
 import com.xiaohongshu.fls.opensdk.entity.order.Response.GetOrderReceiverInfoResponse;
+import com.xiaohongshu.fls.opensdk.entity.order.Response.OrderSimpleDetail;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,6 +31,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author hanyu.wang
@@ -37,11 +51,15 @@ import java.net.URL;
  * @date 2025/12/25
  */
 public class OrderAPITest {
+    private static final DateTimeFormatter TIME_FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final ZoneId TIME_ZONE = ZoneId.of("Asia/Shanghai");
+
     private String appId = "ae807376fea64bbe9335";
     private String version = "2.0";
     private String appSecre = "7f86dcecb3237a5502ae51eff5a232bb";
     String code = "code-d92e34bac40f46818092a0d13e28be72-0dc69dfa92844c2897f08f95d9e00d06";
-    private String accessToken = "token-68645d3e35a045bbaaf0cdf4d8a2b1cf-5cf61e19e2ce46a7a2023c77a1938529";
+    private String accessToken = "token-1c2f43be2be14bffb5ad8f87577f6b7c-f947dd354fcd41c0abf7b46230936d2b";
 
     private MaterialClient materialClient = new MaterialClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
 
@@ -164,7 +182,7 @@ public class OrderAPITest {
         OrderClient orderClient = new OrderClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
 
         GetOrderDetailRequest request = new GetOrderDetailRequest();
-        request.setOrderId("P790600755242471711");
+        request.setOrderId("P798063388702233473");
 
         BaseResponse<GetOrderDetailResponse> baseResponse = orderClient.execute(request, this.accessToken);
 
@@ -173,19 +191,155 @@ public class OrderAPITest {
 
     @Test
     public void testGetOrderList() throws IOException {
+        String startTime = "2026-07-16 19:00:00";
+        String endTime = "2026-07-21 11:45:00";
+        Path outputFile = Paths.get(
+                System.getProperty("user.dir"),
+                "src/main/java/work/redbook/apitest/order_status.csv"
+        );
+
+        exportOrderStatusCsv(startTime, endTime, outputFile);
+    }
+
+    /**
+     * 按创建时间查询订单，并将订单号、订单状态导出为 CSV。
+     * 接口限制单次查询跨度不超过 24 小时，因此较大的时间范围会自动拆分。
+     */
+    private void exportOrderStatusCsv(String startTimeText,
+                                      String endTimeText,
+                                      Path outputFile) throws IOException {
+        long startTime = parseTime(startTimeText);
+        long endTime = parseTime(endTimeText);
+        if (startTime < 0 || endTime < startTime) {
+            throw new IllegalArgumentException("时间范围不合法: " + startTimeText + " - " + endTimeText);
+        }
+
         OrderClient orderClient = new OrderClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
+        Map<String, OrderSimpleDetail> orderMap = new LinkedHashMap<>();
+        long queryStartTime = startTime;
+        final long maxTimeRangeSeconds = 24 * 60 * 60L;
 
-        GetOrderListRequest sdkRequest = new GetOrderListRequest();
-        sdkRequest.setTimeType(1);
-        sdkRequest.setStartTime(1775048400L);
-        sdkRequest.setEndTime(1775052000L);
-        sdkRequest.setPageNo(1);
-        sdkRequest.setPageSize(10);
-        sdkRequest.setOrderStatus(4);
+        while (queryStartTime <= endTime) {
+            long queryEndTime = Math.min(queryStartTime + maxTimeRangeSeconds, endTime);
 
-        BaseResponse<GetOrderListResponse> baseResponse = orderClient.execute(sdkRequest, this.accessToken);
+            GetOrderListRequest sdkRequest = new GetOrderListRequest();
+            sdkRequest.setTimeType(1);
+            sdkRequest.setStartTime(queryStartTime);
+            sdkRequest.setEndTime(queryEndTime);
+            sdkRequest.setPageSize(100);
 
-        System.out.println(JSON.toJSONString(baseResponse));
+            GetOrderListResponse firstPage = getOrderListPage(orderClient, sdkRequest, 1);
+            int maxPageNo = Math.max(firstPage.getMaxPageNo(), 1);
+            if (maxPageNo > 100) {
+                throw new IOException("时间段 " + queryStartTime + " - " + queryEndTime
+                        + " 共 " + maxPageNo + " 页，超过接口 100 页限制，请缩小查询时间范围");
+            }
+
+            for (int pageNo = maxPageNo; pageNo >= 2; pageNo--) {
+                GetOrderListResponse response = getOrderListPage(orderClient, sdkRequest, pageNo);
+                collectOrders(response.getOrderList(), orderMap);
+                System.out.println("已拉取第 " + pageNo + "/" + maxPageNo
+                        + " 页，累计订单数: " + orderMap.size());
+            }
+            collectOrders(firstPage.getOrderList(), orderMap);
+            System.out.println("已拉取第 1/" + maxPageNo
+                    + " 页，累计订单数: " + orderMap.size());
+
+            if (queryEndTime == endTime) {
+                break;
+            }
+            queryStartTime = queryEndTime + 1;
+        }
+
+        List<String> csvLines = new ArrayList<>(orderMap.size() + 1);
+        csvLines.add("\uFEFF订单号,订单状态,创建时间,支付时间,更新时间,发货时间,取消时间,完成时间,最晚承诺发货时间");
+        for (OrderSimpleDetail order : orderMap.values()) {
+            csvLines.add(order.getOrderId()
+                    + "," + getOrderStatusName(order.getOrderStatus())
+                    + "," + formatTime(order.getCreatedTime())
+                    + "," + formatTime(order.getPaidTime())
+                    + "," + formatTime(order.getUpdateTime())
+                    + "," + formatTime(order.getDeliveryTime())
+                    + "," + formatTime(order.getCancelTime())
+                    + "," + formatTime(order.getFinishTime())
+                    + "," + formatTime(order.getPromiseLastDeliveryTime()));
+        }
+        Path parent = outputFile.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+        Files.write(outputFile, csvLines, StandardCharsets.UTF_8);
+        System.out.println(orderMap.size() + " 条订单记录已写入: " + outputFile.toAbsolutePath());
+    }
+
+    private long parseTime(String timeText) {
+        try {
+            return LocalDateTime.parse(timeText, TIME_FORMATTER)
+                    .atZone(TIME_ZONE)
+                    .toEpochSecond();
+        } catch (DateTimeParseException e) {
+            throw new IllegalArgumentException(
+                    "时间格式不正确，请使用 yyyy-MM-dd HH:mm:ss: " + timeText, e);
+        }
+    }
+
+    private GetOrderListResponse getOrderListPage(OrderClient orderClient,
+                                                   GetOrderListRequest request,
+                                                   int pageNo) throws IOException {
+        request.setPageNo(pageNo);
+        BaseResponse<GetOrderListResponse> baseResponse = orderClient.execute(request, this.accessToken);
+        if (baseResponse == null || !baseResponse.isSuccess() || baseResponse.getData() == null) {
+            throw new IOException("拉取第 " + pageNo + " 页订单失败: " + JSON.toJSONString(baseResponse));
+        }
+        if (baseResponse.getData().getOrderList() == null) {
+            throw new IOException("第 " + pageNo + " 页订单列表为空: " + JSON.toJSONString(baseResponse));
+        }
+        return baseResponse.getData();
+    }
+
+    private void collectOrders(List<OrderSimpleDetail> orderList,
+                               Map<String, OrderSimpleDetail> orderMap) {
+        for (OrderSimpleDetail order : orderList) {
+            if (order != null && order.getOrderId() != null) {
+                orderMap.put(order.getOrderId(), order);
+            }
+        }
+    }
+
+    private String formatTime(long timestamp) {
+        if (timestamp <= 0) {
+            return "";
+        }
+        return Instant.ofEpochMilli(timestamp)
+                .atZone(TIME_ZONE)
+                .format(TIME_FORMATTER);
+    }
+
+    private String getOrderStatusName(int orderStatus) {
+        switch (orderStatus) {
+            case 1:
+                return "已下单待付款";
+            case 2:
+                return "已支付处理中";
+            case 3:
+                return "清关中";
+            case 4:
+                return "待发货";
+            case 5:
+                return "部分发货";
+            case 6:
+                return "待收货";
+            case 7:
+                return "已完成";
+            case 8:
+                return "已关闭";
+            case 9:
+                return "已取消";
+            case 10:
+                return "换货申请中";
+            default:
+                return "未知状态(" + orderStatus + ")";
+        }
     }
 
 

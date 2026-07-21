@@ -11,49 +11,49 @@
   },
   "riskScoreThreshold": 1000,
   "active": {
-    "currentContinuousDaysText": "Active for %d consecutive days",
+    "currentContinuousDaysText": "%d-Day Streak",
     "dailyActiveRewardText": "Today's Wants",
-    "newUserFirstDayRewardText": "New user first-day activity reward Wants",
-    "newCycleText": "\uD83E\uDD29 A new active reward cycle has started. Come win more \u26A1\uFE0FWants~",
+    "newUserFirstDayRewardText": "New User First-Day Bonus Wants",
+    "newCycleText": "New activity rewards are here! Earn more \u26A1 Wants!",
     "buttonText": "Wow! Check it out",
-    "completedButtonText": "(Issued)",
+    "completedButtonText": "Delivered",
     "waitingButtonText": "Locked",
     "unlockingButtonText": "(%d/%d)",
     "activeRewardConfigMap": {
       "3": {
         "miniAppImage": "https://static.zaohaowu.com/fe-static/community/mp/incentive/active_award_illustration_3.png",
         "webImage": "https://static.zaohaowu.com/fe-static/community/pc/incentive/active_award_illustration_3.png",
-        "popupRewardText": "Great! You have been active for 3 consecutive days \nYou get 3 extra {want_icon}Wants",
-        "continuousActiveDaysText": "Active for 3 consecutive days",
-        "obtainsWantItTimesText": "Get 3 extra Wants",
-        "viewRewardText": "Reward +3",
-        "mpViewRewardText": "Extra Wants +3"
+        "popupRewardText": "Awesome! You've been active for 3 days and earned 3 bonus {want_icon}Wants!",
+        "continuousActiveDaysText": "3-Day Streak",
+        "obtainsWantItTimesText": "Earn 3 Bonus Wants",
+        "viewRewardText": "Bonus +3",
+        "mpViewRewardText": "Bonus Wants +3"
       },
       "5": {
         "miniAppImage": "https://static.zaohaowu.com/fe-static/community/mp/incentive/active_award_illustration_5.png",
         "webImage": "https://static.zaohaowu.com/fe-static/community/pc/incentive/active_award_illustration_5.png",
-        "popupRewardText": "Great! You have been active for 5 consecutive days \nYou get 5 extra {want_icon}Wants",
-        "continuousActiveDaysText": "Active for 5 consecutive days",
-        "obtainsWantItTimesText": "Get 5 more Wants",
-        "viewRewardText": "Reward +5",
-        "mpViewRewardText": "Extra Wants +5"
+        "popupRewardText": "Awesome! You've been active for 5 days and earned 5 bonus {want_icon}Wants!",
+        "continuousActiveDaysText": "5-Day Streak",
+        "obtainsWantItTimesText": "Earn 5 More Wants",
+        "viewRewardText": "Bonus +5",
+        "mpViewRewardText": "Earn 5 Bonus Wants"
       },
       "7": {
         "miniAppImage": "https://static.zaohaowu.com/fe-static/community/mp/incentive/active_award_illustration_7.png",
         "webImage": "https://static.zaohaowu.com/fe-static/community/pc/incentive/active_award_illustration_7.png",
-        "popupRewardText": "Great! You have been active for 7 consecutive days \nYou get 7 extra {want_icon}Wants",
-        "continuousActiveDaysText": "Active for 7 consecutive days",
-        "obtainsWantItTimesText": "Get 7 more Wants",
-        "viewRewardText": "Reward +7",
-        "mpViewRewardText": "Extra Wants +7"
+        "popupRewardText": "Awesome! You've been active for 3 days and earned 7 bonus {want_icon}Wants!",
+        "continuousActiveDaysText": "7-Day Streak",
+        "obtainsWantItTimesText": "Earn 7 More Wants",
+        "viewRewardText": "Bonus +7",
+        "mpViewRewardText": "Earn 7 Bonus Wants"
       }
     }
   },
   "common": {
     "entryTipNo": 1000,
-    "entryTipText": "Get more {want_icon}Wants now & the free prize pool has been updated!",
-    "viewRewardText": "Reward +%s",
-    "mpViewRewardText": "Reward Wants +%s",
+    "entryTipText": "Get More {want_icon} Wants & Explore New Free Rewards!",
+    "viewRewardText": "Bonus +%s",
+    "mpViewRewardText": "Bonus Wants +%s",
     "taskImage": "https://static.zaohaowu.com/fe-static/app/detail/want_share_icon.png",
     "shareWxQrCodeUploadToTos": true
   },
@@ -78,24 +78,25 @@
   "userActivitySubName": "",
   "guideBaseTime": "2025-12-29 03:45:00",
   "newUserBaseTime": "2026-02-21 00:00:00",
+  "newUserPostConditionNum": 5,
   "cnyConfig": {
     "startTime": "2026-02-12 00:00:00",
     "endTime": "2026-02-23 23:59:59",
-    "dailyActiveRewardArrivedMsg": "Spring Festival benefit: daily active reward has arrived! {want_icon}Wants +4",
-    "dailyActiveRewardArrivedMsgForNew": "Spring Festival benefit: new user registration reward {want_icon}Wants +5 has arrived!",
-    "dailyActiveWantItContent": "Daily active reward Wants",
-    "newUserFirstDayRewardText": "New user first-day activity reward Wants",
-    "limitIncreasePrefix": "Spring Festival limited-time bonus -",
+    "dailyActiveRewardArrivedMsg": "Lunar New Year Bonus! Your daily activity reward is here!\n{want_icon}Wants +4",
+    "dailyActiveRewardArrivedMsgForNew": "Lunar New Year Bonus! Your new user reward is here!\n{want_icon}Wants +5",
+    "dailyActiveWantItContent": "Daily Activity Bonus Wants",
+    "newUserFirstDayRewardText": "New User First-Day Bonus Wants",
+    "limitIncreasePrefix": "Lunar New Year Bonus",
     "limitIncreaseAmount": 3,
     "miniAppImage": "https://static.zaohaowu.com/static/other/spring-festival-wechat.png",
     "webImage": "https://static.zaohaowu.com/static/other/spring-festival-web.png",
     "rewardTickets": 10,
-    "title": "Play Want It during Spring Festival, double the benefits",
-    "rewardText": "Thanks for your order. During Spring Festival, get %s extra {want_icon}Wants!"
+    "title": "Celebrate Lunar New Year with Wants & Earn More Rewards!",
+    "rewardText": "Thanks for your order! Enjoy %s bonus {want_icon}Wants for Lunar New Year!"
   },
   "oldUserAppFirstLoginPopup": {
-    "content": "Welcome back to the app!\nYou get 10 extra {want_icon}Wants",
-    "buttonText": "Cast now",
+    "content": "Welcome back! You've earned 10 bonus {want_icon}Wants!",
+    "buttonText": "Give a Want Now",
     "miniAppImage": "https://static.zaohaowu.com/jjewelry/web/resources/topic/20260413/b83924fbd8254d159f9c6c2a3b3a83a1/resource/f8ffa4fed4934b50be09dae4886aeddb/2f6aa72d4a301f8b53e3e73078acf990/webp/2f6aa72d4a301f8b53e3e73078acf990.webp",
     "webImage": "https://static.zaohaowu.com/jjewelry/web/resources/topic/20260413/b83924fbd8254d159f9c6c2a3b3a83a1/resource/f8ffa4fed4934b50be09dae4886aeddb/2f6aa72d4a301f8b53e3e73078acf990/webp/2f6aa72d4a301f8b53e3e73078acf990.webp"
   },
@@ -104,11 +105,11 @@
     "endTime": "2026-06-16 00:00:00",
     "miniAppAuditStartTime": "09:30:00",
     "miniAppAuditEndTime": "19:00:00",
-    "miniAppAuditContent": "The Zaohaowu app is live! Come experience a fully upgraded creation journey",
-    "webLoginRewardContent": "\uD83C\uDF89We've finally met! The <span class=\"blue-box\">Zaohaowu App</span> is officially live. Log in to the App with your current account for a limited-time gift of <span class=\"blue-box\">10</span> <span class=\"guide-tips-bar__bolt-wrap\"><span class=\"hitems-ticket\"></span></span> <span class=\"blue-box\">Wants!</span>",
-    "webGuestRewardContent": "\uD83C\uDF89We've finally met! The <span class=\"blue-box\">Zaohaowu App </span>is officially live. For a limited time, get <span class=\"blue-box\">more</span><span class=\"guide-tips-bar__bolt-wrap\"><span class=\"hitems-ticket\"></span></span><span class=\"blue-box\">Wants</span> and claim free gifts!",
-    "miniAppLoginRewardContent": "The Zaohaowu app is live! Log in with your current account to get 10 Wants!",
-    "miniAppGuestRewardContent": "The Zaohaowu app is live! Download now to get extra \u26A1\uFE0FWants for a limited time!",
+    "miniAppAuditContent": "The Builda app is here! Experience a whole new way to create.",
+    "webLoginRewardContent": "\uD83C\uDF89 The Builda app is here! Sign in with your existing account and claim 10 bonus Wants for a limited time.",
+    "webGuestRewardContent": "\uD83C\uDF89 The Builda app is here! For a limited time, earn bonus Wants and claim free rewards!",
+    "miniAppLoginRewardContent": "The Builda app is here! Sign in with your existing account to claim 10 bonus Wants.",
+    "miniAppGuestRewardContent": "The Builda app is here! Download now to earn bonus \u26A1\uFE0FWants for a limited time.",
     "buttonText": "Download",
     "miniAppButtonJumpUrl": "/pagesCommon/guidanceAppDownload/index",
     "webButtonJumpUrl": "-"
