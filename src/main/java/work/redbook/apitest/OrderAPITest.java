@@ -44,6 +44,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * @author hanyu.wang
@@ -201,6 +205,19 @@ public class OrderAPITest {
         exportOrderStatusCsv(startTime, endTime, outputFile);
     }
 
+    @Test
+    public void testGetOrderListBySkuId() throws IOException {
+        String startTime = "2026-07-16 19:00:00";
+        String endTime = "2026-07-21 12:06:00";
+        String skuId = "6a5465cba553c30015337bad"; // 填写需要筛选的规格 ID
+        Path outputFile = Paths.get(
+                System.getProperty("user.dir"),
+                "src/main/java/work/redbook/apitest/order_status_by_sku.csv"
+        );
+
+        exportOrderStatusBySkuIdCsv(startTime, endTime, skuId, outputFile);
+    }
+
     /**
      * 按创建时间查询订单，并将订单号、订单状态导出为 CSV。
      * 接口限制单次查询跨度不超过 24 小时，因此较大的时间范围会自动拆分。
@@ -208,13 +225,87 @@ public class OrderAPITest {
     private void exportOrderStatusCsv(String startTimeText,
                                       String endTimeText,
                                       Path outputFile) throws IOException {
+        OrderClient orderClient = new OrderClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
+        Map<String, OrderSimpleDetail> orderMap =
+                getOrdersByCreatedTime(orderClient, startTimeText, endTimeText);
+
+        List<String> csvLines = new ArrayList<>(orderMap.size() + 1);
+        csvLines.add("\uFEFF" + getOrderCsvHeader());
+        for (OrderSimpleDetail order : orderMap.values()) {
+            csvLines.add(getOrderCsvRow(order));
+        }
+        writeCsv(outputFile, csvLines);
+        System.out.println(orderMap.size() + " 条订单记录已写入: " + outputFile.toAbsolutePath());
+    }
+
+    /**
+     * 按创建时间查询订单详情，仅导出包含指定规格 ID 的订单。
+     */
+    private void exportOrderStatusBySkuIdCsv(String startTimeText,
+                                             String endTimeText,
+                                             String skuId,
+                                             Path outputFile) throws IOException {
+        if (skuId == null || skuId.trim().isEmpty()) {
+            throw new IllegalArgumentException("规格 ID 不能为空");
+        }
+
+        OrderClient orderClient = new OrderClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
+        Map<String, OrderSimpleDetail> orderMap =
+                getOrdersByCreatedTime(orderClient, startTimeText, endTimeText);
+        List<String> csvLines = new ArrayList<>();
+        csvLines.add("\uFEFF" + getOrderCsvHeader() + ",规格ID,规格数量");
+
+        List<OrderSimpleDetail> orders = new ArrayList<>(orderMap.values());
+        final int detailBatchSize = 20;
+        int totalBatchCount = (orders.size() + detailBatchSize - 1) / detailBatchSize;
+        int matchedCount = 0;
+        ExecutorService detailExecutor = Executors.newFixedThreadPool(detailBatchSize);
+        try {
+            for (int batchStart = 0; batchStart < orders.size(); batchStart += detailBatchSize) {
+                int batchEnd = Math.min(batchStart + detailBatchSize, orders.size());
+                List<OrderSimpleDetail> batchOrders = orders.subList(batchStart, batchEnd);
+                List<Future<GetOrderDetailResponse>> detailFutures =
+                        new ArrayList<>(batchOrders.size());
+
+                // 详情接口只接受单个订单号，每批并发查询最多 20 个订单。
+                for (OrderSimpleDetail order : batchOrders) {
+                    detailFutures.add(detailExecutor.submit(
+                            () -> getOrderDetail(orderClient, order.getOrderId())));
+                }
+
+                for (int i = 0; i < batchOrders.size(); i++) {
+                    OrderSimpleDetail order = batchOrders.get(i);
+                    GetOrderDetailResponse orderDetail =
+                            getOrderDetailResult(detailFutures.get(i), order.getOrderId());
+                    Long skuQuantity = getSkuQuantity(orderDetail, skuId);
+                    if (skuQuantity != null) {
+                        csvLines.add(getOrderCsvRow(order) + "," + skuId + "," + skuQuantity);
+                        matchedCount++;
+                    }
+                }
+
+                int currentBatchNo = batchStart / detailBatchSize + 1;
+                System.out.println("已查询订单详情第 " + currentBatchNo + "/"
+                        + totalBatchCount + " 批，本批 " + batchOrders.size()
+                        + " 个，累计匹配订单数: " + matchedCount);
+            }
+        } finally {
+            detailExecutor.shutdownNow();
+        }
+
+        writeCsv(outputFile, csvLines);
+        System.out.println(matchedCount + " 条匹配订单已写入: " + outputFile.toAbsolutePath());
+    }
+
+    private Map<String, OrderSimpleDetail> getOrdersByCreatedTime(OrderClient orderClient,
+                                                                  String startTimeText,
+                                                                  String endTimeText) throws IOException {
         long startTime = parseTime(startTimeText);
         long endTime = parseTime(endTimeText);
         if (startTime < 0 || endTime < startTime) {
             throw new IllegalArgumentException("时间范围不合法: " + startTimeText + " - " + endTimeText);
         }
 
-        OrderClient orderClient = new OrderClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
         Map<String, OrderSimpleDetail> orderMap = new LinkedHashMap<>();
         long queryStartTime = startTime;
         final long maxTimeRangeSeconds = 24 * 60 * 60L;
@@ -251,25 +342,31 @@ public class OrderAPITest {
             queryStartTime = queryEndTime + 1;
         }
 
-        List<String> csvLines = new ArrayList<>(orderMap.size() + 1);
-        csvLines.add("\uFEFF订单号,订单状态,创建时间,支付时间,更新时间,发货时间,取消时间,完成时间,最晚承诺发货时间");
-        for (OrderSimpleDetail order : orderMap.values()) {
-            csvLines.add(order.getOrderId()
-                    + "," + getOrderStatusName(order.getOrderStatus())
-                    + "," + formatTime(order.getCreatedTime())
-                    + "," + formatTime(order.getPaidTime())
-                    + "," + formatTime(order.getUpdateTime())
-                    + "," + formatTime(order.getDeliveryTime())
-                    + "," + formatTime(order.getCancelTime())
-                    + "," + formatTime(order.getFinishTime())
-                    + "," + formatTime(order.getPromiseLastDeliveryTime()));
-        }
+        return orderMap;
+    }
+
+    private String getOrderCsvHeader() {
+        return "订单号,订单状态,创建时间,支付时间,更新时间,发货时间,取消时间,完成时间,最晚承诺发货时间";
+    }
+
+    private String getOrderCsvRow(OrderSimpleDetail order) {
+        return order.getOrderId()
+                + "," + getOrderStatusName(order.getOrderStatus())
+                + "," + formatTime(order.getCreatedTime())
+                + "," + formatTime(order.getPaidTime())
+                + "," + formatTime(order.getUpdateTime())
+                + "," + formatTime(order.getDeliveryTime())
+                + "," + formatTime(order.getCancelTime())
+                + "," + formatTime(order.getFinishTime())
+                + "," + formatTime(order.getPromiseLastDeliveryTime());
+    }
+
+    private void writeCsv(Path outputFile, List<String> csvLines) throws IOException {
         Path parent = outputFile.getParent();
         if (parent != null) {
             Files.createDirectories(parent);
         }
         Files.write(outputFile, csvLines, StandardCharsets.UTF_8);
-        System.out.println(orderMap.size() + " 条订单记录已写入: " + outputFile.toAbsolutePath());
     }
 
     private long parseTime(String timeText) {
@@ -295,6 +392,53 @@ public class OrderAPITest {
             throw new IOException("第 " + pageNo + " 页订单列表为空: " + JSON.toJSONString(baseResponse));
         }
         return baseResponse.getData();
+    }
+
+    private GetOrderDetailResponse getOrderDetail(OrderClient orderClient,
+                                                   String orderId) throws IOException {
+        GetOrderDetailRequest request = new GetOrderDetailRequest();
+        request.setOrderId(orderId);
+        BaseResponse<GetOrderDetailResponse> baseResponse =
+                orderClient.execute(request, this.accessToken);
+        if (baseResponse == null || !baseResponse.isSuccess() || baseResponse.getData() == null) {
+            throw new IOException("拉取订单 " + orderId + " 详情失败: "
+                    + JSON.toJSONString(baseResponse));
+        }
+        return baseResponse.getData();
+    }
+
+    private GetOrderDetailResponse getOrderDetailResult(
+            Future<GetOrderDetailResponse> detailFuture,
+            String orderId) throws IOException {
+        try {
+            return detailFuture.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("查询订单 " + orderId + " 详情时线程被中断", e);
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof IOException) {
+                throw (IOException) cause;
+            }
+            throw new IOException("查询订单 " + orderId + " 详情失败", cause);
+        }
+    }
+
+    private Long getSkuQuantity(GetOrderDetailResponse orderDetail, String skuId) {
+        List<GetOrderDetailResponse.OrderSkuDTOV3> skuList = orderDetail.getSkuList();
+        if (skuList == null) {
+            return null;
+        }
+
+        long totalQuantity = 0;
+        boolean matched = false;
+        for (GetOrderDetailResponse.OrderSkuDTOV3 sku : skuList) {
+            if (sku != null && skuId.equals(sku.getSkuId())) {
+                totalQuantity += sku.getSkuQuantity();
+                matched = true;
+            }
+        }
+        return matched ? totalQuantity : null;
     }
 
     private void collectOrders(List<OrderSimpleDetail> orderList,
