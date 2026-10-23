@@ -1,0 +1,159 @@
+@startuml
+' 卡券系统 E-R 图（MVP 版，6 张表）
+' 配套文件：docs/coupon-tables-ddl.sql
+' 渲染：plantuml docs/coupon-er.puml （本机未装，可用 VS Code PlantUML 插件）
+' 只有 trade_user_coupon 按 user_id 分表，其余单库单表。
+' batch_id = 券批次ID（一次建券），coupon_id = 券ID（用户手里的一张券）
+
+legend right
+  字段前的 **\* ** 表示 NOT NULL；**<<PK>>** 主键，**<<UK>>** 唯一键，**<<FK>>** 逻辑外键
+  |= 颜色 |= 层次 |
+  |<#E8F4FF> | 配置（运营写，适合缓存） |
+  |<#FFF4E6> | 计数（发放同步更新，核销批量累加） |
+  |<#E8FFE8> | 用户资产（按 user_id 分表） |
+  |<#F5F5F5> | 流水 |
+  |<#FFE8F0> | 订单侧 |
+endlegend
+
+entity "trade_coupon_batch\n券批次" as coupon #E8F4FF {
+  * id : BIGINT <<PK>>
+  --
+  * batch_id : BIGINT <<UK>>
+  * name : VARCHAR(64)
+  .. 基础规则 ..
+  * issue_channel : TINYINT
+  * countable : TINYINT(1)
+  * register_limit_type : TINYINT
+  register_within_days : INT
+  register_start_time : DATETIME
+  register_end_time : DATETIME
+  * receive_start_time : DATETIME
+  * receive_end_time : DATETIME
+  * valid_type : TINYINT
+  relative_valid_days : INT
+  valid_start_time : DATETIME
+  valid_end_time : DATETIME
+  .. 优惠设置 ..
+  * discount_type : TINYINT
+  discount_value : DECIMAL(12,2)
+  threshold_amount : DECIMAL(12,2)
+  discount_rate : DECIMAL(6,4)
+  max_discount_amount : DECIMAL(12,2)
+  * max_per_user : INT
+  * scope_type : TINYINT
+  .. 叠加与成本 ..
+  * stack_layer : TINYINT
+  * stackable : TINYINT(1)
+  * funder : TINYINT
+  .. 状态 ..
+  * status : TINYINT
+  void_time : DATETIME
+  void_by : VARCHAR(64)
+  void_reason : VARCHAR(255)
+}
+
+entity "trade_coupon_stock\n券计数" as stock #FFF4E6 {
+  * id : BIGINT <<PK>>
+  --
+  * batch_id : BIGINT <<FK>>
+  * bucket_no : INT
+  total_stock : INT
+  * issued_count : INT
+  * used_count : INT
+}
+
+entity "trade_coupon_scope\n适用范围" as scope #E8F4FF {
+  * id : BIGINT <<PK>>
+  --
+  * batch_id : BIGINT <<FK>>
+  * scope_type : TINYINT
+  * ref_id : VARCHAR(64)
+}
+
+entity "trade_user_coupon_00\n用户券（分表）" as usercoupon #E8FFE8 {
+  * id : BIGINT <<PK>>
+  --
+  * coupon_id : BIGINT <<UK>>
+  * user_id : VARCHAR(64) <<分片键>>
+  * batch_id : BIGINT <<FK>>
+  * source_type : TINYINT
+  * status : TINYINT
+  order_id : VARCHAR(64)
+  * receive_time : DATETIME
+  * valid_start_time : DATETIME
+  * valid_end_time : DATETIME
+  used_time : DATETIME
+  .. 规则快照 ..
+  * discount_type : TINYINT
+  discount_value : DECIMAL(12,2)
+  threshold_amount : DECIMAL(12,2)
+  discount_rate : DECIMAL(6,4)
+  max_discount_amount : DECIMAL(12,2)
+  ..
+  * request_no : VARCHAR(64)
+  * version : INT
+}
+
+entity "trade_user_coupon_log\n状态流水" as log #F5F5F5 {
+  * id : BIGINT <<PK>>
+  --
+  * coupon_id : BIGINT <<FK>>
+  * user_id : VARCHAR(64)
+  * batch_id : BIGINT
+  * action : VARCHAR(16)
+  before_status : TINYINT
+  * after_status : TINYINT
+  order_id : VARCHAR(64)
+  * request_no : VARCHAR(64) <<UK>>
+  * mq_sent : TINYINT(1)
+  operator : VARCHAR(64)
+  remark : VARCHAR(255)
+}
+
+entity "trade_order_discount_detail\n订单优惠分摊明细" as detail #FFE8F0 {
+  * id : BIGINT <<PK>>
+  --
+  * main_order_id : VARCHAR(64)
+  * order_id : VARCHAR(64)
+  line_id : VARCHAR(64)
+  * sku_id : VARCHAR(64)
+  * layer_code : VARCHAR(32)
+  * layer_order : INT
+  batch_id : BIGINT
+  coupon_id : BIGINT <<FK>>
+  promotion_id : VARCHAR(64)
+  * funder : TINYINT
+  * original_amount : DECIMAL(12,2)
+  * amount : DECIMAL(12,2)
+  unit_amount_json : JSON
+  * refunded_amount : DECIMAL(12,2)
+}
+
+coupon ||--|| stock : "计数 MVP只有0号桶"
+coupon ||--o{ scope : "指定商品时才有"
+coupon ||--o{ usercoupon : "发放"
+usercoupon ||--o{ log : "状态变更"
+usercoupon ||--o{ detail : "分摊到订单行"
+
+note bottom of stock
+  领券扣减，影响 1 行即成功：
+  UPDATE ... SET issued_count = issued_count + 1
+  WHERE batch_id = ? AND bucket_no = 0
+    AND (total_stock IS NULL OR issued_count < total_stock)
+end note
+
+note bottom of usercoupon
+  存储：1 可用 2 冻结 3 已使用 4 已作废
+  1 可用 →(下单) 2 冻结 →(支付) 3 已使用
+  2 冻结 →(超时/取消) 1 可用；1/2 →(作废) 4 已作废
+  已过期 = status=1 且超过 valid_end_time，不存储
+  每人限领：同分片 count(user_id, batch_id)
+end note
+
+note right of coupon
+  存储：1 正常 2 已作废
+  列表筛选按领取时间推导：
+  已作废 → 未开始 → 已过期 → 生效中
+  不用定时任务改状态
+end note
+@enduml

@@ -63,7 +63,7 @@ public class OrderAPITest {
     private String version = "2.0";
     private String appSecre = "7f86dcecb3237a5502ae51eff5a232bb";
     String code = "code-d92e34bac40f46818092a0d13e28be72-0dc69dfa92844c2897f08f95d9e00d06";
-    private String accessToken = "token-1c2f43be2be14bffb5ad8f87577f6b7c-f947dd354fcd41c0abf7b46230936d2b";
+    private String accessToken = "token-653e4f40871d4cb1ac6f9745429db376-3820ced57d304891a42f682cd0d76974";
 
     private MaterialClient materialClient = new MaterialClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
 
@@ -143,16 +143,16 @@ public class OrderAPITest {
         request.setAppUserId("1");
 
         BatchDecryptRequest.baseInfo receiverAddress = new BatchDecryptRequest.baseInfo();
-        receiverAddress.setDataTag("P782011893460274131");
-        receiverAddress.setEncryptedData("#Du12G8dm0Clc7JiDumrEzBB2HEi6dh0CWxG+5e+KyCzwaZNtR/VQ3HqB7/0JvhhgvRV73NBr5EilJSCEstn0duOlV6OhBiLkYb992xEfMG0bhI80ngnNSSDp44J3/PS+#etvbna6OmfzhTR2Xt5KCRqBqrLOi3jJHXkRO/xTg0gmRG3NY7DDT7REay+alfnq+1jEGeJ5ZwoC2jXn1WM95KfXaCTdQAzvxwAZvoCFg8bZeQSKl5CbJ3QlwnA7bAD+syxo6mp6MT1Ru+SimeLeCvYyyokHvqGWALZ2qjzrgvthMeRjOrgj7Uo75Dp/007npwuLMl71+J25qEwo7VCsX/goQYdTP3EUUighWs+VKtY00emIjHbkSipOaVKBPH4QA#1##");
+        receiverAddress.setDataTag("P800020770889413891");
+        receiverAddress.setEncryptedData("#Du12G8dm0Clc7JiDumrEzAqK2E25vo41ljNLRPLs4dgzv9RwZcJNKAlyuyRPCJ0ltXhTMwjtee29MT4CCLZv8WWwYaZDSsuWrkuOdv5gIMJqweWdNOz2rAOYBjWZavLvI6syUU+aBN6VnW7jOASwa0FshK24wE1WbV0pGWv9gTg=#etvbna6OmfzhTR2Xt5KCRqBqrLOi3jJHXkRO/xTg0gnlMvwR0M2Vbzfai+l2t686xHEQ2u0oIMh/FsQYhvEAw9vXgyDRVmCGhF2ehw+nYJevk4Fr+sb44IfTEg+sU+ZMmzAUiXBFsj/2NXiNUBWXzCRWvLmfoI/2FxPRGxYAOu+PHnkAq/nrR6P5UatSD0sNTDEuIuYIXmwZu9099JsWLkLS1xoYdjYFb1iQ0nAvSYX0Jyq2l4a8X1PF5MERXBK+5Ka4UsqjzXKavP0sm3ZPg2g0fhZ9p+F68q3McGyBrqU=#1##");
 
         BatchDecryptRequest.baseInfo receiverName = new BatchDecryptRequest.baseInfo();
-        receiverName.setDataTag("P782011893460274131");
-        receiverName.setEncryptedData("#Du12G8dm0Clc7JiDumrEzO9F1I7DUVOvJ8tmQWofREs=#etvbna6OmfzhTR2Xt5KCRqBqrLOi3jJHXkRO/xTg0gm8ECllfj53Mq0YaP4kQVFiy0HvHtjbmISM/3CsrRv54A3cP94DNhsZODKRVLApGCOHCM5E9NKd0naaEWOd3PVGwNGtrAg2wBv13K/0+Wo4ArOU03CaKVTGC0JSCckiBcs=#2##");
+        receiverName.setDataTag("P800020770889413891");
+        receiverName.setEncryptedData("#Du12G8dm0Clc7JiDumrEzCNe8thOT9eSME/VTCQ8IlA=#etvbna6OmfzhTR2Xt5KCRqBqrLOi3jJHXkRO/xTg0gntMtbeCKg9gq5qxI4XDWApNAk+rSfYLaAmTC5VusUhbK3bukY5HZaZjiJIzIzjKAcJFB3fBTIE+jQ4g79Z2+N9V6ucdrtBCwB66z4AL7qIMjfNQU/qmiAYuOVJ+0fYsMA=#2##");
 
         BatchDecryptRequest.baseInfo receiverPhone = new BatchDecryptRequest.baseInfo();
-        receiverPhone.setDataTag("P782011893460274131");
-        receiverPhone.setEncryptedData("#Du12G8dm0Clc7JiDumrEzJE6Ci8st9wngFQXeOMV94o=#etvbna6OmfzhTR2Xt5KCRqBqrLOi3jJHXkRO/xTg0gk0XqXnb6JKg+PchmeZHd2f//Eq7CHZo2vVVBxujKf1QcHv7UBlQhXTtiwntBEYp3NcONJYK6YJ5k4p4SMNytk5Z8VWaPH63UQbpY8RIPKo7cWKLhjnA0SzcPe17gBEJy0=#3##");
+        receiverPhone.setDataTag("P800020770889413891");
+        receiverPhone.setEncryptedData("#Du12G8dm0Clc7JiDumrEzJrre/Z+sCxreiWx3V2q/Os=#etvbna6OmfzhTR2Xt5KCRqBqrLOi3jJHXkRO/xTg0gnNUSRkxOR7QPJipkoGZ7wizRlXdczOT1W482pNmikZwGqhTBE7bdgisj960JZoyGPedb7FUDIq4G/s8a/O6jjjHHWkCF1Efw4z0qpZHZz/wpWQUGtR1gQpu2GYacLEBvQ=#3##");
 
         request.setBaseInfos(Lists.newArrayList(receiverAddress, receiverName, receiverPhone));
 
@@ -170,8 +170,8 @@ public class OrderAPITest {
         GetOrderReceiverInfoRequest request = new GetOrderReceiverInfoRequest();
 
         GetOrderReceiverInfoRequest.OrderReceiverQuery query = new GetOrderReceiverInfoRequest.OrderReceiverQuery();
-        query.setOrderId("P782011893460274131");
-        query.setOpenAddressId("4903b7bf6e37ad0efc1ce429dfccd670");
+        query.setOrderId("P802490973858031861");
+        query.setOpenAddressId("84b157df430970d39d5c3929c3625182");
 
         request.setReceiverQueries(Lists.newArrayList(query));
         request.setIsReturn(Boolean.FALSE);
@@ -181,12 +181,17 @@ public class OrderAPITest {
         System.out.println(JSON.toJSONString(baseResponse));
     }
 
+    /**
+     * doc: https://open.xiaohongshu.com/document/api?apiNavigationId=184&id=26&gatewayId=103&gatewayVersionId=1661&apiId=27242&apiParentNavigationId=15
+     * 
+     * @throws IOException
+     */
     @Test
     public void testGetOrderDetail() throws IOException {
         OrderClient orderClient = new OrderClient("https://ark.xiaohongshu.com/ark/open_api/v3/common_controller", appId, version, appSecre);
 
         GetOrderDetailRequest request = new GetOrderDetailRequest();
-        request.setOrderId("P798063388702233473");
+        request.setOrderId("P806119045921219202");
 
         BaseResponse<GetOrderDetailResponse> baseResponse = orderClient.execute(request, this.accessToken);
 
