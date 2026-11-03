@@ -1,9 +1,11 @@
 @startuml
-' 卡券系统 E-R 图（MVP 版，6 张表）
+' 卡券系统 E-R 图（MVP 版，9 张表）
 ' 配套文件：docs/coupon-tables-ddl.sql
 ' 渲染：plantuml docs/coupon-er.puml （本机未装，可用 VS Code PlantUML 插件）
-' 只有 trade_user_coupon 按 user_id 分表，其余单库单表。
-' batch_id = 券批次ID（一次建券），coupon_id = 券ID（用户手里的一张券）
+' MVP 只建无后缀 trade_user_coupon，未来保留按 user_id 分表能力，其余单库单表。
+' issue_channel：6 人群惊喜券（仅新人自动领取）；7 人群灌券（仅由发券任务发放，不进入 C 端领取候选）。
+' source_type：1 系统自动领取；2 人群灌券任务发放。
+' template_id = 券模板ID（一次建券），coupon_id = 券ID（用户手里的一张券）
 
 legend right
   字段前的 **\* ** 表示 NOT NULL；**<<PK>>** 主键，**<<UK>>** 唯一键，**<<FK>>** 逻辑外键
@@ -12,21 +14,18 @@ legend right
   |<#FFF4E6> | 计数（发放同步更新，核销批量累加） |
   |<#E8FFE8> | 用户资产（按 user_id 分表） |
   |<#F5F5F5> | 流水 |
+  |<#FFF0D9> | 定向发券（灌券） |
+  |<#EDE7F6> | 到期提醒 |
   |<#FFE8F0> | 订单侧 |
 endlegend
 
-entity "trade_coupon_batch\n券批次" as coupon #E8F4FF {
+entity "trade_coupon_template\n券模板" as coupon #E8F4FF {
   * id : BIGINT <<PK>>
   --
-  * batch_id : BIGINT <<UK>>
+  * template_id : BIGINT <<UK>>
   * name : VARCHAR(64)
   .. 基础规则 ..
   * issue_channel : TINYINT
-  * countable : TINYINT(1)
-  * register_limit_type : TINYINT
-  register_within_days : INT
-  register_start_time : DATETIME
-  register_end_time : DATETIME
   * receive_start_time : DATETIME
   * receive_end_time : DATETIME
   * valid_type : TINYINT
@@ -40,6 +39,8 @@ entity "trade_coupon_batch\n券批次" as coupon #E8F4FF {
   discount_rate : DECIMAL(6,4)
   max_discount_amount : DECIMAL(12,2)
   * max_per_user : INT
+  * crowd_type : TINYINT
+  register_within_days : INT
   * scope_type : TINYINT
   .. 叠加与成本 ..
   * stack_layer : TINYINT
@@ -55,7 +56,7 @@ entity "trade_coupon_batch\n券批次" as coupon #E8F4FF {
 entity "trade_coupon_stock\n券计数" as stock #FFF4E6 {
   * id : BIGINT <<PK>>
   --
-  * batch_id : BIGINT <<FK>>
+  * template_id : BIGINT <<FK>>
   * bucket_no : INT
   total_stock : INT
   * issued_count : INT
@@ -65,18 +66,21 @@ entity "trade_coupon_stock\n券计数" as stock #FFF4E6 {
 entity "trade_coupon_scope\n适用范围" as scope #E8F4FF {
   * id : BIGINT <<PK>>
   --
-  * batch_id : BIGINT <<FK>>
+  * template_id : BIGINT <<FK>>
   * scope_type : TINYINT
   * ref_id : VARCHAR(64)
 }
 
-entity "trade_user_coupon_00\n用户券（分表）" as usercoupon #E8FFE8 {
+entity "trade_user_coupon\n用户券（逻辑表，未来按 user_id 分表）" as usercoupon #E8FFE8 {
   * id : BIGINT <<PK>>
   --
   * coupon_id : BIGINT <<UK>>
   * user_id : VARCHAR(64) <<分片键>>
-  * batch_id : BIGINT <<FK>>
+  * template_id : BIGINT <<FK>>
   * source_type : TINYINT
+  display_name : VARCHAR(64)
+  scope_type : TINYINT
+  crowd_type : TINYINT
   * status : TINYINT
   order_id : VARCHAR(64)
   * receive_time : DATETIME
@@ -99,7 +103,7 @@ entity "trade_user_coupon_log\n状态流水" as log #F5F5F5 {
   --
   * coupon_id : BIGINT <<FK>>
   * user_id : VARCHAR(64)
-  * batch_id : BIGINT
+  * template_id : BIGINT
   * action : VARCHAR(16)
   before_status : TINYINT
   * after_status : TINYINT
@@ -108,6 +112,48 @@ entity "trade_user_coupon_log\n状态流水" as log #F5F5F5 {
   * mq_sent : TINYINT(1)
   operator : VARCHAR(64)
   remark : VARCHAR(255)
+}
+
+entity "trade_coupon_issue_task\n定向发券任务" as task #FFF0D9 {
+  * id : BIGINT <<PK>>
+  --
+  * task_id : BIGINT <<UK>>
+  * template_id : BIGINT <<FK>>
+  * name : VARCHAR(64)
+  source_file : VARCHAR(255)
+  * total_count : INT
+  * success_count : INT
+  * fail_count : INT
+  * status : TINYINT
+  start_time : DATETIME
+  finish_time : DATETIME
+  * create_by : VARCHAR(64)
+}
+
+entity "trade_coupon_issue_task_item\n定向发券明细" as item #FFF0D9 {
+  * id : BIGINT <<PK>>
+  --
+  * task_id : BIGINT <<FK>>
+  * user_id : VARCHAR(64)
+  * status : TINYINT
+  fail_reason : VARCHAR(32)
+  coupon_id : BIGINT
+  * retry_count : INT
+}
+
+entity "trade_coupon_expire_notify\n券到期提醒记录" as notify #EDE7F6 {
+  * id : BIGINT <<PK>>
+  --
+  * user_id : VARCHAR(64)
+  * notify_date : DATE
+  * expire_date : DATE
+  * coupon_count : INT
+  * coupon_ids : JSON
+  * channel : TINYINT
+  * status : TINYINT
+  fail_reason : VARCHAR(255)
+  * retry_count : INT
+  send_time : DATETIME
 }
 
 entity "trade_order_discount_detail\n订单优惠分摊明细" as detail #FFE8F0 {
@@ -119,7 +165,7 @@ entity "trade_order_discount_detail\n订单优惠分摊明细" as detail #FFE8F0
   * sku_id : VARCHAR(64)
   * layer_code : VARCHAR(32)
   * layer_order : INT
-  batch_id : BIGINT
+  template_id : BIGINT
   coupon_id : BIGINT <<FK>>
   promotion_id : VARCHAR(64)
   * funder : TINYINT
@@ -134,26 +180,41 @@ coupon ||--o{ scope : "指定商品时才有"
 coupon ||--o{ usercoupon : "发放"
 usercoupon ||--o{ log : "状态变更"
 usercoupon ||--o{ detail : "分摊到订单行"
+  coupon ||--o{ task : "定向发放/人群灌券模板才有"
+task ||--o{ item : "名单 一人一行"
+item ||--o| usercoupon : "发放成功生成"
+usercoupon }o--|| notify : "同用户同天合并为一条提醒"
 
 note bottom of stock
   领券扣减，影响 1 行即成功：
   UPDATE ... SET issued_count = issued_count + 1
-  WHERE batch_id = ? AND bucket_no = 0
+  WHERE template_id = ? AND bucket_no = 0
     AND (total_stock IS NULL OR issued_count < total_stock)
 end note
 
 note bottom of usercoupon
-  存储：1 可用 2 冻结 3 已使用 4 已作废
-  1 可用 →(下单) 2 冻结 →(支付) 3 已使用
-  2 冻结 →(超时/取消) 1 可用；1/2 →(作废) 4 已作废
+  存储：1 未使用 2 已锁定 3 已使用
+  未使用 →(下单) 已锁定 →(支付) 已使用
+  已锁定 →(超时/主动取消) 未使用
+  已使用 →(整单退款) 未使用；→(部分退款) 已使用
   已过期 = status=1 且超过 valid_end_time，不存储
-  每人限领：同分片 count(user_id, batch_id)
+  每人限领：同分片 count(user_id, template_id)
 end note
 
 note right of coupon
+  未开始 → 生效中 → 已过期（按领取时间推导）
+  未开始/生效中 →(作废) 已作废；已过期不能作废
   存储：1 正常 2 已作废
-  列表筛选按领取时间推导：
-  已作废 → 未开始 → 已过期 → 生效中
   不用定时任务改状态
+end note
+note bottom of item
+  (task_id, user_id) 唯一，名单去重
+  失败名单：task_id + status=2 导出
+  重试：失败的重置为 0，幂等号 任务ID_用户ID 防重复
+end note
+note bottom of notify
+  每天扫 status=1 且 valid_end_time 在「今天+N天」的券
+  (user_id, notify_date) 唯一，INSERT IGNORE 重跑不重复
+  只读用户券表，不改券状态
 end note
 @enduml

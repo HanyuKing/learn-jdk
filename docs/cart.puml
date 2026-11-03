@@ -1,0 +1,18 @@
+@startuml
+left to right direction
+person customer as "造好物用户"
+person operator as "运营/客服"
+rectangle tradeOrderSystem as "造好物交易订单系统"
+rectangle userCenter as "用户中心"
+rectangle wechat as "微信支付"
+rectangle alipay as "支付宝"
+rectangle erp as "ERP/供应商平台"
+rectangle notification as "通知平台"
+customer --> tradeOrderSystem : 加购、结算、支付、售后
+operator --> tradeOrderSystem : 查询和处理异常
+tradeOrderSystem --> userCenter : 查询身份、等级、地址
+tradeOrderSystem --> wechat : 支付/关单/退款
+tradeOrderSystem --> alipay : 支付/退款
+tradeOrderSystem --> erp : 子订单履约
+tradeOrderSystem --> notification : 交易/订单通知
+@enduml

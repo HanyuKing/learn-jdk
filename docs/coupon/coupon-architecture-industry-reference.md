@@ -1,7 +1,7 @@
 # 优惠券系统架构：业界资料整理与设计参考
 
 > 整理日期：2026-10-14
-> 配套：[coupon-system-design.md](coupon-system-design.md)（本仓库已有的高并发抢券设计方案）、`trade-order-api/src/test/java/cn/mathmagic/jjewelry/coupon`（算价/分摊 demo）
+> 配套：[coupon-system-design.md](coupon-system-design.md)（本仓库已有的高并发抢券设计方案）、`../../trade-order-api/src/test/java/cn/mathmagic/jjewelry/coupon`（算价/分摊 demo）
 > 说明：本文第 1~7 节是业界公开资料的提炼，第 8 节对照本仓库现状。资料来源见文末，引用处标 [n]。
 
 ---
