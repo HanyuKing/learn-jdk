@@ -260,6 +260,7 @@ CREATE TABLE `trade_user_coupon` (
     `user_id`             VARCHAR(64)     NOT NULL COMMENT '用户ID，分片键',
     `template_id`         BIGINT UNSIGNED NOT NULL COMMENT '券模板ID',
     `source_type`         TINYINT         NOT NULL DEFAULT 1 COMMENT '来源：1系统自动领取 2人群灌券任务发放；任务发放时 request_no 为任务幂等号',
+    `arrival_popup_status` TINYINT        NOT NULL DEFAULT 1 COMMENT '到账弹窗状态：0待处理 1已处理',
     `display_name`        VARCHAR(64)     DEFAULT NULL COMMENT '发券时的C端券名称快照，来源模板description',
     `scope_type`          TINYINT         DEFAULT NULL COMMENT '发券时的商品范围类型快照；1指定商品 2全店商品',
     `crowd_type`          TINYINT         DEFAULT NULL COMMENT '发券时的人群快照：0全部用户 1新人；仅用于新人领取历史判断，不对外展示',
@@ -298,6 +299,7 @@ CREATE TABLE `trade_user_coupon` (
     UNIQUE KEY `uk_user_template` (`user_id`, `template_id`),
     -- 新人终身领取判断：按租户、用户和发券时人群快照查询，不看状态/有效期
     KEY `idx_user_crowd` (`tenant_id`, `user_id`, `crowd_type`),
+    KEY `idx_arrival_popup` (`tenant_id`, `user_id`, `arrival_popup_status`, `closed`, `crowd_type`, `receive_time`, `coupon_id`),
     -- 到期提醒扫描：按状态 + 失效时间范围捞，覆盖 user_id、coupon_id，不回表
     KEY `idx_status_valid` (`status`, `valid_end_time`, `user_id`, `coupon_id`),
     -- 订单取消、退款时按订单找券
