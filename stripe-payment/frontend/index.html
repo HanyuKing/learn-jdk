@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Stripe 测试收银台</title>
+  <link rel="stylesheet" href="/assets/style.css">
+  <script src="https://js.stripe.com/v3/" defer></script>
+  <script src="/assets/checkout.js" defer></script>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Stripe 测试收银台</h1>
+      <p>用 Stripe 沙箱支付一笔美元或日元订单。测试卡不会产生真实扣款。</p>
+    </header>
+
+    <div class="checkout">
+      <section class="panel" aria-labelledby="order-title">
+        <h2 id="order-title">订单</h2>
+        <form id="order-form">
+          <label for="currency">支付币种</label>
+          <select id="currency" required disabled></select>
+          <div class="amount-row">
+            <span>应付金额</span>
+            <strong id="total">—</strong>
+          </div>
+          <button id="create-order" type="submit" disabled>创建订单</button>
+        </form>
+        <dl id="order-detail" hidden>
+          <dt>订单号</dt><dd id="order-id"></dd>
+          <dt>Stripe 参数</dt><dd id="stripe-amount"></dd>
+          <dt>订单状态</dt><dd id="order-status"></dd>
+          <dt>支付意图</dt><dd id="intent-id"></dd>
+          <dt id="paid-via-label" hidden>确认来源</dt><dd id="paid-via" hidden></dd>
+        </dl>
+        <button id="new-order" type="button" class="secondary" hidden>开始新订单</button>
+      </section>
+
+      <section class="panel" aria-labelledby="payment-title">
+        <h2 id="payment-title">付款</h2>
+        <p id="message" class="message" role="status" aria-live="polite">正在加载收银台。</p>
+        <form id="payment-form" hidden>
+          <div id="payment-element"></div>
+          <button id="pay" type="submit" disabled>确认付款</button>
+          <p class="test-card">成功测试卡 <code>4242 4242 4242 4242</code><br>填写未来有效期和任意三位 CVC。</p>
+        </form>
+        <button id="check-status" type="button" class="secondary" hidden>查询付款结果</button>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

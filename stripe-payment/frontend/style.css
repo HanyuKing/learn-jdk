@@ -1,0 +1,45 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, -apple-system, "PingFang SC", sans-serif;
+  color: #19283a;
+  background: #f4f5f1;
+  line-height: 1.55;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; }
+main { width: min(100% - 40px, 920px); margin: 64px auto; }
+header { margin-bottom: 32px; }
+h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.15; margin: 0 0 12px; letter-spacing: -.04em; }
+header p { margin: 0; color: #43556a; }
+.checkout { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 4fr); gap: 20px; align-items: start; }
+.panel { background: #fff; border: 1px solid #d8dfd8; border-radius: 14px; padding: 24px; min-width: 0; }
+h2 { font-size: 1.2rem; margin: 0 0 20px; }
+label { display: block; font-weight: 600; margin-bottom: 8px; }
+select, button { font: inherit; border-radius: 8px; min-height: 44px; }
+select { width: 100%; padding: 8px 12px; border: 1px solid #a9b6c4; color: inherit; background: #fff; }
+button { width: 100%; cursor: pointer; background: #174a35; color: #fff; border: 1px solid transparent; padding: 9px 14px; font-weight: 650; }
+button:hover:not(:disabled) { background: #103726; }
+button:disabled { cursor: default; opacity: .56; }
+button:focus-visible, select:focus-visible { outline: 3px solid #3d8865; outline-offset: 3px; }
+.secondary { color: #174a35; background: #fff; border-color: #899d94; margin-top: 15px; }
+.secondary:hover:not(:disabled) { background: #edf5ef; }
+.amount-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 20px 0; }
+.amount-row strong { font-size: 1.65rem; font-variant-numeric: tabular-nums; }
+dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 7px 14px; border-top: 1px solid #e2e8e4; padding-top: 16px; margin: 0; font-size: .86rem; }
+dt { color: #43556a; }
+dd { margin: 0; overflow-wrap: anywhere; }
+.message { padding: 11px 13px; color: #43556a; background: #f1f4f7; border-radius: 8px; margin: 0; }
+.message[data-tone="error"] { color: #8b3628; background: #fff1ed; }
+.message[data-tone="success"] { color: #174a35; background: #edf5ef; }
+#payment-form { margin-top: 18px; }
+#pay { margin-top: 16px; }
+.test-card { color: #43556a; margin: 12px 0 0; font-size: .86rem; }
+code { font-size: .93em; white-space: nowrap; }
+
+@media (max-width: 680px) {
+  main { margin: 30px auto; }
+  .checkout { grid-template-columns: 1fr; }
+  .panel { padding: 20px; }
+}

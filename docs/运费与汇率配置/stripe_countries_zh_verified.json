@@ -1,0 +1,1424 @@
+[
+  {
+    "code": "AF",
+    "nameEn": "Afghanistan",
+    "nameZh": "阿富汗",
+    "sort": 1
+  },
+  {
+    "code": "AX",
+    "nameEn": "Åland Islands",
+    "nameZh": "奥兰群岛",
+    "sort": 2
+  },
+  {
+    "code": "AL",
+    "nameEn": "Albania",
+    "nameZh": "阿尔巴尼亚",
+    "sort": 3
+  },
+  {
+    "code": "DZ",
+    "nameEn": "Algeria",
+    "nameZh": "阿尔及利亚",
+    "sort": 4
+  },
+  {
+    "code": "AD",
+    "nameEn": "Andorra",
+    "nameZh": "安道尔",
+    "sort": 5
+  },
+  {
+    "code": "AO",
+    "nameEn": "Angola",
+    "nameZh": "安哥拉",
+    "sort": 6
+  },
+  {
+    "code": "AI",
+    "nameEn": "Anguilla",
+    "nameZh": "安圭拉",
+    "sort": 7
+  },
+  {
+    "code": "AQ",
+    "nameEn": "Antarctica",
+    "nameZh": "南极洲",
+    "sort": 8
+  },
+  {
+    "code": "AG",
+    "nameEn": "Antigua & Barbuda",
+    "nameZh": "安提瓜和巴布达",
+    "sort": 9
+  },
+  {
+    "code": "AR",
+    "nameEn": "Argentina",
+    "nameZh": "阿根廷",
+    "sort": 10
+  },
+  {
+    "code": "AM",
+    "nameEn": "Armenia",
+    "nameZh": "亚美尼亚",
+    "sort": 11
+  },
+  {
+    "code": "AW",
+    "nameEn": "Aruba",
+    "nameZh": "阿鲁巴",
+    "sort": 12
+  },
+  {
+    "code": "AC",
+    "nameEn": "Ascension Island",
+    "nameZh": "阿森松岛",
+    "sort": 13
+  },
+  {
+    "code": "AU",
+    "nameEn": "Australia",
+    "nameZh": "澳大利亚",
+    "sort": 14
+  },
+  {
+    "code": "AT",
+    "nameEn": "Austria",
+    "nameZh": "奥地利",
+    "sort": 15
+  },
+  {
+    "code": "AZ",
+    "nameEn": "Azerbaijan",
+    "nameZh": "阿塞拜疆",
+    "sort": 16
+  },
+  {
+    "code": "BS",
+    "nameEn": "Bahamas",
+    "nameZh": "巴哈马",
+    "sort": 17
+  },
+  {
+    "code": "BH",
+    "nameEn": "Bahrain",
+    "nameZh": "巴林",
+    "sort": 18
+  },
+  {
+    "code": "BD",
+    "nameEn": "Bangladesh",
+    "nameZh": "孟加拉国",
+    "sort": 19
+  },
+  {
+    "code": "BB",
+    "nameEn": "Barbados",
+    "nameZh": "巴巴多斯",
+    "sort": 20
+  },
+  {
+    "code": "BY",
+    "nameEn": "Belarus",
+    "nameZh": "白俄罗斯",
+    "sort": 21
+  },
+  {
+    "code": "BE",
+    "nameEn": "Belgium",
+    "nameZh": "比利时",
+    "sort": 22
+  },
+  {
+    "code": "BZ",
+    "nameEn": "Belize",
+    "nameZh": "伯利兹",
+    "sort": 23
+  },
+  {
+    "code": "BJ",
+    "nameEn": "Benin",
+    "nameZh": "贝宁",
+    "sort": 24
+  },
+  {
+    "code": "BM",
+    "nameEn": "Bermuda",
+    "nameZh": "百慕大",
+    "sort": 25
+  },
+  {
+    "code": "BT",
+    "nameEn": "Bhutan",
+    "nameZh": "不丹",
+    "sort": 26
+  },
+  {
+    "code": "BO",
+    "nameEn": "Bolivia",
+    "nameZh": "玻利维亚",
+    "sort": 27
+  },
+  {
+    "code": "BA",
+    "nameEn": "Bosnia & Herzegovina",
+    "nameZh": "波斯尼亚和黑塞哥维那",
+    "sort": 28
+  },
+  {
+    "code": "BW",
+    "nameEn": "Botswana",
+    "nameZh": "博茨瓦纳",
+    "sort": 29
+  },
+  {
+    "code": "BV",
+    "nameEn": "Bouvet Island",
+    "nameZh": "布韦岛",
+    "sort": 30
+  },
+  {
+    "code": "BR",
+    "nameEn": "Brazil",
+    "nameZh": "巴西",
+    "sort": 31
+  },
+  {
+    "code": "IO",
+    "nameEn": "British Indian Ocean Territory",
+    "nameZh": "英属印度洋领地",
+    "sort": 32
+  },
+  {
+    "code": "VG",
+    "nameEn": "British Virgin Islands",
+    "nameZh": "英属维尔京群岛",
+    "sort": 33
+  },
+  {
+    "code": "BN",
+    "nameEn": "Brunei",
+    "nameZh": "文莱",
+    "sort": 34
+  },
+  {
+    "code": "BG",
+    "nameEn": "Bulgaria",
+    "nameZh": "保加利亚",
+    "sort": 35
+  },
+  {
+    "code": "BF",
+    "nameEn": "Burkina Faso",
+    "nameZh": "布基纳法索",
+    "sort": 36
+  },
+  {
+    "code": "BI",
+    "nameEn": "Burundi",
+    "nameZh": "布隆迪",
+    "sort": 37
+  },
+  {
+    "code": "KH",
+    "nameEn": "Cambodia",
+    "nameZh": "柬埔寨",
+    "sort": 38
+  },
+  {
+    "code": "CM",
+    "nameEn": "Cameroon",
+    "nameZh": "喀麦隆",
+    "sort": 39
+  },
+  {
+    "code": "CA",
+    "nameEn": "Canada",
+    "nameZh": "加拿大",
+    "sort": 40
+  },
+  {
+    "code": "CV",
+    "nameEn": "Cape Verde",
+    "nameZh": "佛得角",
+    "sort": 41
+  },
+  {
+    "code": "BQ",
+    "nameEn": "Caribbean Netherlands",
+    "nameZh": "荷属加勒比区",
+    "sort": 42
+  },
+  {
+    "code": "KY",
+    "nameEn": "Cayman Islands",
+    "nameZh": "开曼群岛",
+    "sort": 43
+  },
+  {
+    "code": "CF",
+    "nameEn": "Central African Republic",
+    "nameZh": "中非共和国",
+    "sort": 44
+  },
+  {
+    "code": "TD",
+    "nameEn": "Chad",
+    "nameZh": "乍得",
+    "sort": 45
+  },
+  {
+    "code": "CL",
+    "nameEn": "Chile",
+    "nameZh": "智利",
+    "sort": 46
+  },
+  {
+    "code": "CN",
+    "nameEn": "China",
+    "nameZh": "中国",
+    "sort": 47
+  },
+  {
+    "code": "CO",
+    "nameEn": "Colombia",
+    "nameZh": "哥伦比亚",
+    "sort": 48
+  },
+  {
+    "code": "KM",
+    "nameEn": "Comoros",
+    "nameZh": "科摩罗",
+    "sort": 49
+  },
+  {
+    "code": "CG",
+    "nameEn": "Congo - Brazzaville",
+    "nameZh": "刚果（布）",
+    "sort": 50
+  },
+  {
+    "code": "CD",
+    "nameEn": "Congo - Kinshasa",
+    "nameZh": "刚果（金）",
+    "sort": 51
+  },
+  {
+    "code": "CK",
+    "nameEn": "Cook Islands",
+    "nameZh": "库克群岛",
+    "sort": 52
+  },
+  {
+    "code": "CR",
+    "nameEn": "Costa Rica",
+    "nameZh": "哥斯达黎加",
+    "sort": 53
+  },
+  {
+    "code": "CI",
+    "nameEn": "Côte d’Ivoire",
+    "nameZh": "科特迪瓦",
+    "sort": 54
+  },
+  {
+    "code": "HR",
+    "nameEn": "Croatia",
+    "nameZh": "克罗地亚",
+    "sort": 55
+  },
+  {
+    "code": "CW",
+    "nameEn": "Curaçao",
+    "nameZh": "库拉索",
+    "sort": 56
+  },
+  {
+    "code": "CY",
+    "nameEn": "Cyprus",
+    "nameZh": "塞浦路斯",
+    "sort": 57
+  },
+  {
+    "code": "CZ",
+    "nameEn": "Czechia",
+    "nameZh": "捷克",
+    "sort": 58
+  },
+  {
+    "code": "DK",
+    "nameEn": "Denmark",
+    "nameZh": "丹麦",
+    "sort": 59
+  },
+  {
+    "code": "DJ",
+    "nameEn": "Djibouti",
+    "nameZh": "吉布提",
+    "sort": 60
+  },
+  {
+    "code": "DM",
+    "nameEn": "Dominica",
+    "nameZh": "多米尼克",
+    "sort": 61
+  },
+  {
+    "code": "DO",
+    "nameEn": "Dominican Republic",
+    "nameZh": "多米尼加共和国",
+    "sort": 62
+  },
+  {
+    "code": "EC",
+    "nameEn": "Ecuador",
+    "nameZh": "厄瓜多尔",
+    "sort": 63
+  },
+  {
+    "code": "EG",
+    "nameEn": "Egypt",
+    "nameZh": "埃及",
+    "sort": 64
+  },
+  {
+    "code": "SV",
+    "nameEn": "El Salvador",
+    "nameZh": "萨尔瓦多",
+    "sort": 65
+  },
+  {
+    "code": "GQ",
+    "nameEn": "Equatorial Guinea",
+    "nameZh": "赤道几内亚",
+    "sort": 66
+  },
+  {
+    "code": "ER",
+    "nameEn": "Eritrea",
+    "nameZh": "厄立特里亚",
+    "sort": 67
+  },
+  {
+    "code": "EE",
+    "nameEn": "Estonia",
+    "nameZh": "爱沙尼亚",
+    "sort": 68
+  },
+  {
+    "code": "SZ",
+    "nameEn": "Eswatini",
+    "nameZh": "斯威士兰",
+    "sort": 69
+  },
+  {
+    "code": "ET",
+    "nameEn": "Ethiopia",
+    "nameZh": "埃塞俄比亚",
+    "sort": 70
+  },
+  {
+    "code": "FK",
+    "nameEn": "Falkland Islands",
+    "nameZh": "福克兰群岛",
+    "sort": 71
+  },
+  {
+    "code": "FO",
+    "nameEn": "Faroe Islands",
+    "nameZh": "法罗群岛",
+    "sort": 72
+  },
+  {
+    "code": "FJ",
+    "nameEn": "Fiji",
+    "nameZh": "斐济",
+    "sort": 73
+  },
+  {
+    "code": "FI",
+    "nameEn": "Finland",
+    "nameZh": "芬兰",
+    "sort": 74
+  },
+  {
+    "code": "FR",
+    "nameEn": "France",
+    "nameZh": "法国",
+    "sort": 75
+  },
+  {
+    "code": "GF",
+    "nameEn": "French Guiana",
+    "nameZh": "法属圭亚那",
+    "sort": 76
+  },
+  {
+    "code": "PF",
+    "nameEn": "French Polynesia",
+    "nameZh": "法属波利尼西亚",
+    "sort": 77
+  },
+  {
+    "code": "TF",
+    "nameEn": "French Southern Territories",
+    "nameZh": "法属南部领地",
+    "sort": 78
+  },
+  {
+    "code": "GA",
+    "nameEn": "Gabon",
+    "nameZh": "加蓬",
+    "sort": 79
+  },
+  {
+    "code": "GM",
+    "nameEn": "Gambia",
+    "nameZh": "冈比亚",
+    "sort": 80
+  },
+  {
+    "code": "GE",
+    "nameEn": "Georgia",
+    "nameZh": "格鲁吉亚",
+    "sort": 81
+  },
+  {
+    "code": "DE",
+    "nameEn": "Germany",
+    "nameZh": "德国",
+    "sort": 82
+  },
+  {
+    "code": "GH",
+    "nameEn": "Ghana",
+    "nameZh": "加纳",
+    "sort": 83
+  },
+  {
+    "code": "GI",
+    "nameEn": "Gibraltar",
+    "nameZh": "直布罗陀",
+    "sort": 84
+  },
+  {
+    "code": "GR",
+    "nameEn": "Greece",
+    "nameZh": "希腊",
+    "sort": 85
+  },
+  {
+    "code": "GL",
+    "nameEn": "Greenland",
+    "nameZh": "格陵兰",
+    "sort": 86
+  },
+  {
+    "code": "GD",
+    "nameEn": "Grenada",
+    "nameZh": "格林纳达",
+    "sort": 87
+  },
+  {
+    "code": "GP",
+    "nameEn": "Guadeloupe",
+    "nameZh": "瓜德罗普",
+    "sort": 88
+  },
+  {
+    "code": "GU",
+    "nameEn": "Guam",
+    "nameZh": "关岛",
+    "sort": 89
+  },
+  {
+    "code": "GT",
+    "nameEn": "Guatemala",
+    "nameZh": "危地马拉",
+    "sort": 90
+  },
+  {
+    "code": "GG",
+    "nameEn": "Guernsey",
+    "nameZh": "根西岛",
+    "sort": 91
+  },
+  {
+    "code": "GN",
+    "nameEn": "Guinea",
+    "nameZh": "几内亚",
+    "sort": 92
+  },
+  {
+    "code": "GW",
+    "nameEn": "Guinea-Bissau",
+    "nameZh": "几内亚比绍",
+    "sort": 93
+  },
+  {
+    "code": "GY",
+    "nameEn": "Guyana",
+    "nameZh": "圭亚那",
+    "sort": 94
+  },
+  {
+    "code": "HT",
+    "nameEn": "Haiti",
+    "nameZh": "海地",
+    "sort": 95
+  },
+  {
+    "code": "HN",
+    "nameEn": "Honduras",
+    "nameZh": "洪都拉斯",
+    "sort": 96
+  },
+  {
+    "code": "HK",
+    "nameEn": "Hong Kong SAR China",
+    "nameZh": "中国香港特别行政区",
+    "sort": 97
+  },
+  {
+    "code": "HU",
+    "nameEn": "Hungary",
+    "nameZh": "匈牙利",
+    "sort": 98
+  },
+  {
+    "code": "IS",
+    "nameEn": "Iceland",
+    "nameZh": "冰岛",
+    "sort": 99
+  },
+  {
+    "code": "IN",
+    "nameEn": "India",
+    "nameZh": "印度",
+    "sort": 100
+  },
+  {
+    "code": "ID",
+    "nameEn": "Indonesia",
+    "nameZh": "印度尼西亚",
+    "sort": 101
+  },
+  {
+    "code": "IQ",
+    "nameEn": "Iraq",
+    "nameZh": "伊拉克",
+    "sort": 102
+  },
+  {
+    "code": "IE",
+    "nameEn": "Ireland",
+    "nameZh": "爱尔兰",
+    "sort": 103
+  },
+  {
+    "code": "IM",
+    "nameEn": "Isle of Man",
+    "nameZh": "马恩岛",
+    "sort": 104
+  },
+  {
+    "code": "IL",
+    "nameEn": "Israel",
+    "nameZh": "以色列",
+    "sort": 105
+  },
+  {
+    "code": "IT",
+    "nameEn": "Italy",
+    "nameZh": "意大利",
+    "sort": 106
+  },
+  {
+    "code": "JM",
+    "nameEn": "Jamaica",
+    "nameZh": "牙买加",
+    "sort": 107
+  },
+  {
+    "code": "JP",
+    "nameEn": "Japan",
+    "nameZh": "日本",
+    "sort": 108
+  },
+  {
+    "code": "JE",
+    "nameEn": "Jersey",
+    "nameZh": "泽西岛",
+    "sort": 109
+  },
+  {
+    "code": "JO",
+    "nameEn": "Jordan",
+    "nameZh": "约旦",
+    "sort": 110
+  },
+  {
+    "code": "KZ",
+    "nameEn": "Kazakhstan",
+    "nameZh": "哈萨克斯坦",
+    "sort": 111
+  },
+  {
+    "code": "KE",
+    "nameEn": "Kenya",
+    "nameZh": "肯尼亚",
+    "sort": 112
+  },
+  {
+    "code": "KI",
+    "nameEn": "Kiribati",
+    "nameZh": "基里巴斯",
+    "sort": 113
+  },
+  {
+    "code": "XK",
+    "nameEn": "Kosovo",
+    "nameZh": "科索沃",
+    "sort": 114
+  },
+  {
+    "code": "KW",
+    "nameEn": "Kuwait",
+    "nameZh": "科威特",
+    "sort": 115
+  },
+  {
+    "code": "KG",
+    "nameEn": "Kyrgyzstan",
+    "nameZh": "吉尔吉斯斯坦",
+    "sort": 116
+  },
+  {
+    "code": "LA",
+    "nameEn": "Laos",
+    "nameZh": "老挝",
+    "sort": 117
+  },
+  {
+    "code": "LV",
+    "nameEn": "Latvia",
+    "nameZh": "拉脱维亚",
+    "sort": 118
+  },
+  {
+    "code": "LB",
+    "nameEn": "Lebanon",
+    "nameZh": "黎巴嫩",
+    "sort": 119
+  },
+  {
+    "code": "LS",
+    "nameEn": "Lesotho",
+    "nameZh": "莱索托",
+    "sort": 120
+  },
+  {
+    "code": "LR",
+    "nameEn": "Liberia",
+    "nameZh": "利比里亚",
+    "sort": 121
+  },
+  {
+    "code": "LY",
+    "nameEn": "Libya",
+    "nameZh": "利比亚",
+    "sort": 122
+  },
+  {
+    "code": "LI",
+    "nameEn": "Liechtenstein",
+    "nameZh": "列支敦士登",
+    "sort": 123
+  },
+  {
+    "code": "LT",
+    "nameEn": "Lithuania",
+    "nameZh": "立陶宛",
+    "sort": 124
+  },
+  {
+    "code": "LU",
+    "nameEn": "Luxembourg",
+    "nameZh": "卢森堡",
+    "sort": 125
+  },
+  {
+    "code": "MO",
+    "nameEn": "Macao SAR China",
+    "nameZh": "中国澳门特别行政区",
+    "sort": 126
+  },
+  {
+    "code": "MG",
+    "nameEn": "Madagascar",
+    "nameZh": "马达加斯加",
+    "sort": 127
+  },
+  {
+    "code": "MW",
+    "nameEn": "Malawi",
+    "nameZh": "马拉维",
+    "sort": 128
+  },
+  {
+    "code": "MY",
+    "nameEn": "Malaysia",
+    "nameZh": "马来西亚",
+    "sort": 129
+  },
+  {
+    "code": "MV",
+    "nameEn": "Maldives",
+    "nameZh": "马尔代夫",
+    "sort": 130
+  },
+  {
+    "code": "ML",
+    "nameEn": "Mali",
+    "nameZh": "马里",
+    "sort": 131
+  },
+  {
+    "code": "MT",
+    "nameEn": "Malta",
+    "nameZh": "马耳他",
+    "sort": 132
+  },
+  {
+    "code": "MQ",
+    "nameEn": "Martinique",
+    "nameZh": "马提尼克",
+    "sort": 133
+  },
+  {
+    "code": "MR",
+    "nameEn": "Mauritania",
+    "nameZh": "毛里塔尼亚",
+    "sort": 134
+  },
+  {
+    "code": "MU",
+    "nameEn": "Mauritius",
+    "nameZh": "毛里求斯",
+    "sort": 135
+  },
+  {
+    "code": "YT",
+    "nameEn": "Mayotte",
+    "nameZh": "马约特",
+    "sort": 136
+  },
+  {
+    "code": "MX",
+    "nameEn": "Mexico",
+    "nameZh": "墨西哥",
+    "sort": 137
+  },
+  {
+    "code": "MD",
+    "nameEn": "Moldova",
+    "nameZh": "摩尔多瓦",
+    "sort": 138
+  },
+  {
+    "code": "MC",
+    "nameEn": "Monaco",
+    "nameZh": "摩纳哥",
+    "sort": 139
+  },
+  {
+    "code": "MN",
+    "nameEn": "Mongolia",
+    "nameZh": "蒙古",
+    "sort": 140
+  },
+  {
+    "code": "ME",
+    "nameEn": "Montenegro",
+    "nameZh": "黑山",
+    "sort": 141
+  },
+  {
+    "code": "MS",
+    "nameEn": "Montserrat",
+    "nameZh": "蒙特塞拉特",
+    "sort": 142
+  },
+  {
+    "code": "MA",
+    "nameEn": "Morocco",
+    "nameZh": "摩洛哥",
+    "sort": 143
+  },
+  {
+    "code": "MZ",
+    "nameEn": "Mozambique",
+    "nameZh": "莫桑比克",
+    "sort": 144
+  },
+  {
+    "code": "MM",
+    "nameEn": "Myanmar (Burma)",
+    "nameZh": "缅甸",
+    "sort": 145
+  },
+  {
+    "code": "NA",
+    "nameEn": "Namibia",
+    "nameZh": "纳米比亚",
+    "sort": 146
+  },
+  {
+    "code": "NR",
+    "nameEn": "Nauru",
+    "nameZh": "瑙鲁",
+    "sort": 147
+  },
+  {
+    "code": "NP",
+    "nameEn": "Nepal",
+    "nameZh": "尼泊尔",
+    "sort": 148
+  },
+  {
+    "code": "NL",
+    "nameEn": "Netherlands",
+    "nameZh": "荷兰",
+    "sort": 149
+  },
+  {
+    "code": "NC",
+    "nameEn": "New Caledonia",
+    "nameZh": "新喀里多尼亚",
+    "sort": 150
+  },
+  {
+    "code": "NZ",
+    "nameEn": "New Zealand",
+    "nameZh": "新西兰",
+    "sort": 151
+  },
+  {
+    "code": "NI",
+    "nameEn": "Nicaragua",
+    "nameZh": "尼加拉瓜",
+    "sort": 152
+  },
+  {
+    "code": "NE",
+    "nameEn": "Niger",
+    "nameZh": "尼日尔",
+    "sort": 153
+  },
+  {
+    "code": "NG",
+    "nameEn": "Nigeria",
+    "nameZh": "尼日利亚",
+    "sort": 154
+  },
+  {
+    "code": "NU",
+    "nameEn": "Niue",
+    "nameZh": "纽埃",
+    "sort": 155
+  },
+  {
+    "code": "MK",
+    "nameEn": "North Macedonia",
+    "nameZh": "北马其顿",
+    "sort": 156
+  },
+  {
+    "code": "NO",
+    "nameEn": "Norway",
+    "nameZh": "挪威",
+    "sort": 157
+  },
+  {
+    "code": "OM",
+    "nameEn": "Oman",
+    "nameZh": "阿曼",
+    "sort": 158
+  },
+  {
+    "code": "PK",
+    "nameEn": "Pakistan",
+    "nameZh": "巴基斯坦",
+    "sort": 159
+  },
+  {
+    "code": "PS",
+    "nameEn": "Palestinian Territories",
+    "nameZh": "巴勒斯坦领土",
+    "sort": 160
+  },
+  {
+    "code": "PA",
+    "nameEn": "Panama",
+    "nameZh": "巴拿马",
+    "sort": 161
+  },
+  {
+    "code": "PG",
+    "nameEn": "Papua New Guinea",
+    "nameZh": "巴布亚新几内亚",
+    "sort": 162
+  },
+  {
+    "code": "PY",
+    "nameEn": "Paraguay",
+    "nameZh": "巴拉圭",
+    "sort": 163
+  },
+  {
+    "code": "PE",
+    "nameEn": "Peru",
+    "nameZh": "秘鲁",
+    "sort": 164
+  },
+  {
+    "code": "PH",
+    "nameEn": "Philippines",
+    "nameZh": "菲律宾",
+    "sort": 165
+  },
+  {
+    "code": "PN",
+    "nameEn": "Pitcairn Islands",
+    "nameZh": "皮特凯恩群岛",
+    "sort": 166
+  },
+  {
+    "code": "PL",
+    "nameEn": "Poland",
+    "nameZh": "波兰",
+    "sort": 167
+  },
+  {
+    "code": "PT",
+    "nameEn": "Portugal",
+    "nameZh": "葡萄牙",
+    "sort": 168
+  },
+  {
+    "code": "PR",
+    "nameEn": "Puerto Rico",
+    "nameZh": "波多黎各",
+    "sort": 169
+  },
+  {
+    "code": "QA",
+    "nameEn": "Qatar",
+    "nameZh": "卡塔尔",
+    "sort": 170
+  },
+  {
+    "code": "RE",
+    "nameEn": "Réunion",
+    "nameZh": "留尼汪",
+    "sort": 171
+  },
+  {
+    "code": "RO",
+    "nameEn": "Romania",
+    "nameZh": "罗马尼亚",
+    "sort": 172
+  },
+  {
+    "code": "RU",
+    "nameEn": "Russia",
+    "nameZh": "俄罗斯",
+    "sort": 173
+  },
+  {
+    "code": "RW",
+    "nameEn": "Rwanda",
+    "nameZh": "卢旺达",
+    "sort": 174
+  },
+  {
+    "code": "WS",
+    "nameEn": "Samoa",
+    "nameZh": "萨摩亚",
+    "sort": 175
+  },
+  {
+    "code": "SM",
+    "nameEn": "San Marino",
+    "nameZh": "圣马力诺",
+    "sort": 176
+  },
+  {
+    "code": "ST",
+    "nameEn": "São Tomé & Príncipe",
+    "nameZh": "圣多美和普林西比",
+    "sort": 177
+  },
+  {
+    "code": "SA",
+    "nameEn": "Saudi Arabia",
+    "nameZh": "沙特阿拉伯",
+    "sort": 178
+  },
+  {
+    "code": "SN",
+    "nameEn": "Senegal",
+    "nameZh": "塞内加尔",
+    "sort": 179
+  },
+  {
+    "code": "RS",
+    "nameEn": "Serbia",
+    "nameZh": "塞尔维亚",
+    "sort": 180
+  },
+  {
+    "code": "SC",
+    "nameEn": "Seychelles",
+    "nameZh": "塞舌尔",
+    "sort": 181
+  },
+  {
+    "code": "SL",
+    "nameEn": "Sierra Leone",
+    "nameZh": "塞拉利昂",
+    "sort": 182
+  },
+  {
+    "code": "SG",
+    "nameEn": "Singapore",
+    "nameZh": "新加坡",
+    "sort": 183
+  },
+  {
+    "code": "SX",
+    "nameEn": "Sint Maarten",
+    "nameZh": "荷属圣马丁",
+    "sort": 184
+  },
+  {
+    "code": "SK",
+    "nameEn": "Slovakia",
+    "nameZh": "斯洛伐克",
+    "sort": 185
+  },
+  {
+    "code": "SI",
+    "nameEn": "Slovenia",
+    "nameZh": "斯洛文尼亚",
+    "sort": 186
+  },
+  {
+    "code": "SB",
+    "nameEn": "Solomon Islands",
+    "nameZh": "所罗门群岛",
+    "sort": 187
+  },
+  {
+    "code": "SO",
+    "nameEn": "Somalia",
+    "nameZh": "索马里",
+    "sort": 188
+  },
+  {
+    "code": "ZA",
+    "nameEn": "South Africa",
+    "nameZh": "南非",
+    "sort": 189
+  },
+  {
+    "code": "GS",
+    "nameEn": "South Georgia & South Sandwich Islands",
+    "nameZh": "南乔治亚和南桑威奇群岛",
+    "sort": 190
+  },
+  {
+    "code": "KR",
+    "nameEn": "South Korea",
+    "nameZh": "韩国",
+    "sort": 191
+  },
+  {
+    "code": "SS",
+    "nameEn": "South Sudan",
+    "nameZh": "南苏丹",
+    "sort": 192
+  },
+  {
+    "code": "ES",
+    "nameEn": "Spain",
+    "nameZh": "西班牙",
+    "sort": 193
+  },
+  {
+    "code": "LK",
+    "nameEn": "Sri Lanka",
+    "nameZh": "斯里兰卡",
+    "sort": 194
+  },
+  {
+    "code": "BL",
+    "nameEn": "St. Barthélemy",
+    "nameZh": "圣巴泰勒米",
+    "sort": 195
+  },
+  {
+    "code": "SH",
+    "nameEn": "St. Helena",
+    "nameZh": "圣赫勒拿",
+    "sort": 196
+  },
+  {
+    "code": "KN",
+    "nameEn": "St. Kitts & Nevis",
+    "nameZh": "圣基茨和尼维斯",
+    "sort": 197
+  },
+  {
+    "code": "LC",
+    "nameEn": "St. Lucia",
+    "nameZh": "圣卢西亚",
+    "sort": 198
+  },
+  {
+    "code": "MF",
+    "nameEn": "St. Martin",
+    "nameZh": "法属圣马丁",
+    "sort": 199
+  },
+  {
+    "code": "PM",
+    "nameEn": "St. Pierre & Miquelon",
+    "nameZh": "圣皮埃尔和密克隆群岛",
+    "sort": 200
+  },
+  {
+    "code": "VC",
+    "nameEn": "St. Vincent & Grenadines",
+    "nameZh": "圣文森特和格林纳丁斯",
+    "sort": 201
+  },
+  {
+    "code": "SD",
+    "nameEn": "Sudan",
+    "nameZh": "苏丹",
+    "sort": 202
+  },
+  {
+    "code": "SR",
+    "nameEn": "Suriname",
+    "nameZh": "苏里南",
+    "sort": 203
+  },
+  {
+    "code": "SJ",
+    "nameEn": "Svalbard & Jan Mayen",
+    "nameZh": "斯瓦尔巴和扬马延",
+    "sort": 204
+  },
+  {
+    "code": "SE",
+    "nameEn": "Sweden",
+    "nameZh": "瑞典",
+    "sort": 205
+  },
+  {
+    "code": "CH",
+    "nameEn": "Switzerland",
+    "nameZh": "瑞士",
+    "sort": 206
+  },
+  {
+    "code": "TW",
+    "nameEn": "Taiwan",
+    "nameZh": "台湾",
+    "sort": 207
+  },
+  {
+    "code": "TJ",
+    "nameEn": "Tajikistan",
+    "nameZh": "塔吉克斯坦",
+    "sort": 208
+  },
+  {
+    "code": "TZ",
+    "nameEn": "Tanzania",
+    "nameZh": "坦桑尼亚",
+    "sort": 209
+  },
+  {
+    "code": "TH",
+    "nameEn": "Thailand",
+    "nameZh": "泰国",
+    "sort": 210
+  },
+  {
+    "code": "TL",
+    "nameEn": "Timor-Leste",
+    "nameZh": "东帝汶",
+    "sort": 211
+  },
+  {
+    "code": "TG",
+    "nameEn": "Togo",
+    "nameZh": "多哥",
+    "sort": 212
+  },
+  {
+    "code": "TK",
+    "nameEn": "Tokelau",
+    "nameZh": "托克劳",
+    "sort": 213
+  },
+  {
+    "code": "TO",
+    "nameEn": "Tonga",
+    "nameZh": "汤加",
+    "sort": 214
+  },
+  {
+    "code": "TT",
+    "nameEn": "Trinidad & Tobago",
+    "nameZh": "特立尼达和多巴哥",
+    "sort": 215
+  },
+  {
+    "code": "TA",
+    "nameEn": "Tristan da Cunha",
+    "nameZh": "特里斯坦-达库尼亚群岛",
+    "sort": 216
+  },
+  {
+    "code": "TN",
+    "nameEn": "Tunisia",
+    "nameZh": "突尼斯",
+    "sort": 217
+  },
+  {
+    "code": "TR",
+    "nameEn": "Türkiye",
+    "nameZh": "土耳其",
+    "sort": 218
+  },
+  {
+    "code": "TM",
+    "nameEn": "Turkmenistan",
+    "nameZh": "土库曼斯坦",
+    "sort": 219
+  },
+  {
+    "code": "TC",
+    "nameEn": "Turks & Caicos Islands",
+    "nameZh": "特克斯和凯科斯群岛",
+    "sort": 220
+  },
+  {
+    "code": "TV",
+    "nameEn": "Tuvalu",
+    "nameZh": "图瓦卢",
+    "sort": 221
+  },
+  {
+    "code": "UG",
+    "nameEn": "Uganda",
+    "nameZh": "乌干达",
+    "sort": 222
+  },
+  {
+    "code": "UA",
+    "nameEn": "Ukraine",
+    "nameZh": "乌克兰",
+    "sort": 223
+  },
+  {
+    "code": "AE",
+    "nameEn": "United Arab Emirates",
+    "nameZh": "阿拉伯联合酋长国",
+    "sort": 224
+  },
+  {
+    "code": "GB",
+    "nameEn": "United Kingdom",
+    "nameZh": "英国",
+    "sort": 225
+  },
+  {
+    "code": "US",
+    "nameEn": "United States",
+    "nameZh": "美国",
+    "sort": 226
+  },
+  {
+    "code": "UY",
+    "nameEn": "Uruguay",
+    "nameZh": "乌拉圭",
+    "sort": 227
+  },
+  {
+    "code": "UZ",
+    "nameEn": "Uzbekistan",
+    "nameZh": "乌兹别克斯坦",
+    "sort": 228
+  },
+  {
+    "code": "VU",
+    "nameEn": "Vanuatu",
+    "nameZh": "瓦努阿图",
+    "sort": 229
+  },
+  {
+    "code": "VA",
+    "nameEn": "Vatican City",
+    "nameZh": "梵蒂冈",
+    "sort": 230
+  },
+  {
+    "code": "VE",
+    "nameEn": "Venezuela",
+    "nameZh": "委内瑞拉",
+    "sort": 231
+  },
+  {
+    "code": "VN",
+    "nameEn": "Vietnam",
+    "nameZh": "越南",
+    "sort": 232
+  },
+  {
+    "code": "WF",
+    "nameEn": "Wallis & Futuna",
+    "nameZh": "瓦利斯和富图纳",
+    "sort": 233
+  },
+  {
+    "code": "EH",
+    "nameEn": "Western Sahara",
+    "nameZh": "西撒哈拉",
+    "sort": 234
+  },
+  {
+    "code": "YE",
+    "nameEn": "Yemen",
+    "nameZh": "也门",
+    "sort": 235
+  },
+  {
+    "code": "ZM",
+    "nameEn": "Zambia",
+    "nameZh": "赞比亚",
+    "sort": 236
+  },
+  {
+    "code": "ZW",
+    "nameEn": "Zimbabwe",
+    "nameZh": "津巴布韦",
+    "sort": 237
+  }
+]

@@ -1,0 +1,416 @@
+{
+  "standardMethodCode": "STANDARD",
+  "fallbackPolicy": {
+    "allowCheckout": true,
+    "methods": [
+      {
+        "code": "STANDARD",
+        "nameI18n": {
+          "en-US": "Standard Shipping",
+          "ja-JP": "通常配送"
+        },
+        "etaTextI18n": {
+          "en-US": "Estimated delivery:12-30 business days",
+          "ja-JP": "お届け目安：12〜30営業日"
+        },
+        "feesByCurrency": {
+          "USD": 0,
+          "JPY": 0
+        },
+        "default": true
+      }
+    ]
+  },
+  "destinations": {
+    "CN": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:3-5 business days",
+            "ja-JP": "お届け目安：3〜5営業日"
+          },
+          "feesByCurrency": {
+            "USD": 0,
+            "JPY": 0
+          },
+          "default": true
+        }
+      ]
+    },
+    "HK": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:3-5 business days",
+            "ja-JP": "お届け目安：3〜5営業日"
+          },
+          "feesByCurrency": {
+            "USD": 0,
+            "JPY": 0
+          },
+          "default": true
+        }
+      ]
+    },
+    "MO": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:3-5 business days",
+            "ja-JP": "お届け目安：3〜5営業日"
+          },
+          "feesByCurrency": {
+            "USD": 0,
+            "JPY": 0
+          },
+          "default": true
+        }
+      ]
+    },
+    "TW": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:3-5 business days",
+            "ja-JP": "お届け目安：3〜5営業日"
+          },
+          "feesByCurrency": {
+            "USD": 0,
+            "JPY": 0
+          },
+          "default": true
+        }
+      ]
+    },
+    "JP": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:3-5 business days",
+            "ja-JP": "お届け目安：3〜5営業日"
+          },
+          "feesByCurrency": {
+            "USD": 0,
+            "JPY": 0
+          },
+          "default": true
+        }
+      ]
+    },
+    "US": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:10-15 business days",
+            "ja-JP": "お届け目安：10〜15営業日"
+          },
+          "feesByCurrency": {
+            "USD": 0,
+            "JPY": 0
+          },
+          "default": true
+        },
+        {
+          "code": "EXPRESS",
+          "nameI18n": {
+            "en-US": "Expedited Shipping",
+            "ja-JP": "お急ぎ便"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:7-12 business days",
+            "ja-JP": "発送後7〜12営業日（目安）"
+          },
+          "feesByCurrency": {
+            "USD": 2.99,
+            "JPY": 475
+          },
+          "default": false
+        }
+      ],
+      "regionOverrides": {
+        "FLXXX": {
+          "methods": [
+            {
+              "code": "STANDARD",
+              "nameI18n": {
+                "en-US": "Standard Shipping",
+                "ja-JP": "通常配送"
+              },
+              "etaTextI18n": {
+                "en-US": "Estimated 10–15 business days after shipping",
+                "ja-JP": "発送後10〜15営業日（目安）"
+              },
+              "feesByCurrency": {
+                "USD": 0,
+                "JPY": 0
+              },
+              "default": true
+            },
+            {
+              "code": "EXPRESS",
+              "nameI18n": {
+                "en-US": "Expedited Shipping ✈️",
+                "ja-JP": "お急ぎ便 ✈️"
+              },
+              "etaTextI18n": {
+                "en-US": "Estimated 5–9 business days after shipping",
+                "ja-JP": "発送後5〜9営業日（目安）"
+              },
+              "feesByCurrency": {
+                "USD": 9.99,
+                "JPY": 1580
+              },
+              "default": false
+            }
+          ]
+        }
+      }
+    },
+    "CA": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:10-15 business days",
+            "ja-JP": "お届け目安：10〜15営業日"
+          },
+          "feesByCurrency": {
+            "USD": 0,
+            "JPY": 0
+          },
+          "default": true
+        },
+        {
+          "code": "EXPRESS",
+          "nameI18n": {
+            "en-US": "Expedited Shipping",
+            "ja-JP": "お急ぎ便"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:7-12 business days",
+            "ja-JP": "発送後7〜12営業日（目安）"
+          },
+          "feesByCurrency": {
+            "USD": 2.99,
+            "JPY": 475
+          },
+          "default": false
+        }
+      ]
+    },
+    "ZA": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:12-30 business days",
+            "ja-JP": "お届け目安：12〜30営業日"
+          },
+          "feesByCurrency": {
+            "USD": 9.99,
+            "JPY": 1580
+          },
+          "default": true
+        }
+      ]
+    },
+    "CO": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:12-30 business days",
+            "ja-JP": "お届け目安：12〜30営業日"
+          },
+          "feesByCurrency": {
+            "USD": 9.99,
+            "JPY": 1580
+          },
+          "default": true
+        }
+      ]
+    },
+    "CL": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:12-30 business days",
+            "ja-JP": "お届け目安：12〜30営業日"
+          },
+          "feesByCurrency": {
+            "USD": 9.99,
+            "JPY": 1580
+          },
+          "default": true
+        }
+      ]
+    },
+    "BR": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:12-30 business days",
+            "ja-JP": "お届け目安：12〜30営業日"
+          },
+          "feesByCurrency": {
+            "USD": 9.99,
+            "JPY": 1580
+          },
+          "default": true
+        }
+      ]
+    },
+    "MT": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:12-30 business days",
+            "ja-JP": "お届け目安：12〜30営業日"
+          },
+          "feesByCurrency": {
+            "USD": 9.99,
+            "JPY": 1580
+          },
+          "default": true
+        }
+      ]
+    },
+    "CH": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:12-30 business days",
+            "ja-JP": "お届け目安：12〜30営業日"
+          },
+          "feesByCurrency": {
+            "USD": 9.99,
+            "JPY": 1580
+          },
+          "default": true
+        }
+      ]
+    },
+    "NO": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:12-30 business days",
+            "ja-JP": "お届け目安：12〜30営業日"
+          },
+          "feesByCurrency": {
+            "USD": 9.99,
+            "JPY": 1580
+          },
+          "default": true
+        }
+      ]
+    },
+    "CY": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:12-30 business days",
+            "ja-JP": "お届け目安：12〜30営業日"
+          },
+          "feesByCurrency": {
+            "USD": 9.99,
+            "JPY": 1580
+          },
+          "default": true
+        }
+      ]
+    },
+    "IL": {
+      "methods": [
+        {
+          "code": "STANDARD",
+          "nameI18n": {
+            "en-US": "Standard Shipping",
+            "ja-JP": "通常配送"
+          },
+          "etaTextI18n": {
+            "en-US": "Estimated delivery:12-30 business days",
+            "ja-JP": "お届け目安：12〜30営業日"
+          },
+          "feesByCurrency": {
+            "USD": 9.99,
+            "JPY": 1580
+          },
+          "default": true
+        }
+      ]
+    }
+  }
+}
