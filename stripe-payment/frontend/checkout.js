@@ -723,7 +723,8 @@ newOrderButton.addEventListener('click', () => {
   taxCaseSelect.disabled = false;
   createButton.hidden = false;
   createButton.disabled = false;
-  renderTaxOptions(taxCaseSelect.value in taxCases ? taxCaseSelect.value : '');
+  const selectedTaxCase = taxCaseSelect.value;
+  renderTaxOptions(!selectedTaxCase || selectedTaxCase in taxCases ? selectedTaxCase : guangzhouTaxCase);
   renderPreview();
   showMessage(taxCaseSelect.value === guangzhouTaxCase ? '选择商品，再填写收货地址。' : '选择币种和税费场景后创建订单。');
 });

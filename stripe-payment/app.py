@@ -20,12 +20,13 @@ PRICES = {
     "usd": {"amount": 1250, "decimals": 2, "country": "US"},
     "jpy": {"amount": 1500, "decimals": 0, "country": "JP"},
 }
-CHECKOUT_TAX_CASES = {
-    "stripe_manual": "Stripe 手动税率",
-    "stripe_auto": "Stripe Tax 自动算税",
-}
+# 已创建的自动算税订单仍通过原来的 Checkout 会话结算。
+CHECKOUT_TAX_CASES = {"stripe_manual", "stripe_auto"}
 GUANGZHOU_TAX_CASE = "stripe_guangzhou"
-TAX_CASES = {**CHECKOUT_TAX_CASES, GUANGZHOU_TAX_CASE: "Stripe Tax · 广州发货"}
+TAX_CASES = {
+    GUANGZHOU_TAX_CASE: "Stripe Tax · 广州发货",
+    "stripe_manual": "Stripe 手动税率",
+}
 GUANGZHOU_SHIP_FROM = {
     "country": "CN", "state": "44", "city": "Guangzhou",
     "postal_code": "510000", "line1": "Guangzhou fulfillment center",

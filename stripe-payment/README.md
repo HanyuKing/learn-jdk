@@ -1,6 +1,6 @@
 # Stripe 电商 Demo
 
-用 Python Flask、SQLite 和 Stripe 沙箱体验选商品、购物车、优惠码、配送、算税、下单和支付。默认场景从广州向美国或日本发货，支持美元和日元。三个基础支付场景也可以在「税费场景」中选择。 [Stripe 沙箱与测试卡](https://docs.stripe.com/testing)
+用 Python Flask、SQLite 和 Stripe 沙箱体验选商品、购物车、优惠码、配送、算税、下单和支付。默认使用「Stripe Tax · 广州发货」，支持送往美国或日本，以美元或日元支付。「税费场景」里也可以选择常规支付和 Stripe 手动税率。 [Stripe 沙箱与测试卡](https://docs.stripe.com/testing)
 
 ## 启动收银台
 
@@ -41,14 +41,9 @@ test -f .env || cp .env.example .env
 | 美国 · 加州基础销售税 | $12.50 | 7.25% | $0.91 | $13.41 | `1341` |
 | 日本 · 标准消费税 | ¥1,500 | 10% | ¥150 | ¥1,650 | `1650` |
 
-## Stripe Tax 自动算税
-
-1. 在同一个 Stripe 沙箱完成 **Tax → 设置**，填写测试营业地址，再到 **Tax → 登记**添加立即生效的测试登记。例如添加美国加州及日本。沙箱中的登记只用于测试。 [Stripe Tax 沙箱设置](https://docs.stripe.com/tax/testing)
-2. 在收银台选择币种和「Stripe Tax 自动算税」，创建订单后填写本页的 Stripe 收货地址。USD 订单采集美国地址，JPY 订单采集日本地址。Stripe 对通用实物商品（`txcd_99999999`）重新算税后，订单栏会显示税额和应付金额。 [Checkout Elements 自动算税](https://docs.stripe.com/tax/checkout/elements) · [Stripe 产品税务分类](https://docs.stripe.com/tax/tax-codes)
-3. 用已登记地区的测试地址和测试卡付款。美国可用 `200 N Spring St, Los Angeles, CA 90012`。日本可用 `東京都新宿区西新宿2-8-1, 163-8001`。若要验证日本国内销售的标准消费税，可在专用沙箱把测试营业地址设在日本，再使用日本收货地址和生效的日本登记。Stripe 按地址、商品、登记及跨境规则返回结果，未登记或适用免税时可能显示零税额。 [Stripe 零税额说明](https://docs.stripe.com/tax/zero-tax) · [日本实物销售规则](https://docs.stripe.com/tax/supported-countries/asia-pacific/collect-tax?tax-jurisdiction-asia-pacific=japan#cross-border-sales-of-goods-to-japan)
-4. 付款后在收银台核对订单税额和应付金额。`amount` 是含税总额，美元用美分，日元用日元。也可在 Stripe Dashboard 按 `cs_...` 或 `pi_...` 查看对应记录。跨境关税和进口消费税按清关规则另算。 [Stripe 币种最小单位](https://docs.stripe.com/currencies)
-
 ## Stripe Tax · 广州发货
+
+在同一个 Stripe 沙箱完成 **Tax → 设置**，再到 **Tax → 登记**为要测试的地区添加立即生效的测试登记。Stripe Tax 只为远程销售场景支持中国大陆，因此 Demo 通过每笔试算的 `ship_from_details` 指定广州发货。Stripe 根据发货地、收货地、商品和适用的税务登记算税。 [Stripe Tax 沙箱设置](https://docs.stripe.com/tax/testing) · [Stripe 发货地址](https://docs.stripe.com/tax/ship-from-address) · [Stripe 零税额说明](https://docs.stripe.com/tax/zero-tax)
 
 | 测试收货地 | 商品原价 | 活动优惠 | 优惠码减免 | 折后商品 | 运费 | 税前小计 | 结账税 | 应付 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -147,7 +142,7 @@ PY
 | 试算税费 | `POST /api/tax/quote` 接收币种、`items`、收货地址、`shippingMethodCode` 和 `promotionCode`，返回商品及结算明细 |
 | 创建订单 | `PUT /api/orders/<id>` 提交试算输入与税费场景。带 `items` 的订单先保存商品、正式试算 ID 和应付金额，同一 UUID 可重试 |
 | 发起支付 | `POST /api/orders/<id>/payment` 从已创建订单读取应付金额，创建或复用 `PaymentIntent` |
-| 确认支付 | 手动税率和 Checkout 自动算税使用 Checkout Elements。广州发货和常规支付使用 Payment Element，并调用 `stripe.confirmPayment` |
+| 确认支付 | 手动税率使用 Checkout Elements。广州发货和常规支付使用 Payment Element，并调用 `stripe.confirmPayment` |
 | 接收通知 | `POST /api/stripe/webhook` 验签。Checkout 订单核对会话 ID、订单号、币种、小计、税额、总额及付款状态。PaymentIntent 路径核对订单和实收金额 |
 | 同步状态 | `GET /api/orders/<id>` 读本地状态。`POST /api/orders/<id>/sync` 主动查询 Stripe，并保存付款结果和实际税额 |
 
