@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
-  <title>Stripe 测试收银台</title>
+  <title>Stripe 电商 Demo</title>
   <link rel="stylesheet" href="/assets/style.css">
   <script src="https://js.stripe.com/endive/stripe.js" defer></script>
   <script src="/assets/checkout.js" defer></script>
@@ -12,11 +12,26 @@
 <body>
   <main>
     <header>
-      <h1>Stripe 测试收银台</h1>
-      <p>用 Stripe 沙箱支付一笔美元或日元订单。测试卡不会产生真实扣款。</p>
+      <h1>Stripe 电商 Demo</h1>
+      <p>选购定制树脂商品，使用 Stripe 沙箱体验从购物车到付款的流程。</p>
     </header>
 
     <div class="checkout">
+      <section id="shop" class="panel shop" aria-labelledby="shop-title" hidden>
+        <div>
+          <h2 id="shop-title">选商品</h2>
+          <div id="catalog" class="catalog"></div>
+        </div>
+        <div class="cart" aria-labelledby="cart-title" role="region">
+          <h2 id="cart-title">购物车</h2>
+          <p id="cart-empty" class="tax-note">购物车里还没有商品。</p>
+          <ul id="cart-items" class="cart-items"></ul>
+          <div id="cart-total-row" class="amount-row" hidden>
+            <span id="cart-count" aria-live="polite"></span>
+            <strong id="cart-total"></strong>
+          </div>
+        </div>
+      </section>
       <section class="panel" aria-labelledby="order-title">
         <h2 id="order-title">订单</h2>
         <form id="order-form">
@@ -29,6 +44,24 @@
             <dt>商品小计</dt><dd id="subtotal"></dd>
             <dt id="tax-label">税费</dt><dd id="tax-amount"></dd>
           </dl>
+          <section id="guangzhou-summary" aria-label="结算明细" hidden>
+            <ul id="order-items" class="cart-items receipt-items" aria-label="商品明细" hidden></ul>
+            <dl class="summary-amounts">
+              <dt>商品原价</dt><dd id="product-price"></dd>
+              <dt>活动优惠</dt><dd id="activity-discount"></dd>
+              <dt>优惠码减免</dt><dd id="coupon-discount"></dd>
+              <dt>折后商品金额</dt><dd id="merchandise-price"></dd>
+              <dt>运费</dt><dd id="shipping-fee"></dd>
+              <dt>税前小计</dt><dd id="pretax-amount"></dd>
+              <dt>税费</dt><dd id="sales-tax"></dd>
+            </dl>
+            <section id="tax-details" aria-labelledby="tax-details-title" hidden>
+              <h3 id="tax-details-title">税费明细</h3>
+              <ul id="tax-rates"></ul>
+            </section>
+            <p id="sales-tax-status" class="tax-note" hidden></p>
+            <p id="import-fees-note" class="tax-note" hidden>跨境订单清关时可能产生关税和进口税。</p>
+          </section>
           <div class="amount-row">
             <span id="total-label">应付金额</span>
             <strong id="total">—</strong>
@@ -41,6 +74,8 @@
           <dt>订单状态</dt><dd id="order-status"></dd>
           <dt>支付意图</dt><dd id="intent-id"></dd>
           <dt id="session-label" hidden>Checkout 会话</dt><dd id="session-id" hidden></dd>
+          <dt id="tax-calculation-label" hidden>Stripe 税费试算</dt><dd id="tax-calculation-id" hidden></dd>
+          <dt id="tax-transaction-label" hidden>Stripe 税务交易</dt><dd id="tax-transaction-id" hidden></dd>
           <dt id="paid-via-label" hidden>确认来源</dt><dd id="paid-via" hidden></dd>
         </dl>
         <button id="new-order" type="button" class="secondary" hidden>开始新订单</button>
@@ -50,11 +85,19 @@
         <h2 id="payment-title">付款</h2>
         <p id="message" class="message" role="status" aria-live="polite">正在加载收银台。</p>
         <button id="open-checkout" type="button" hidden>前往 Stripe Checkout</button>
+        <button id="start-payment" type="button" hidden>去付款</button>
         <form id="payment-form" hidden>
           <div id="shipping-fields" hidden>
             <h3>收货地址</h3>
             <div id="shipping-address-element"></div>
-            <button id="quote-shipping" type="button" hidden disabled>计算税费</button>
+            <div id="shipping-options" hidden>
+              <label for="shipping-method">配送方式</label>
+              <select id="shipping-method"></select>
+              <label for="promotion-code">优惠码</label>
+              <input id="promotion-code" type="text" maxlength="80" placeholder="可输入 PROMO_EXAMPLE" autocomplete="off">
+              <button id="quote-shipping" type="button" disabled>计算税费</button>
+              <button id="submit-guangzhou" type="button" class="secondary" hidden>提交订单</button>
+            </div>
           </div>
           <div id="checkout-fields" hidden>
             <h3>联系邮箱</h3>

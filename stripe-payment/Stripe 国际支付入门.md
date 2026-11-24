@@ -201,6 +201,23 @@ Stripe 后台可以在 **Settings → Tax** 设置账户的 **Preset product tax
 
 正式下单时，项目再次走结算算价，将最终 `payAmount` 写入订单，并把税额、状态和 `taxcalc_...` 保存到订单扩展的 `salesTax`。`/payment/create` 从订单取这个应付金额。支付成功后，符合条件且税额大于 0 的订单会用已保存的试算 ID 登记 Tax Transaction，无需重新试算。 [创单算价](../trade-order-service/src/main/java/cn/mathmagic/jjewelry/business/order/service/OrderService.java#L429) · [保存税务快照](../trade-order-service/src/main/java/cn/mathmagic/jjewelry/business/order/service/OrderService.java#L489) · [支付后登记](../trade-order-service/src/main/java/cn/mathmagic/jjewelry/business/payment/tax/StripeTaxTransactionService.java#L37) · [Stripe Tax Transaction API](https://docs.stripe.com/api/tax/transactions/create_from_calculation)
 
+### 学习问答
+
+#### 美国有没有商品和运费都收税、税率又不同的例子？
+
+有。以**科罗拉多州奥罗拉市在 Arapahoe 县的区域**为例。当地零售商销售 US$100 的应税商品，顾客可以免费到店自提，也可以选 US$20 配送，且发票单列运费。符合条件的可选配送免征州和州代收的销售税，奥罗拉市对商家收取的整笔配送费征收市销售税。 [科罗拉多州销售税指南](https://tax.colorado.gov/sales-tax-guide#associated-service-charges) · [奥罗拉市配送费规则](https://www.auroragov.org/common/pages/GetFile.ashx?key=hOcqAVEZ)
+
+| 项目 | 计税金额 | 税率 | 税额 |
+| --- | ---: | ---: | ---: |
+| 商品 | US$100.00 | 8.00% | US$8.00 |
+| 运费 | US$20.00 | 3.75% | US$0.75 |
+
+示例销售税合计 **US$8.75**。商品税率包含 **3.75%** 市税，以及合计 **4.25%** 的州、县和地区销售税。运费这一行只适用市税，**US$20 整笔**都按 3.75% 计算。 [奥罗拉市销售税率表](https://www.auroragov.org/business_services/taxes/sales_tax) · [科罗拉多州代收地方销售税说明](https://tax.colorado.gov/local-government-sales-tax)
+
+上表已用 Stripe 沙箱验证。Stripe 将科罗拉多州税和自治市销售税分别登记和试算，本次测试使用州登记和奥罗拉市登记。 [Stripe 科罗拉多州和城市登记](https://docs.stripe.com/tax/supported-countries/united-states/collect-tax?tax-jurisdiction-united-states=colorado#local-home-rule-sales-tax)
+
+在 Demo 选美元和一件「定制树脂手办」，收货地址填写 `15151 E Alameda Pkwy, Aurora, CO 80012`，选择「加急配送 · US$20.00」，优惠码留空。应用自动活动优惠后，折后商品为 **US$90.00**。Stripe 实测返回商品 **8.00% · US$7.21**、运费 **3.75% · US$0.75**，含税应付 **US$117.96**。 [奥罗拉市测试地址](https://www.auroragov.org/common/pages/GetFile.ashx?key=hRxCATji) · [Demo 操作步骤](README.md#完整电商流程)
+
 ## 5. 在测试环境动手跑一笔
 
 ### 准备商户号、密钥和回调地址
