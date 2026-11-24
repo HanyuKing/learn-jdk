@@ -30,11 +30,13 @@ button:focus-visible, select:focus-visible { outline: 3px solid #3d8865; outline
 dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 7px 14px; border-top: 1px solid #e2e8e4; padding-top: 16px; margin: 0; font-size: .86rem; }
 dt { color: #43556a; }
 dd { margin: 0; overflow-wrap: anywhere; }
+.tax-label, #tax-breakdown { margin-top: 16px; }
 .message { padding: 11px 13px; color: #43556a; background: #f1f4f7; border-radius: 8px; margin: 0; }
 .message[data-tone="error"] { color: #8b3628; background: #fff1ed; }
 .message[data-tone="success"] { color: #174a35; background: #edf5ef; }
-#payment-form { margin-top: 18px; }
-#pay { margin-top: 16px; }
+#payment-form, #open-checkout { margin-top: 18px; }
+#shipping-fields h3, #checkout-fields h3 { font-size: 1rem; margin: 16px 0 8px; }
+#quote-shipping, #pay { margin-top: 16px; }
 .test-card { color: #43556a; margin: 12px 0 0; font-size: .86rem; }
 code { font-size: .93em; white-space: nowrap; }
 

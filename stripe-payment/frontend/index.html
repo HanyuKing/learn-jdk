@@ -6,7 +6,7 @@
   <meta name="referrer" content="no-referrer">
   <title>Stripe 测试收银台</title>
   <link rel="stylesheet" href="/assets/style.css">
-  <script src="https://js.stripe.com/v3/" defer></script>
+  <script src="https://js.stripe.com/endive/stripe.js" defer></script>
   <script src="/assets/checkout.js" defer></script>
 </head>
 <body>
@@ -22,8 +22,15 @@
         <form id="order-form">
           <label for="currency">支付币种</label>
           <select id="currency" required disabled></select>
+          <label for="tax-case" class="tax-label">税费场景</label>
+          <select id="tax-case" disabled></select>
+          <p id="ship-from" class="test-card" hidden>发货地 · 中国广州</p>
+          <dl id="tax-breakdown" hidden>
+            <dt>商品小计</dt><dd id="subtotal"></dd>
+            <dt id="tax-label">税费</dt><dd id="tax-amount"></dd>
+          </dl>
           <div class="amount-row">
-            <span>应付金额</span>
+            <span id="total-label">应付金额</span>
             <strong id="total">—</strong>
           </div>
           <button id="create-order" type="submit" disabled>创建订单</button>
@@ -33,6 +40,7 @@
           <dt>Stripe 参数</dt><dd id="stripe-amount"></dd>
           <dt>订单状态</dt><dd id="order-status"></dd>
           <dt>支付意图</dt><dd id="intent-id"></dd>
+          <dt id="session-label" hidden>Checkout 会话</dt><dd id="session-id" hidden></dd>
           <dt id="paid-via-label" hidden>确认来源</dt><dd id="paid-via" hidden></dd>
         </dl>
         <button id="new-order" type="button" class="secondary" hidden>开始新订单</button>
@@ -41,10 +49,23 @@
       <section class="panel" aria-labelledby="payment-title">
         <h2 id="payment-title">付款</h2>
         <p id="message" class="message" role="status" aria-live="polite">正在加载收银台。</p>
+        <button id="open-checkout" type="button" hidden>前往 Stripe Checkout</button>
         <form id="payment-form" hidden>
-          <div id="payment-element"></div>
-          <button id="pay" type="submit" disabled>确认付款</button>
-          <p class="test-card">成功测试卡 <code>4242 4242 4242 4242</code><br>填写未来有效期和任意三位 CVC。</p>
+          <div id="shipping-fields" hidden>
+            <h3>收货地址</h3>
+            <div id="shipping-address-element"></div>
+            <button id="quote-shipping" type="button" hidden disabled>计算税费</button>
+          </div>
+          <div id="checkout-fields" hidden>
+            <h3>联系邮箱</h3>
+            <div id="contact-details-element"></div>
+            <h3>支付方式</h3>
+          </div>
+          <div id="payment-fields" hidden>
+            <div id="payment-element"></div>
+            <button id="pay" type="submit" disabled>确认付款</button>
+            <p class="test-card">成功测试卡 <code>4242 4242 4242 4242</code><br>填写未来有效期和任意三位 CVC。</p>
+          </div>
         </form>
         <button id="check-status" type="button" class="secondary" hidden>查询付款结果</button>
       </section>
