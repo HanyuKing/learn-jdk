@@ -1,0 +1,4 @@
+Flask>=3.1,<4
+python-dotenv>=1.1,<2
+alipay-sdk-python==3.7.1467
+cryptography>=48,<49

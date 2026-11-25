@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>支付宝支付 Demo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='checkout.css') }}">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>{{ '支付宝模拟收银台' if wallet else '支付宝支付 Demo' }}</h1>
+      <p class="mode">{{ '本地模拟 · 不会扣款' if mode == 'mock' else '支付宝官方沙箱 · 不会扣款' }}</p>
+    </header>
+    {% if not order %}
+    <section class="panel">
+      <h2>{{ product }}</h2>
+      <p>单价 ¥{{ '%.2f' | format(unit_price / 100) }}</p>
+      <form action="{{ url_for('create_order') }}" method="post">
+        <label class="quantity">数量 <input type="number" name="quantity" value="1" min="1" max="9" required></label>
+        <div class="actions"><button type="submit">创建订单</button></div>
+      </form>
+    </section>
+    {% else %}
+    <section class="panel">
+      <h2>订单详情</h2>
+      <dl>
+        <div><dt>商品</dt><dd>{{ order.product }} × {{ order.quantity }}</dd></div>
+        <div><dt>订单号</dt><dd>{{ order.id }}</dd></div>
+        <div><dt>状态</dt><dd>{{ statuses[order.status] }}</dd></div>
+        {% if order.transaction_id %}<div><dt>交易号</dt><dd>{{ order.transaction_id }}</dd></div>{% endif %}
+        {% if order.confirmed_by %}<div><dt>确认来源</dt><dd>{{ order.confirmed_by }}</dd></div>{% endif %}
+        <div class="amount"><dt>应付金额</dt><dd>¥{{ '%.2f' | format(order.amount / 100) }}</dd></div>
+      </dl>
+    </section>
+    {% if order.status == 'pending' %}
+    <section class="panel">
+      <h2>{{ '选择模拟结果' if wallet else '付款' }}</h2>
+      {% if message %}<p class="notice" role="status">{{ message }}</p>{% endif %}
+      {% if wallet %}
+        <form class="actions" method="post">
+          <button name="result" value="paid">模拟支付成功</button>
+          <button class="secondary" name="result" value="failed">模拟支付失败</button>
+        </form>
+      {% else %}
+        <div class="actions">
+          <form action="{{ url_for('start_payment', order_id=order_id) }}" method="post"><button>{{ '前往模拟收银台' if mode == 'mock' else '前往支付宝沙箱付款' }}</button></form>
+          {% if mode == 'sandbox' %}<form action="{{ url_for('payment_return', order_id=order_id, _method='POST') }}" method="post"><button class="secondary">查询支付结果</button></form>{% endif %}
+        </div>
+      {% endif %}
+    </section>
+    {% endif %}
+    <footer><a href="{{ url_for('show_order', order_id=order_id) if wallet else url_for('shop') }}">{{ '返回订单' if wallet else '创建新订单' }}</a></footer>
+    {% endif %}
+  </main>
+</body>
+</html>
