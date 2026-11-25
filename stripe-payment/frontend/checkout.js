@@ -19,6 +19,7 @@ const payButton = document.querySelector('#pay');
 const checkButton = document.querySelector('#check-status');
 const message = document.querySelector('#message');
 const guangzhouTaxCase = 'stripe_guangzhou';
+const paymentMethodOrder = ['card', 'alipay', 'wechat_pay'];
 const taxRateFormatter = new Intl.NumberFormat('zh-CN', { style: 'percent', maximumFractionDigits: 4 });
 const storageKey = 'stripe-demo-order';
 const cartStorageKey = 'stripe-demo-cart';
@@ -383,7 +384,7 @@ async function mountCheckout(clientSecret, taxCase) {
   paymentForm.hidden = false;
   mountElement(sdk.createShippingAddressElement(), '#shipping-address-element');
   mountElement(sdk.createContactDetailsElement(), '#contact-details-element');
-  const payment = sdk.createPaymentElement();
+  const payment = sdk.createPaymentElement({ paymentMethodOrder });
   payment.on('loaderror', () => showMessage('Stripe 付款表单加载失败，请检查网络后重试。', 'error'));
   mountElement(payment, '#payment-element');
   renderCheckoutAmounts(checkoutActions.getSession(), taxCase);
@@ -468,7 +469,7 @@ async function preparePayment() {
   if (result.checkout_url) {
     checkoutButton.onclick = () => window.location.assign(result.checkout_url);
     checkoutButton.hidden = false;
-    showMessage('在 Stripe Checkout 填写收货地址，核对税费并用测试卡付款。');
+    showMessage('在 Stripe Checkout 填写收货地址，核对税费并选择支付方式。');
     return;
   }
 
@@ -479,13 +480,13 @@ async function preparePayment() {
   }
 
   elements = stripe.elements({ clientSecret: result.client_secret, locale: 'zh' });
-  const payment = elements.create('payment');
+  const payment = elements.create('payment', { paymentMethodOrder });
   payment.on('ready', () => { canConfirm = true; updatePayButton(); });
   payment.on('loaderror', () => showMessage('Stripe 付款表单加载失败，请检查网络后重试。', 'error'));
   paymentForm.hidden = false;
   paymentFields.hidden = false;
   mountElement(payment, '#payment-element');
-  showMessage('在 Stripe 表单中输入测试卡并确认付款。');
+  showMessage('选择支付方式，确认后按 Stripe 提示完成付款。');
 }
 
 async function loadOrder() {

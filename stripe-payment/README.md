@@ -27,14 +27,20 @@ test -f .env || cp .env.example .env
 2. **填写收货和配送信息。** 点击「填写收货地址」，在 Stripe 地址组件中选择美国或日本。配送方式包括标准配送（US$5 或 ¥750）和免运费配送，美元订单可另选 **US$20 加急配送**。美国测试地址可用 `200 N Spring St, Los Angeles, CA 90012`，日本可用 `東京都新宿区西新宿2-8-1, 163-8001`。
 3. **输入优惠码并试算。** 商品自动享受 9 折，输入 `PROMO_EXAMPLE` 每单再减 **US$5** 或 **¥750**。点「计算税费」，核对商品明细、折扣、运费、税率和含税应付。改商品、数量、地址、配送或优惠码后，重新试算。
 4. **提交订单。** 点「提交订单」后，后端重新读取目录价格，验证数量和优惠码，重新计算税费，并把商品、配送选项、金额和试算记录保存到 SQLite。页面显示订单号与「待支付」。
-5. **支付。** 点「去付款」，后端从订单读取含税金额，创建或复用 PaymentIntent。同一个订单号可在同一标签页刷新后继续付款。卡信息由 Stripe Payment Element 收集。
+5. **支付。** 点「去付款」，后端从订单读取含税金额，创建或复用 PaymentIntent。同一个订单号可在同一标签页刷新后继续付款。Stripe Payment Element 会显示银行卡以及符合条件的支付宝、微信支付等方式。
 6. **确认结果。** 成功后页面显示「已支付」、确认来源和 Stripe 支付意图。后端通过验签的 Webhook 或主动查单核对币种和实收金额。有结账税额的订单还会登记 Stripe 税务交易。可用 `4000 0000 0000 0002` 验证拒付后仍可用同一订单重试。 [Stripe 测试卡](https://docs.stripe.com/testing#cards)
+
+## 支付宝和微信支付
+
+1. 在 `.env` 密钥对应的 Stripe 沙箱打开 **设置 → 支付方式**，在默认配置中启用 **Alipay** 和 **WeChat Pay**。使用 Stripe CLI 创建的临时沙箱时，先认领沙箱，再在 Dashboard 完成配置。 [Stripe 支付方式设置](https://dashboard.stripe.com/settings/payment_methods)
+2. 创建一笔新订单。Stripe 根据沙箱的商户地区、订单币种和客户资格决定显示哪些方式。例如，美国商户沙箱可用 USD 测试，日本商户沙箱可用 JPY 测试。广州发货、常规支付和手动税率都沿用 Stripe 动态支付方式。 [支付宝支持的币种](https://docs.stripe.com/payments/alipay#supported-currencies) · [微信支付支持的币种](https://docs.stripe.com/payments/wechat-pay#supported-currencies)
+3. **支付宝**确认付款后跳转到 Stripe 测试页面，完成授权后返回收银台。**微信支付**确认付款后，用手机的二维码扫描器打开 Stripe 测试页面模拟授权。支付后查看订单状态，必要时点击「查询付款结果」。 [支付宝测试流程](https://docs.stripe.com/payments/alipay/accept-a-payment?locale=en-GB&payment-ui=direct-api#test-your-integration) · [微信支付测试流程](https://docs.stripe.com/payments/wechat-pay/accept-a-payment?payment-ui=checkout#test-your-integration)
 
 ## Stripe 手动税率
 
 1. 在与 `.env` 密钥对应的 **Stripe 沙箱**中打开税率页面，新建两个**价外税率（Exclusive）**。美国例子填加州基础销售税 **7.25%**，日本例子填消费税 **10%**。也可用 Tax Rates API 创建。 [Stripe 沙箱税率](https://dashboard.stripe.com/test/tax-rates) · [Stripe 创建手动税率](https://docs.stripe.com/tax/tax-rates) · [加州基础税率](https://cdtfa.ca.gov/taxes-and-fees/sut-rates-description.htm) · [日本标准消费税率](https://www.nta.go.jp/taxes/shiraberu/taxanswer/shohi/6303.htm)
 2. 把美国的 `txr_...` 填入 `STRIPE_US_TAX_RATE_ID`，日本的填入 `STRIPE_JP_TAX_RATE_ID`，再重启服务。后端按币种选择对应的 ID，并将它传给 Checkout 商品行的 `tax_rates`。 [本地配置模板](.env.example) · [Checkout 手动税率](https://docs.stripe.com/payments/checkout/use-manual-tax-rates)
-3. 在收银台选「Stripe 手动税率」并创建订单。在出现的地址组件中，USD 用美国加州测试地址，JPY 用日本测试地址。填写邮箱，核对税费，然后在本页用测试卡付款。固定税率由选中的 `txr_...` 决定。
+3. 在收银台选「Stripe 手动税率」并创建订单。在出现的地址组件中，USD 用美国加州测试地址，JPY 用日本测试地址。填写邮箱，核对税费，然后在本页选择可用的支付方式。固定税率由选中的 `txr_...` 决定。
 
 | 税费场景 | 商品小计 | 税率 | 税额 | 应付金额 | Stripe `amount` |
 | --- | ---: | ---: | ---: | ---: | ---: |

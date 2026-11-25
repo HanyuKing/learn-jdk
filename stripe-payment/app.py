@@ -408,6 +408,19 @@ def create_app():
         if time.time() - order["created_at"] >= 23 * 60 * 60:
             abort(409, "这笔订单的创建重试窗口已过，请先在 Stripe 查对原订单。")
 
+    def create_stripe_payment(create, params, idempotency_key):
+        options = {"idempotency_key": idempotency_key}
+        try:
+            return create({
+                **params,
+                "payment_method_options": {"wechat_pay": {"client": "web"}},
+            }, options=options)
+        except stripe.IdempotencyError as error:
+            if error.http_status != 400:
+                raise
+            # 兼容 Stripe 已受理但本地尚未保存支付 ID 的旧请求，沿用原参数和幂等键。
+            return create(params, options=options)
+
     def calculate_tax(params, pretax, idempotency_key=None):
         options = {"idempotency_key": idempotency_key} if idempotency_key else {}
         calculation = tax_client.v1.tax.calculations.create(params, options=options)
@@ -556,7 +569,8 @@ def create_app():
                 navigation = {"ui_mode": "elements", "return_url": return_url + "success"}
             else:
                 navigation = {"success_url": return_url + "success", "cancel_url": return_url + "cancel"}
-            session = stripe_client.v1.checkout.sessions.create(
+            session = create_stripe_payment(
+                stripe_client.v1.checkout.sessions.create,
                 {
                     "mode": "payment",
                     "line_items": [line_item],
@@ -567,7 +581,7 @@ def create_app():
                     "payment_intent_data": {"metadata": {"order_id": order["id"], "tax_case": order["tax_case"]}},
                     **navigation,
                 },
-                options={"idempotency_key": f"order-java-demo:checkout:{order['id']}"},
+                f"order-java-demo:checkout:{order['id']}",
             )
             with closing(connect()) as connection, connection:
                 connection.execute("""
@@ -752,7 +766,8 @@ def create_app():
                     tax_rate_bps=str(order["tax_rate_bps"]),
                     tax_amount=str(order["tax_amount"]),
                 )
-            intent = stripe_client.v1.payment_intents.create(
+            intent = create_stripe_payment(
+                stripe_client.v1.payment_intents.create,
                 {
                     "amount": order["amount"],
                     "currency": order["currency"],
@@ -760,7 +775,7 @@ def create_app():
                     "metadata": metadata,
                     **tax_details,
                 },
-                options={"idempotency_key": f"order-java-demo:{order_id}"},
+                f"order-java-demo:{order_id}",
             )
             with closing(connect()) as connection, connection:
                 connection.execute("""
