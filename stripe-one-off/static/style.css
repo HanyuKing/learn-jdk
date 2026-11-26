@@ -1,0 +1,26 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color: #182638;
+  background: #f4f7fa;
+  line-height: 1.55;
+}
+
+main { width: min(660px, 100% - 32px); margin: 56px auto; }
+header { margin-bottom: 28px; }
+h1 { font-size: clamp(1.85rem, 5vw, 2.6rem); }
+h1, h2 { margin: 0; }
+p { color: #44566b; }
+.panel { padding: clamp(20px, 4vw, 30px); margin-bottom: 20px; border: 1px solid #dbe4ef; border-radius: 14px; background: white; }
+.price { margin: 14px 0 0; color: #182638; font-size: 1.8rem; font-weight: 700; }
+.notice { padding: 12px 16px; border-left: 3px solid #235396; background: #e7f0ff; }
+.status { font-weight: 700; }
+.status-paid { color: #146846; }
+.status-failed { color: #a2322c; }
+dl { display: grid; grid-template-columns: max-content 1fr; gap: 10px 16px; margin: 22px 0; }
+dt { color: #44566b; }
+dd { margin: 0; overflow-wrap: anywhere; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+button { padding: 9px 16px; border: 1px solid transparent; border-radius: 7px; font: inherit; cursor: pointer; background: #235396; color: white; }
+button.secondary { border-color: #98b1d3; background: white; color: #204a85; }
+a { color: #204a85; }
+button:focus-visible, a:focus-visible { outline: 3px solid #5289d7; outline-offset: 3px; }

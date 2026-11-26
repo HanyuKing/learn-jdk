@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stripe 一次性购买 Demo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>一次性购买</h1>
+      <p>使用 Stripe 沙箱购买产品目录中的商品。</p>
+    </header>
+
+    {% if error %}
+    <section class="panel" role="alert">
+      <h2>操作未完成</h2>
+      <p>{{ error }}</p>
+      <a href="{{ url_for('index') }}">返回商品页</a>
+    </section>
+    {% elif order %}
+    {% set statuses = {'pending': '待付款', 'processing': '付款处理中', 'paid': '已支付',
+      'failed': '付款失败', 'expired': '结账已过期'} %}
+    <section class="panel">
+      <h2>订单详情</h2>
+      <p class="status status-{{ order.status }}" role="status">{{ statuses[order.status] }}</p>
+      <dl>
+        <dt>商品</dt><dd>{{ order.product_name }}</dd>
+        <dt>订单金额</dt><dd>{{ order|money }}</dd>
+        <dt>订单号</dt><dd><code>{{ order.id }}</code></dd>
+        {% if order.checkout_id %}
+        <dt>Checkout 会话</dt><dd><code>{{ order.checkout_id }}</code></dd>
+        {% endif %}
+        {% if order.payment_intent_id %}
+        <dt>Stripe 支付意图</dt><dd><code>{{ order.payment_intent_id }}</code></dd>
+        {% endif %}
+        {% if order.paid_via %}
+        <dt>确认来源</dt><dd>{{ 'Stripe Webhook' if order.paid_via == 'webhook' else '服务端查单' }}</dd>
+        {% endif %}
+      </dl>
+      <div class="actions">
+        {% if order.status == 'pending' %}
+        <form method="post" action="{{ url_for('start_checkout', order_id=order.id) }}">
+          <input type="hidden" name="token" value="{{ session.form_token }}">
+          <button type="submit">继续付款</button>
+        </form>
+        {% endif %}
+        {% if order.checkout_id and order.status in ('pending', 'processing') %}
+        <form method="post" action="{{ url_for('sync', order_id=order.id) }}">
+          <input type="hidden" name="token" value="{{ session.form_token }}">
+          <button class="secondary" type="submit">查询付款结果</button>
+        </form>
+        {% endif %}
+        <a href="{{ url_for('index') }}">返回商品页</a>
+      </div>
+    </section>
+    {% elif product %}
+    {% if not webhook_ready %}
+    <p class="notice" role="status">Webhook 尚未配置。付款后可通过返回页查询付款结果。</p>
+    {% endif %}
+    <section class="panel">
+      <h2>{{ product.product_name }}</h2>
+      <p class="price">{{ product|money }}</p>
+      <p>购买 1 件，结账时一次付清。</p>
+      <form method="post" action="{{ url_for('start_checkout', order_id=order_id) }}">
+        <input type="hidden" name="token" value="{{ session.form_token }}">
+        <button type="submit">前往 Stripe 付款</button>
+      </form>
+    </section>
+    {% else %}
+    <section class="panel">
+      <h2>配置商品</h2>
+      <p>请按 README 在 <code>.env</code> 填写沙箱密钥和 One-off 价格 ID，然后重启服务。</p>
+    </section>
+    {% endif %}
+    {% if recent %}
+    <a href="{{ url_for('receipt', order_id=recent.id) }}">查看最近订单</a>
+    {% endif %}
+  </main>
+</body>
+</html>

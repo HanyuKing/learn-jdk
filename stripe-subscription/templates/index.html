@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stripe 订阅 Demo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Stripe 订阅 Demo</h1>
+      <p>在 Stripe 沙箱测试月付、年付和自动续费。</p>
+    </header>
+
+    {% if error %}
+    <section class="panel" role="alert">
+      <p>{{ error }}</p>
+      <a href="{{ url_for('index') }}">返回订阅首页</a>
+    </section>
+    {% else %}
+    {% for text in get_flashed_messages() %}
+    <p class="notice" role="status">{{ text }}</p>
+    {% endfor %}
+    {% if not stripe_ready %}
+    <p class="notice" role="status">请先按 README 配置 Stripe 沙箱密钥和套餐价格，再重启服务。</p>
+    {% elif not webhook_ready %}
+    <p class="notice" role="status">Webhook 签名密钥未配置。可手动查询，但续费状态不会自动更新。</p>
+    {% endif %}
+
+    <section class="panel" aria-labelledby="subscription-title">
+      <h2 id="subscription-title">我的订阅</h2>
+      {% if subscription %}
+      {% set statuses = {'incomplete': '等待首次付款', 'incomplete_expired': '首次付款已过期',
+        'trialing': '试用中', 'active': '正常', 'past_due': '续费待支付', 'unpaid': '未支付',
+        'paused': '已暂停', 'canceled': '已结束'} %}
+      {% set invoices = {'draft': '草稿', 'open': '待支付', 'paid': '已支付', 'uncollectible': '无法收款', 'void': '已作废'} %}
+      <dl>
+        <dt>套餐</dt><dd>{{ plans[subscription.interval].label if subscription.interval in plans else subscription.interval }}</dd>
+        <dt>订阅状态</dt><dd>{{ statuses.get(subscription.status, subscription.status) }} <code>{{ subscription.status }}</code></dd>
+        <dt>会员权限</dt><dd>{{ '已开通' if has_access else '未开通' }}</dd>
+        <dt>已付款至</dt><dd>{{ subscription.paid_until|date_time }}</dd>
+        {% if subscription.cancel_at and has_subscription %}
+        <dt>计划取消时间</dt><dd>{{ subscription.cancel_at|date_time }}</dd>
+        {% endif %}
+        {% if subscription.latest_invoice_status %}
+        <dt>最近账单</dt><dd>{{ invoices.get(subscription.latest_invoice_status, subscription.latest_invoice_status) }}</dd>
+        {% endif %}
+        <dt>Stripe 订阅 ID</dt><dd><code>{{ subscription.id }}</code></dd>
+      </dl>
+      {% else %}
+      <p>当前浏览器还没有订阅记录。</p>
+      {% endif %}
+      {% if member and stripe_ready %}
+      <div class="actions">
+        <form method="post" action="{{ url_for('refresh') }}">
+          <input type="hidden" name="token" value="{{ session.form_token }}">
+          <button class="secondary" type="submit">查询 Stripe 状态</button>
+        </form>
+        <form method="post" action="{{ url_for('portal') }}">
+          <input type="hidden" name="token" value="{{ session.form_token }}">
+          <button class="secondary" type="submit">管理订阅和账单</button>
+        </form>
+      </div>
+      {% endif %}
+    </section>
+
+    {% if not has_subscription %}
+    <section aria-labelledby="plans-title">
+      <h2 id="plans-title">选择套餐</h2>
+      <div class="plans">
+        {% for interval, plan in plans.items() %}
+        <form class="panel" method="post" action="{{ url_for('start_checkout') }}">
+          <input type="hidden" name="token" value="{{ session.form_token }}">
+          <input type="hidden" name="plan" value="{{ interval }}">
+          <h3>{{ plan.label }}</h3>
+          <p>{{ '每月' if interval == 'month' else '每年' }}自动续费。金额在 Stripe 结账页确认。</p>
+          <button type="submit" {% if not stripe_ready or not plan.price_id %}disabled{% endif %}>订阅{{ plan.label }}</button>
+        </form>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+    {% endif %}
+  </main>
+</body>
+</html>
