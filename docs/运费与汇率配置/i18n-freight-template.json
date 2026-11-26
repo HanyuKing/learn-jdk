@@ -1,0 +1,43 @@
+{
+  "languages": {
+    "en": {
+      "freeText": "FREE",
+      "methods": {
+        "STANDARD": {
+          "name": "Standard Shipping",
+          "etaText": "Estimated Delivery: {min}–{max} Business Days"
+        },
+        "EXPRESS": {
+          "name": "Express Shipping",
+          "etaText": "Estimated Delivery: {min}–{max} Business Days"
+        }
+      }
+    },
+    "ja": {
+      "freeText": "送料無料",
+      "methods": {
+        "STANDARD": {
+          "name": "通常配送",
+          "etaText": "お届け目安： {min}～{max}営業日"
+        },
+        "EXPRESS": {
+          "name": "お急ぎ便",
+          "etaText": "お届け目安： {min}～{max}営業日"
+        }
+      }
+    },
+    "zh": {
+      "freeText": "免费",
+      "methods": {
+        "STANDARD": {
+          "name": "标准配送",
+          "etaText": "预计送达时间：{min}～{max} 个工作日"
+        },
+        "EXPRESS": {
+          "name": "加急配送",
+          "etaText": "预计送达时间：{min}～{max} 个工作日"
+        }
+      }
+    }
+  }
+}
